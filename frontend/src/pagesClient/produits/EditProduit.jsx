@@ -80,7 +80,7 @@ const EditProduit = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="EDIT PRODUCT" subtitle="Modification d'un produit" />
+      <Header title="MODIFICATION DU PRODUIT" subtitle="Modification dU produit séléctionné" />
       <form
         onSubmit={handleSubmit}
         sx={{

@@ -27,7 +27,7 @@ const PrintInvoice = () => {
   if (!data) return <div>No data found</div>;
 
   const {
-    invoiceNumber,
+    _id,
     invoiceStatus,
     userName,
     userEmail,
@@ -64,7 +64,7 @@ const PrintInvoice = () => {
             <Box m={2}/>
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Box bgcolor="gray" borderRadius={4} p={2} >
-            <Typography variant="h6" sx={{ color: "white", fontWeight: "bold" }}>Facture N° :  #{invoiceNumber}</Typography>
+            <Typography variant="h6" sx={{ color: "white", fontWeight: "bold" }}>Facture N° :  #{_id}</Typography>
             </Box>  
             <Box bgcolor={getStatusColor(invoiceStatus)} borderRadius={4} p={2}>
             <Typography variant="h6" sx={{ color: "white", fontWeight: "bold", '@media print': { display: 'none' } }}>Status: {invoiceStatus}</Typography>

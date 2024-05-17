@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const InvoiceSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'Enterprise', required: true },
   clientId: { type: Schema.Types.ObjectId, ref: 'Client', required: true },
-  invoiceNumber: { type: String, required: true },
   date: { type: Date, default: Date.now },
   dueDate: { type: Date, required: true },
   items: [{
@@ -12,6 +11,15 @@ const InvoiceSchema = new Schema({
       quantity: { type: Number, required: true },
       price: { type: Number } 
   }],
+  taxes: [
+    {
+      taxId: {
+        type: Schema.Types.ObjectId,
+        ref: "Tax",
+        required: true,
+      }
+    }
+  ],
   status: { type: String, enum: ['sent', 'paid', 'late'], default: 'sent' },
   amount: { type: Number, required: true },
 },

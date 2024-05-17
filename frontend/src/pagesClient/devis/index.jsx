@@ -251,10 +251,7 @@ const Devis = () => {
   };
 
   const handleEmail = (id) => {
-    setIdDevi(id);
-    if (deviDetail) {
-      console.log("devi : ", deviDetail);
-    }
+    navigate(`/devis/email/${id}`);
   };
 
   const handleEdit = (id) => {
@@ -285,7 +282,7 @@ const Devis = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Add
+            Ajouter un devi
           </Button>
         </Link>
       </FlexBetween>

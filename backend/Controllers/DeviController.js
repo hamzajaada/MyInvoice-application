@@ -3,18 +3,16 @@ const OverallStat = require ("../Models/OverallStateSchema");
 const Client = require  ("../Models/ClientSchema");
 const Product = require  ("../Models/ProductSchema");
 const Enterprise = require("../Models/EntrepriseSchema");
+const nodemailer = require('nodemailer');
 
 const addDevi = async (req, res) => {
   try {
-    console.log('start')    
-    // console.log(req.body.devi);
     const devi = new Devi(req.body.devi);
     await devi.save();
-    console.log('devi : ', devi)
     res.status(201).json(devi);
   } catch (error) {
     console.error('err : ', error)
-    res.status(500).send("Erreur serveur lors de l'ajout de facture");
+    res.status(500).send("Erreur serveur lors de l'ajout de devi");
   }
 };
 
@@ -39,7 +37,6 @@ const prepareDeviDetails = async (req, res) => {
       });
    
     const formattedDate = formatDate(devi.date);
-    const formattedDueDate = formatDate(devi.dueDate);
     const itemsTable = devi.items.map((item) => {
       return {
         productName: item.productId.name,
@@ -73,7 +70,6 @@ const prepareDeviDetails = async (req, res) => {
         clientPhone,
         clientAddress,
         formattedDate,
-        formattedDueDate,
         itemsTable,
         amount,
       });
@@ -123,6 +119,66 @@ const removeDevi = async (req, res) => {
   }
 };
 
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "myinvoice06@gmail.com",
+    pass: "ekiv afoc wbnb mrep",
+  },
+});
+
+const sendEmail = async (req, res) => {
+  // console.log("Received data:", req.body);
+  const { clientEmail, clientName, userName, _id, itemsTable, amount, userPhone, userAddress, userEmail } = req.body;
+  console.log("Parsed data:", { clientEmail, clientName, userName, _id, itemsTable, amount, userPhone, userAddress, userEmail });
+  const itemsTableHTML = itemsTable.map(item => `<tr><td>${item.productName}</td><td>${item.quantity}</td><td>${item.price.toFixed(2)} DHs</td></tr>`).join('');
+  const body = `
+  <p>Cher Client(e) Mr/Mme.<strong> ${clientName}</strong>,</br></p>
+  <p>Vous avez reçu une devi de l'entreprise <strong><i>${userName}</i></strong>, vérifiez les détails ci-dessous:</br></p>
+  <p> - Numéro de devi :<strong> #${_id}</strong></p></br>
+  <table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+      <tr>
+        <th><strong>Nom du Produit</strong></th>
+        <th><strong>Quantité</strong></th>
+        <th><strong>Prix</strong></th>
+      </tr>
+    </thead>
+    <tbody>
+      ${itemsTableHTML}
+    </tbody>
+    <tfoot>
+      <tr>
+        <th><strong>Montant : </strong></th>
+        <td colspan="2"> <strong>${amount.toFixed(2)} DHs</strong> </td>
+      </tr>
+    </tfoot>
+  </table>
+  </br>
+  <p>Si vous avez des questions, vous trouverez ci-dessus les coordonnées de l'entreprise :</p></br>
+  <ul>
+    <li> Téléphone :<strong> ${userPhone}</strong></li>
+    <li> Adresse :<strong> ${userAddress}</strong></li>
+    <li> Email :<strong> ${userEmail}</strong></li>
+  </ul></br>
+  <p>Cordialement,</p></br>
+  <p><strong>MY INVOICE TEAM</strong></p>
+`;
+  var mailOptions = {
+    from: "myinvoice06@gmail.com",
+    to: clientEmail,
+    subject: `Devi envoyée depuis ${userName}`,
+    html: body,
+  }
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: 'Email sent successfully' }); 
+  } catch (error) {
+    console.error('Error sending email:', error.message);
+    res.status(500).json({ error: 'Failed to send email' });
+  }
+};
+
 module.exports = {
   addDevi,
   getAllDevis,
@@ -130,4 +186,5 @@ module.exports = {
   updateDevi,
   removeDevi,
   prepareDeviDetails,
+  sendEmail
 };

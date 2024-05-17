@@ -22,6 +22,15 @@ const BonCommandeSchema = new Schema(
         price: { type: Number },
       },
     ],
+    taxes: [
+      {
+        taxId: {
+          type: Schema.Types.ObjectId,
+          ref: "Tax",
+          required: true,
+        }
+      }
+    ],
     status: { type: String, enum: ["attent de traitement", "au cour de traitement", "expédié"], default: "attent de traitement" },
     amount: { type: Number, required: true },
   },

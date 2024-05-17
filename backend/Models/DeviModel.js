@@ -10,6 +10,15 @@ const DeviSchema = new Schema({
       quantity: { type: Number, required: true },
       price: { type: Number } 
   }],
+  taxes: [
+    {
+      taxId: {
+        type: Schema.Types.ObjectId,
+        ref: "Tax",
+        required: true,
+      }
+    }
+  ],
   status: { type: String, enum: ["attente d'approbation", 'approuvé', 'rejeté'], default: "attente d'approbation" },
   amount: { type: Number, required: true },
 },

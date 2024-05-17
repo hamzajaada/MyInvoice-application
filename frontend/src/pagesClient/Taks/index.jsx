@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, useTheme, Button, IconButton } from "@mui/material";
-import { useGetAllCategoriesQuery, useRemoveTaksMutation } from "state/api";
+import { useRemoveTaksMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -27,7 +27,7 @@ const Categories = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/Api/Taks/Entreprise/${id}`
+          `http://localhost:3001/Api/Tax/Entreprise/${id}`
         );
         setTaks(response.data);
         setIsLoading(false);
@@ -47,8 +47,13 @@ const Categories = () => {
 
   const columns = [
     {
-      field: "TaksValleur",
+      field: "name",
       headerName: "Taxes",
+      flex: 1,
+    },
+    {
+      field: "TaksValleur",
+      headerName: "Valeur",
       flex: 1,
       renderCell: (params) => {
         const Taxe = params.value;
@@ -63,6 +68,12 @@ const Categories = () => {
       renderCell: (params) => (
         <Box>
           <IconButton
+            onClick={() => handleEdit(params.row._id)}
+            aria-label="edit"
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
             onClick={() => handleDelete(params.row._id)}
             aria-label="delete"
           >
@@ -72,6 +83,10 @@ const Categories = () => {
       ),
     },
   ];
+
+  const handleEdit = (id) => {
+    window.location.href = `/${userName}/Taks/edit/${id}`;
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -93,7 +108,7 @@ const Categories = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Add
+            Ajoute du tax
           </Button>
         </Link>
       </FlexBetween>

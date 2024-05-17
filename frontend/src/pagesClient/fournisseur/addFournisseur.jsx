@@ -39,7 +39,7 @@ const AddFournisseur = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="ADD FOURNISSEURS" subtitle="Ajout d'un nouveau fournisseurs" />
+      <Header title="AJOUTER UN FOURNISSEUR" subtitle="Ajout d'un nouveau fournisseurs" />
       <form onSubmit={handleSubmit} sx={{
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,

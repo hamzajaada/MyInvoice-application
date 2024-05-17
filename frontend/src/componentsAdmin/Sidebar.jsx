@@ -27,6 +27,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
 import TryIcon from "@mui/icons-material/Try";
 import { Link } from "react-router-dom";
+import profileImage from "assets/logo-removebg-preview.png";
+
 
 const navItems = [
   {
@@ -116,9 +118,14 @@ const Sidebar = ({
               <FlexBetween color={theme.palette.secondary.main}>
                 <Box display="flex" alignItems="center" gap="0.5rem">
                   <Link to="/">
-                    <Typography variant="h4" fontWeight="bold">
-                      MY INVOICE
-                    </Typography>
+                  <Box
+                      component="img"
+                      alt="profile"
+                      src={profileImage}
+                      height="100px"
+                      width="160px"
+                      sx={{ objectFit: "cover" }}
+                    />
                   </Link>
                 </Box>
                 {!isNonMobile && (

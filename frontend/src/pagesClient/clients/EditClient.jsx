@@ -54,7 +54,7 @@ const EditClient = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="ADD SERVICES" subtitle="Ajout d'un nouveau pack" />
+      <Header title="MODIFICATION DE CLIENT" subtitle="Modification de client séléctionné" />
       <form onSubmit={handleSubmit} sx={{
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,

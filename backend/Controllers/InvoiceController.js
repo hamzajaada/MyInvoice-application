@@ -45,7 +45,7 @@ const prepareInvoiceDetails = async (req, res) => {
         price: item.productId.price,
       };
     });
-      invoiceNumber= invoice.invoiceNumber;
+      _id= invoice._id;
       invoiceStatus = invoice.status;
       userName = invoice.userId.name;
       userEmail = invoice.userId.email;
@@ -59,7 +59,7 @@ const prepareInvoiceDetails = async (req, res) => {
       amount = invoice.amount;
       
       res.status(200).json({
-        invoiceNumber,
+        _id,
         invoiceStatus,
         userName,
         userEmail,
@@ -113,12 +113,12 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendEmail = async (req, res) => {
-  const { clientEmail, clientName, userName, invoiceNumber, itemsTable, amount, formattedDueDate, userPhone, userAddress, userEmail } = req.body;
+  const { clientEmail, clientName, userName, _id, itemsTable, amount, formattedDueDate, userPhone, userAddress, userEmail } = req.body;
   const itemsTableHTML = itemsTable.map(item => `<tr><td>${item.productName}</td><td>${item.quantity}</td><td>${item.price.toFixed(2)} DHs</td></tr>`).join('');
   const body = `
   <p>Cher Client(e) Mr/Mme.<strong> ${clientName}</strong>,</br></p>
   <p>Vous avez reçu une facture de l'entreprise <strong><i>${userName}</i></strong>, vérifiez les détails ci-dessous:</br></p>
-  <p> - Numéro de facture :<strong> #${invoiceNumber}</strong></p></br>
+  <p> - Numéro de facture :<strong> #${_id}</strong></p></br>
   <table border="1" cellspacing="0" cellpadding="5">
     <thead>
       <tr>

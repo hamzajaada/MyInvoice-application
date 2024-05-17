@@ -220,39 +220,102 @@ const getEnterpriseCountByMonthAndYear = async(req, res) => {
     
   }
 }
-const ForgoutPass = async (req, res)=>{
-    console.log(req.body)
-    const {email} = req.body;
-    Entreprise.findOne({email : email}).then (entreprise=>{
-      if(!entreprise){
-        return res.json({message : "User not existed"})
+const ForgoutPass = async (req, res) => {
+  try {
+      console.log(req.body);
+      const { email } = req.body;
+
+      // Chercher l'entreprise avec l'email fourni
+      const entreprise = await Entreprise.findOne({ email: email });
+      if (!entreprise) {
+          return res.json({ message: "Utilisateur non trouvé" });
       }
-      const token = jwt.sign({id : entreprise._id} , "AbdelilahElgallati1230",{expiresIn:"1d"})
+
+      // Créer un token JWT
+      const token = jwt.sign({ id: entreprise._id }, "AbdelilahElgallati1230", { expiresIn: "1d" });
+
+      // Configurer le transporteur de nodemailer
       var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: "myinvoice06@gmail.com",
-          pass: "ekiv afoc wbnb mrep",
-        },
+          service: 'gmail',
+          auth: {
+              user: "myinvoice06@gmail.com",
+              pass: "ekiv afoc wbnb mrep", // Assurez-vous de stocker le mot de passe en toute sécurité
+          },
       });
-      
+
+      // Contenu HTML de l'email avec du style
+      const htmlContent = `
+          <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+              <h2 style="color: #333;">Réinitialisation du mot de passe</h2>
+              <p>Bonjour,</p>
+              <p>Vous avez demandé à réinitialiser votre mot de passe. Cliquez sur le lien ci-dessous pour procéder :</p>
+              <a 
+                  href="http://localhost:3000/reset-password/${entreprise._id}/${token}" 
+                  style="display: inline-block; padding: 10px 20px; margin: 10px 0; color: white; background-color: #007bff; text-decoration: none; border-radius: 5px;"
+              >
+                  Réinitialiser le mot de passe
+              </a>
+              <p>Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer cet email.</p>
+              <p>Merci,</p>
+              <p>L'équipe MyInvoice</p>
+          </div>
+      `;
+
+      // Définir les options de l'email
       var mailOptions = {
-        from: 'myinvoice06@gmail.com',
-        to: email,
-        subject: 'Reset password',
-        text: `http://localhost:3000/reset-password/${entreprise._id}/${token}`
+          from: 'myinvoice06@gmail.com',
+          to: email,
+          subject: 'Réinitialisation du mot de passe',
+          html: htmlContent
       };
-      
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.error('Error sending email:', error.message);
-           res.status(500).json({ message: 'Failed to send email' })
-        } else {
-          res.status(200).json({ message: 'Email envoyez avec succes!!!!! Verifiez votre email  ' }); 
-        }
+
+      // Envoyer l'email
+      transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+              console.error('Erreur lors de l\'envoi de l\'email:', error.message);
+              res.status(500).json({ message: 'Échec de l\'envoi de l\'email' });
+          } else {
+              res.status(200).json({ message: 'Email envoyé avec succès ! Vérifiez votre email.' });
+          }
       });
-    })
-}
+  } catch (error) {
+      console.error('Erreur dans ForgotPass:', error.message);
+      res.status(500).json({ message: 'Erreur du serveur' });
+  }
+};
+// const ForgoutPass = async (req, res)=>{
+//     console.log(req.body)
+//     const {email} = req.body;
+//     Entreprise.findOne({email : email}).then (entreprise=>{
+//       if(!entreprise){
+//         return res.json({message : "User not existed"})
+//       }
+//       const token = jwt.sign({id : entreprise._id} , "AbdelilahElgallati1230",{expiresIn:"1d"})
+//       var transporter = nodemailer.createTransport({
+//         service: 'gmail',
+//         auth: {
+//           user: "myinvoice06@gmail.com",
+//           pass: "ekiv afoc wbnb mrep",
+//         },
+//       });
+      
+//       var mailOptions = {
+//         from: 'myinvoice06@gmail.com',
+//         to: email,
+//         subject: 'Reset password',
+//         text: `http://localhost:3000/reset-password/${entreprise._id}/${token}`
+//       };
+      
+//       transporter.sendMail(mailOptions, function(error, info){
+//         if (error) {
+//           console.error('Error sending email:', error.message);
+//            res.status(500).json({ message: 'Failed to send email' })
+//         } else {
+//           res.status(200).json({ message: 'Email envoyez avec succes!!!!! Verifiez votre email  ' }); 
+//         }
+//       });
+//     })
+// }
 const ResetPass = async(req,res)=>{
    console.log(req.body)
    const id  = req.body.id;

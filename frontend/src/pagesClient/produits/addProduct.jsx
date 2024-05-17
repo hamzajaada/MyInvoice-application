@@ -57,7 +57,7 @@ const AddProduit = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="ADD PRODUCT" subtitle="Ajout d'un nouveau produit" />
+      <Header title="AJOUTE DE PRODUCT" subtitle="Ajout d'un nouveau produit" />
       <form
         onSubmit={handleSubmit}
         sx={{
@@ -133,7 +133,7 @@ const AddProduit = () => {
         </FormControl>
         <Box mt={2}>
           <Button type="submit" variant="contained" color="primary">
-            Add product
+            Ajouter
           </Button>
         </Box>
       </form>

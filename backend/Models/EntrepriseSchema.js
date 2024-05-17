@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const EnterpriseSchema = new Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     password: { type: String,  },
     role: { type: String, default: 'standart'},
     subscription: { type: String, enum: ['active', 'expired', 'cancelled'], default: 'active' },

@@ -21,7 +21,8 @@ export const api = createApi({
     "BonCommandes",
     "BonLivraison",
     "Devi",
-    "Demande"
+    "Demande",
+    "Tax",
   ],
   endpoints: (build) =>({
     getEntreprise: build.query({
@@ -566,17 +567,33 @@ export const api = createApi({
         method: "DELETE",
       }),
     }),
+
     // Taks 
+    getAllTaxEntreprise: build.query({
+      query: (id) => `Tax/Entreprise/${id}`,
+      providesTags: ["Tax"],
+    }),
     AddTaks: build.mutation({
       query: (TaksData) => ({
-        url: `Taks/add/`,
+        url: `Tax/add/`,
         method: "POST",
         body: TaksData,
       }),
     }),
+    getOneTax: build.query({
+      query: (id) => `Tax/${id}`,
+      providesTags: ["Tax"],
+    }),
+    updateTax: build.mutation({
+      query: ({ id, taxData }) => ({
+        url: `Tax/edit/${id}`,
+        method: "PUT",
+        body: taxData,
+      }),
+    }) ,
     removeTaks: build.mutation({
       query: (id) => ({
-        url: `Taks/remove/${id}`,
+        url: `Tax/remove/${id}`,
         method: "DELETE",
       }),
     }),
@@ -704,7 +721,11 @@ export const {
   useUpdateDemandeMutation,
   useAddDemandeMutation,
   useRemoveDemandeMutation,
+
   //Taks
+  useGetAllTaxEntrepriseQuery,
   useAddTaksMutation,
   useRemoveTaksMutation,
+  useGetOneTaxQuery,
+  useUpdateTaxMutation
 } = api;

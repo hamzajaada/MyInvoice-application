@@ -14,6 +14,7 @@ const AddClient = () => {
 
   const [Taks, setTaks] = useState({
     userId: localStorage.getItem("userId") || "",
+    name:"",
     TaksValleur : 0,
   });
   const [addTaks] = useAddTaksMutation();
@@ -37,12 +38,21 @@ const AddClient = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-    <Header title="ADD SERVICES" subtitle="Ajout d'un nouveau pack" />
+    <Header title="AJOUTE DU TAX" subtitle="Ajout d'un nouveau tax" />
     <form onSubmit={handleSubmit} sx={{
       backgroundImage: "none",
       backgroundColor: theme.palette.background.alt,
       borderRadius: "0.55rem",
     }} >
+      <TextField
+        label="Taks name"
+        name="name"
+        value={Taks.name} // Update this to use the correct state
+        onChange={handleChange}
+        fullWidth
+        required
+        margin="normal"
+      />
       <TextField
         label="Taks Valleur"
         name="TaksValleur"

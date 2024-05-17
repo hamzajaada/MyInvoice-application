@@ -8,6 +8,7 @@ BonCommandesRouter.get( "/details/:id", BonCommandesController.prepareBonCommand
 BonCommandesRouter.get( "/List/:id", BonCommandesController.getAllBonCommandes); 
 BonCommandesRouter.get( "/:id", BonCommandesController.getOneBonCommande); 
 BonCommandesRouter.post('/add',BonCommandesController.addBonCommande);
+BonCommandesRouter.post('/email',BonCommandesController.sendEmail);
 BonCommandesRouter.put('/edit/:id',BonCommandesController.updateBonCommande);
 BonCommandesRouter.delete("/remove/:id",BonCommandesController.removeBonCommande);
 

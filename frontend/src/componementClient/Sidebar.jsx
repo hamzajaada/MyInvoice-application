@@ -108,11 +108,6 @@ const navItems = [
     title: "add-demande",
     icon: <TryIcon />,
   },
-  {
-    text: "Profil",
-    title: "profil",
-    icon: <AdminPanelSettingsOutlined />,
-  },
 ];
 
 const Sidebar = ({

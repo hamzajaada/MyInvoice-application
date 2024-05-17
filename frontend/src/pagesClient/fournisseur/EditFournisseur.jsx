@@ -54,7 +54,7 @@ const EditFournisseur = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="EDIT FOURNISSEUS" subtitle="modification d'un fournisseur" />
+      <Header title="MODIFICATION DU FOURNISSEU" subtitle="modification d'un fournisseur" />
       <form onSubmit={handleSubmit} sx={{
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,

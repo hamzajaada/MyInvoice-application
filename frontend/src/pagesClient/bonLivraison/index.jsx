@@ -254,10 +254,7 @@ const BonLivraison = () => {
   };
 
   const handleEmail = (id) => {
-    setIdBonLivraison(id);
-    if (bonLivraisonDetail) {
-      console.log("invoice : ", bonLivraisonDetail);
-    }
+    navigate(`/bon-livraison/email/${id}`);
   };
 
   const handleEdit = (id) => {
@@ -288,7 +285,7 @@ const BonLivraison = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Add
+            Ajoute de bon de livraison
           </Button>
         </Link>
       </FlexBetween>{" "}

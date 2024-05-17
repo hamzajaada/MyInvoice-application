@@ -134,7 +134,7 @@ const Fournisseurs = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Add
+            Ajoute de fournisseur
           </Button>
         </Link>
       </FlexBetween>

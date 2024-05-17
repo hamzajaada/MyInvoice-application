@@ -129,7 +129,7 @@ const Clients  = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Add
+            Ajoute de clients
           </Button>
         </Link>
       </FlexBetween>

@@ -44,6 +44,7 @@ const Navbar = ({
     localStorage.removeItem('userName')
     navigate('/')
   } 
+  
 
   return (
     <AppBar sx={{ position: "static", background: "none", boxShadow: "none" }}>
@@ -93,7 +94,7 @@ const Navbar = ({
               <Box
                 component="img"
                 alt="profile"
-                src={`http://localhost:3001/Images/${user.logo}`}
+                src={user.logo ? (user.logo.startsWith('http') ? user.logo : `http://localhost:3001/Images/${user.logo}`) : "#"}
                 height="32px"
                 width="32px"
                 borderRadius="50%"
@@ -124,7 +125,9 @@ const Navbar = ({
               onClose={handleClose}
               anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
+              
               <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+              
             </Menu>
           </FlexBetween>
         </FlexBetween>

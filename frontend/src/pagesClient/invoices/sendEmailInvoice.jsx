@@ -25,7 +25,7 @@ const SendEmailInvoice = () => {
         setIsSendingEmail(true);
         try {
           await axios.post('http://localhost:3001/Api/Invoice/email', {
-            invoiceNumber: data.invoiceNumber,
+            _id: data._id,
             userName: data.userName,
             userEmail: data.userEmail,
             userPhone: data.userPhone,

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Box, useTheme, IconButton } from "@mui/material";
+import { Box, useTheme, IconButton, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import {
-  useGetOnePackQuery,
-  useRemoveInvoiceMutation,
-} from "state/api";
+import { useGetOnePackQuery, useRemoveInvoiceMutation } from "state/api";
 import Header from "componementClient/Header";
 import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
-import AddButton from "componementClient/addButton";
+import FlexBetween from "componentsAdmin/FlexBetween";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import {
   CheckCircleOutline,
@@ -23,8 +22,8 @@ import axios from "axios";
 const Invoices = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  if(!localStorage.getItem('userId')) {
-    navigate('/');
+  if (!localStorage.getItem("userId")) {
+    navigate("/");
   }
   const removeInvoice = useRemoveInvoiceMutation();
   const packId = localStorage.getItem("packId");
@@ -78,7 +77,7 @@ const Invoices = () => {
 
   const columns = [
     {
-      field: "invoiceNumber",
+      field: "_id",
       headerName: "Numéro de Facture",
       flex: 0.7,
 
@@ -243,10 +242,6 @@ const Invoices = () => {
     },
   ];
 
-  const handleAddButton = () => {
-    navigate(`/${userName}/ajouterFacture`);
-  };
-
   const handleDetails = (id) => {
     window.location.href = `/${userName}/factures/details/${id}`;
   };
@@ -257,7 +252,7 @@ const Invoices = () => {
 
   const handleEmail = (id) => {
     navigate(`/${userName}/factures/email/${id}`);
-    }
+  };
 
   const handleEdit = (id) => {
     window.location.href = `/${userName}/factures/edit/${id}`;
@@ -274,12 +269,23 @@ const Invoices = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header
-        title="FACTURES"
-        subtitle="Liste entier des "
-        total={Facture ? Facture.length : 0}
-      />
-      <AddButton label="Nouvelle Facture" onClick={handleAddButton} />
+      <FlexBetween>
+        <Header
+          title="FACTURES"
+          subtitle="Liste des bon de facutures "
+          total={Facture ? Facture.length : 0}
+        />
+        <Link to={`/${userName}/ajouterFacture`}>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddOutlinedIcon />}
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Ajouter une facture
+          </Button>
+        </Link>
+      </FlexBetween>
       <Box
         height="80vh"
         sx={{

@@ -36,7 +36,7 @@ const AddClient = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="ADD SERVICES" subtitle="Ajout d'un nouveau pack" />
+      <Header title="ADD CATEGORIES" subtitle="Ajout d'un nouveau catégorie" />
       <form onSubmit={handleSubmit} sx={{
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,
@@ -54,7 +54,7 @@ const AddClient = () => {
         
         <Box mt={2}>
           <Button type="submit" variant="contained" color="primary">
-            Add category
+            Ajouter
           </Button>
         </Box>
       </form>

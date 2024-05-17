@@ -27,7 +27,7 @@ const DetailsInvoice = () => {
   if (!data) return <div>No data found</div>;
 
   const {
-    invoiceNumber,
+    _id,
     invoiceStatus,
     userName,
     userEmail,
@@ -51,7 +51,7 @@ const DetailsInvoice = () => {
       <Paper elevation={3} style={{ padding: theme.spacing(3), marginBottom: theme.spacing(3) }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Box bgcolor="gray" borderRadius={4} p={2} >
-            <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>Numéro de Facture: #{invoiceNumber}</Typography>
+            <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>Numéro de Facture: #{_id}</Typography>
           </Box>
           <Box bgcolor={getStatusColor(invoiceStatus)} borderRadius={4} p={2}>
             <Typography variant="h6" sx={{ color: "white", fontWeight: "bold" }}>Status: {invoiceStatus}</Typography>

@@ -109,7 +109,7 @@ const EditInvoice = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="EDITER BON DE LIVRAISON" subtitle="Modification de le bon de livraison que vous avez sélectionnez"/>
+      <Header title="MODIFICATION DU BON DE LIVRAISON" subtitle="Modification de le bon de livraison que vous avez sélectionnez"/>
       <Box m={2} />
       <form onSubmit={handleSubmit}>
       <Card elevation={3} style={{ borderRadius: 8, padding: "1.5rem", marginBottom: "1.5rem" }}>

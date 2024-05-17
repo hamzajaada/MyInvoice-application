@@ -21,7 +21,7 @@ const Header = () => {
   const [mobileNav, setMobileNav] = useState(false);
   const [isActive, setisActive] = useState(false);
   const { logo, IconSun, IconMon, IconeHome } = header;
-  const userName = localStorage.getItem('userName');
+  const userName = localStorage.getItem("userName");
 
   //scrool event
   useEffect(() => {
@@ -47,7 +47,7 @@ const Header = () => {
   // DARK MODE :
 
   const [theme, setTheme] = useState(localStorage.getItem("currentMode"));
- 
+
   useEffect(() => {
     const storedTheme = localStorage.getItem("currentMode");
     if (storedTheme) {
@@ -94,10 +94,10 @@ const Header = () => {
   // useState de  translatedData
   const [translatedData, setTranslatedData] = useState([]);
 
-  const [btnText , setBtntext] = useState(header.btnText);
-  const [btnTextDec , setBtntextDec] = useState(header.btnTextDec);
-  var trText = ""
-  
+  const [btnText, setBtntext] = useState(header.btnText);
+  const [btnTextDec, setBtntextDec] = useState(header.btnTextDec);
+  var trText = "";
+
   useEffect(() => {
     const lang = Cookies.get("from");
     const langto = Cookies.get("to");
@@ -111,17 +111,16 @@ const Header = () => {
       setLang("fra");
     }
     // fonction multiThreads
-    
+
     const translateData = async () => {
       if (langto != "fra" && langto) {
-      trText = await tr(btnText, "fra", langto);
-      setBtntext(trText)
-      trText = await tr(btnTextDec, "fra", langto);
-      setBtntextDec(trText)
-    }
+        trText = await tr(btnText, "fra", langto);
+        setBtntext(trText);
+        trText = await tr(btnTextDec, "fra", langto);
+        setBtntextDec(trText);
+      }
 
       const translatedItems = await Promise.all(
-        
         // pour exécuter plusieurs promesses en parallèle. Cela signifie que toutes les promesses à l'intérieur de Promise.all doivent se terminer avant que la fonction ne continue.
         nav.map(async (item) => {
           const it = item;
@@ -171,95 +170,95 @@ const Header = () => {
           <Nav />
         </div>
         <div className=" flex justify-evenly gap-x-6 ml-[10px]">
-        {!localStorage.getItem("userId") ? (
+          <select
+            onChange={handleLanguageChange}
+            value={lang}
+            className=" border border-accent dark:bg-black bg-white text-accent block rounded-md  py-2 pl-[10px] focus:outline-none focus:border-accent  font-Quicksand cursor-pointer"
+            // data-aos="fade-down"
+            // data-aos-delay="100"
+          >
+            <option
+              value="eng"
+              className="text-accent hover:accent-accentHover "
+            >
+              English
+            </option>
+            <option
+              value="fra"
+              className="text-accent hover:accent-accentHover "
+            >
+              French
+            </option>
+            <option
+              value="spa"
+              className="text-accent hover:accent-accentHover "
+            >
+              Espagnol
+            </option>
+            <option
+              value="chi"
+              className="text-accent hover:accent-accentHover "
+            >
+              Chinois
+            </option>
+            <option
+              value="ara"
+              className="text-accent hover:accent-accentHover "
+            >
+              العربية
+            </option>
+            {/* Ajoutez d'autres options de langues au besoin */}
+          </select>
           <button
-            className="btn btn-sm btn-outline hidden lg:flex"
+            className="w-45 text-accent ml-[140px] lg:ml-[0px] "
             data-aos="fade-down"
             data-aos-delay="100"
-            onClick={handleLoginClick}
+            onClick={toggletheme}
           >
-            {btnText}
+            {theme === "dark" ? IconSun : IconMon}
           </button>
-        ) : (
-          <button
-            className="btn btn-sm btn-outline hidden lg:flex"
-            data-aos="fade-down"
-            data-aos-delay="100"
-            onClick={handleLogout}
-          >
-            {btnTextDec}
-          </button>
-        )}
-
-        <button
-          className="w-45 text-accent ml-[140px] lg:ml-[0px] "
-          data-aos="fade-down"
-          data-aos-delay="100"
-          onClick={toggletheme}
-        >
-          {theme === "dark" ? IconSun : IconMon}
-        </button>
-        {localStorage.getItem("userId") ? (
-          <button
-            className="w-45 text-accent lg:ml-[0px]  "
-            data-aos="fade-down"
-            data-aos-delay="100"
-            onClick={toggleHome}
-          >
-            {IconeHome}
-          </button>
-        ) : (
-          " "
-        )}
-        <button className="lg:hidden" onClick={() => setMobileNav(!mobileNav)}>
-          {mobileNav ? (
-            <HiOutlineX className="text-3xl text-accent" />
+          {localStorage.getItem("userId") ? (
+            <button
+              className="w-45 text-accent lg:ml-[0px]  "
+              data-aos="fade-down"
+              data-aos-delay="100"
+              onClick={toggleHome}
+            >
+              {IconeHome}
+            </button>
           ) : (
-            <HiMenuAlt4 className="text-3xl text-accent" />
+            " "
           )}
-        </button>
-        <select
-          onChange={handleLanguageChange}
-          value={lang}
-          className=" border border-accent dark:bg-black bg-white text-accent block rounded-md  py-2 pl-[10px] focus:outline-none focus:border-accent  font-Quicksand cursor-pointer"
-          // data-aos="fade-down"
-          // data-aos-delay="100"
-        >
-          <option
-            value="eng"
-            className="text-accent hover:accent-accentHover "
+          <button
+            className="lg:hidden"
+            onClick={() => setMobileNav(!mobileNav)}
           >
-            English
-          </option>
-          <option
-            value="fra"
-            className="text-accent hover:accent-accentHover "
-          >
-            French
-          </option>
-          <option
-            value="spa"
-            className="text-accent hover:accent-accentHover "
-          >
-           Espagnol
-          </option>
-          <option
-            value="chi"
-            className="text-accent hover:accent-accentHover "
-          >
-          Chinois
-          </option>
-          <option
-            value="ara"
-            className="text-accent hover:accent-accentHover "
-          >
-           العربية
-          </option>
-          {/* Ajoutez d'autres options de langues au besoin */}
-        </select>
+            {mobileNav ? (
+              <HiOutlineX className="text-3xl text-accent" />
+            ) : (
+              <HiMenuAlt4 className="text-3xl text-accent" />
+            )}
+          </button>
+          {!localStorage.getItem("userId") ? (
+            <button
+              className="btn btn-sm btn-outline hidden lg:flex"
+              data-aos="fade-down"
+              data-aos-delay="100"
+              onClick={handleLoginClick}
+            >
+              {btnText}
+            </button>
+          ) : (
+            <button
+              className="btn btn-sm btn-outline hidden lg:flex"
+              data-aos="fade-down"
+              data-aos-delay="100"
+              onClick={handleLogout}
+            >
+              {btnTextDec}
+            </button>
+          )}
         </div>
-
-        
       </div>
 
       <div

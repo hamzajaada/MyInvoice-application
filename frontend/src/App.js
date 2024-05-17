@@ -67,18 +67,21 @@ import AddBonCommande from "pagesClient/bonCommande/addBonCommande";
 import EditBonCommande from "pagesClient/bonCommande/editBonCommande";
 import DetailsBonCommande from "pagesClient/bonCommande/detailsBonCommande";
 import PrintBonCommande from "pagesClient/bonCommande/printBonCommande";
+import SendEmailBonCommandes from "pagesClient/bonCommande/sendEmailBonCommande";
 
 import Devis from "pagesClient/devis";
 import AddDevi from "pagesClient/devis/addDevi";
 import EditDevi from "pagesClient/devis/editDevi";
 import DetailsDevi from "pagesClient/devis/detailsDevi";
 import PrintDevi from "pagesClient/devis/printDevi";
+import SendEmailDevis from "pagesClient/devis/sendEmailDevis";
 
 import BonLivraison from "pagesClient/bonLivraison";
 import AddBonLivraison from "pagesClient/bonLivraison/addBonLivraison";
 import EditBonLivraison from "pagesClient/bonLivraison/editBonLivraison";
 import DetailsBonLivraison from "pagesClient/bonLivraison/detailsBonLivraison";
 import PrintBonLivraison from "pagesClient/bonLivraison/printBonLivraison";
+import SendEmailBonLivraison from "pagesClient/bonLivraison/sendEmailBonLivraison";
 
 import Demandes from 'pages/Demande'
 import AddDemande from 'pagesClient/Demande/AddDemande'
@@ -87,6 +90,8 @@ import Profil from "pagesClient/profil";
 
 import AddTaks from "pagesClient/Taks/addTaks";
 import Taks from "pagesClient/Taks/index";
+import EditTaks from "pagesClient/Taks/EditTaks";
+
 const App = () => {
   const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
@@ -136,7 +141,6 @@ const App = () => {
           <Route element={<AddThemeProvider theme={theme} pages={LayoutClient} />}>
             {/* générale */}
             <Route path="/:userName/dashboardClient"element={  <AddThemeProvider theme={theme} pages={DashboardClient} />}/>
-            {/* <Route path="/dashboardClient"element={  <AddThemeProvider theme={theme} pages={DashboardClient} />}/> */}
 
             <Route path="/:userName/profil" element={<AddThemeProvider theme={theme} pages={Profil} />}/>
             <Route path="/:userName/add-demande" element={<AddThemeProvider theme={theme} pages={AddDemande} />}/>
@@ -168,7 +172,7 @@ const App = () => {
               {/* taks */}
             <Route path="/:userName/Taks" element={<AddThemeProvider theme={theme} pages={Taks} />}/>
             <Route path="/:userName/Taks/new" element={<AddThemeProvider theme={theme} pages={AddTaks} />}  />
-            {/* <Route path="/categories/edit/:id" element={<AddThemeProvider theme={theme} pages={EditCategorie} />}/> */}
+            <Route path="/:userName/Taks/edit/:id" element={<AddThemeProvider theme={theme} pages={EditTaks} />}/>
             {/* fournisseur */}
             <Route path="/:userName/fournisseurs" element={<AddThemeProvider theme={theme} pages={Fournisseurs} />}/>
             <Route path="/:userName/fournisseurs/new" element={   <AddThemeProvider theme={theme} pages={AddFournisseur} /> }/>
@@ -178,17 +182,19 @@ const App = () => {
             <Route path="/:userName/bon-commandes/new" element={   <AddThemeProvider theme={theme} pages={AddBonCommande} /> }/>
             <Route path="/:userName/bon-commandes/edit/:id" element={   <AddThemeProvider theme={theme} pages={EditBonCommande} /> }/>
             <Route path="/:userName/bon-commandes/details/:id" element={   <AddThemeProvider theme={theme} pages={DetailsBonCommande} /> }/>
+            <Route path="/:userName/bon-commandes/email/:id" element={<AddThemeProvider theme={theme} pages={SendEmailBonCommandes} />} />
             {/* bon de livraison */}
             <Route path="/:userName/bon-livraison" element={<AddThemeProvider theme={theme} pages={BonLivraison} />}/>
             <Route path="/:userName/bon-livraison/new" element={   <AddThemeProvider theme={theme} pages={AddBonLivraison} /> }/>
             <Route path="/:userName/bon-livraison/edit/:id" element={   <AddThemeProvider theme={theme} pages={EditBonLivraison} /> }/>
             <Route path="/:userName/bon-livraison/details/:id" element={   <AddThemeProvider theme={theme} pages={DetailsBonLivraison} /> }/>
+            <Route path="/:userName/bon-livraison/email/:id" element={<AddThemeProvider theme={theme} pages={SendEmailBonLivraison} />} />
             {/* devis */}
             <Route path="/:userName/devis" element={<AddThemeProvider theme={theme} pages={Devis} />}/>
             <Route path="/:userName/devis/new" element={<AddThemeProvider theme={theme} pages={AddDevi} />}/>
             <Route path="/:userName/devis/edit/:id" element={<AddThemeProvider theme={theme} pages={EditDevi} />}/>
             <Route path="/:userName/devis/details/:id" element={<AddThemeProvider theme={theme} pages={DetailsDevi} />}/>
-          </Route>
+            <Route path="/:userName/devis/email/:id" element={<AddThemeProvider theme={theme} pages={SendEmailDevis} />} />          </Route>
         </Routes>
       </div>
     </BrowserRouter>

@@ -6,7 +6,8 @@ const morgan = require("morgan");
 const cron = require("node-cron");
 const passport = require("passport");
 const session = require("express-session");
-const url = "mongodb://127.0.0.1:27017/MyInvoice";
+// const url = "mongodb://127.0.0.1:27017/MyInvoice";
+const url = "mongodb+srv://MyInvoice:MyInvoice123Test@myinvoice.id4aqck.mongodb.net/?retryWrites=true&w=majority&appName=MyInvoice"
 const bodyParser = require("body-parser");
 const app = express();
 const Port = 3001;
@@ -53,7 +54,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/Api/Categorie", CategorieRouter);
-app.use("/Api/Taks", TaksRouter);
+app.use("/Api/Tax", TaksRouter);
 app.use("/Api/Client", ClientRouter);
 app.use("/Api/Fournisseur", FournisseurRouter);
 app.use("/Api/Entreprise", EntrepriseRouter);

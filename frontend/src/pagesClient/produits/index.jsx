@@ -146,7 +146,7 @@ const Products  = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Add
+            Ajoute du produit
           </Button>
         </Link>
       </FlexBetween>

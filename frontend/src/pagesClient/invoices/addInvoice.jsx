@@ -12,9 +12,9 @@ import {
 } from "@mui/material";
 import Header from "componentsAdmin/Header";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import { useGetProductsQuery, useGetClientsQuery, useAddInvoiceMutation } from "state/api";
+import { useGetProductsQuery, useGetAllTaxEntrepriseQuery, useGetClientsQuery, useAddInvoiceMutation } from "state/api";
 import { useNavigate } from "react-router-dom";
-
+import { format, isAfter, parseISO, startOfDay } from 'date-fns';
 const AddInvoice = () => {
   const navigate = useNavigate();
 
@@ -27,19 +27,32 @@ const AddInvoice = () => {
   const [invoice, setInvoice] = useState({
     userId: localStorage.getItem("userId") || "",
     clientId: "",
-    invoiceNumber: "",
-    dueDate: new Date(),
+    dueDate: format(new Date(), 'yyyy-MM-dd'),
     items: [{ productId: "", quantity: 0 }],
+    taxes: [{ taxId: "" }],
     amount: 0,
   });
   const [AddInvoice] = useAddInvoiceMutation();
   const { data:  clientsData } = useGetClientsQuery(id);
   const { data: productsData } = useGetProductsQuery(id);
+  const { data: taxData } = useGetAllTaxEntrepriseQuery(id);
 
   const Navigate = useNavigate();
 
   const handleChange = (e) => {
-    setInvoice({ ...invoice, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "dueDate") {
+      const selectedDate = parseISO(value);
+      const today = startOfDay(new Date());
+      if (isAfter(selectedDate, today) || selectedDate.getTime() === today.getTime()) {
+        setInvoice({ ...invoice, [name]: value });
+      } else {
+        alert("La date d'échéance doit être supérieure ou égale à la date actuelle.");
+      }
+    } else {
+      setInvoice({ ...invoice, [name]: value });
+    }
+    // setInvoice({ ...invoice, [e.target.name]: e.target.value });
   };
 
   const handleProductAdd = () => {
@@ -49,10 +62,23 @@ const AddInvoice = () => {
     });
   };
 
+  const handleTaxAdd = () => {
+    setInvoice({
+      ...invoice,
+      taxes: [...invoice.taxes, { taxId: "" }],
+    });
+  };
+
   const handleProductChange = (index, productId) => {
     const updatedItems = [...invoice.items];
     updatedItems[index].productId = productId;
     setInvoice({ ...invoice, items: updatedItems });
+  };
+
+  const handleTaxChange = (index, taxId) => {
+    const updatedTaxes = [...invoice.taxes];
+    updatedTaxes[index].taxId = taxId;
+    setInvoice({ ...invoice, taxes: updatedTaxes });
   };
 
   const handleQuantityChange = (index, quantity) => {
@@ -68,13 +94,22 @@ const AddInvoice = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const amount = invoice.items.reduce(
+      let amount = invoice.items.reduce(
         (acc, item) =>
           acc +
           (productsData.find((product) => product._id === item.productId)?.price || 0) *
           item.quantity,
         0
       );
+      const taxes = invoice.taxes.reduce(
+        (acc, item) => {
+          const tax = taxData.find((taxe) => taxe._id === item.taxId);
+          return acc + (tax ? tax.TaksValleur : 0);
+        },
+        0
+      );
+      console.log('taxes : ', taxes);
+      amount = amount * (1 + taxes / 100);
       await AddInvoice({ invoice: { ...invoice, amount } });
       Navigate(`/${userName}/factures`);
     } catch (error) {
@@ -85,21 +120,10 @@ const AddInvoice = () => {
   return (
     <Box m="1.5rem 2.5rem">
     <Header title="AJOUTER DES FACTURES" subtitle="Ajout d'une nouvelle facture" />
-    <Box m="1.5rem auto" maxWidth="800px" border={`2px solid ${theme.palette.primary.main}`} borderRadius="0.5rem" p="1rem">
+    <Box m="1.5rem auto" fullWidth border={`2px solid ${theme.palette.primary.main}`} borderRadius="0.5rem" p="1rem">
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextField
-              label="Numéro de facture"
-              name="invoiceNumber"
-              value={invoice.invoiceNumber}
-              onChange={handleChange}
-              fullWidth
-              required
-              margin="normal"
-            />
-          </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <TextField
               label="Date d'échéance"
               name="dueDate"
@@ -182,6 +206,42 @@ const AddInvoice = () => {
               </Grid>
             </React.Fragment>
           ))}
+          <Grid item xs={12}>
+              <Button
+                type="button"
+                variant="contained"
+                color="primary"
+                onClick={handleTaxAdd}
+                startIcon={<AddShoppingCartIcon />}
+                fullWidth
+              >
+                Ajouter de tax
+              </Button>
+            </Grid>
+            {invoice.taxes.map((tax, index) => (
+              <React.Fragment key={index}>
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel id={`tax-label-${index}`}>Vos Taxes</InputLabel>
+                    <Select
+                      labelId={`tax-label-${index}`}
+                      id={`tax-select-${index}`}
+                      value={tax.taxId}
+                      onChange={(e) => handleTaxChange(index, e.target.value)}
+                      fullWidth
+                      required
+                    >
+                      {taxData &&
+                        taxData.map((taxe) => (
+                          <MenuItem key={taxe._id} value={taxe._id}>
+                            {taxe.name}
+                          </MenuItem>
+                        ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </React.Fragment>
+            ))}
           <Grid item xs={12}>
             <Button type="submit" variant="contained" color="primary">
               Ajouter la facture

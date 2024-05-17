@@ -1,6 +1,7 @@
 const BonLivraison = require("../Models/BonLivraisonModel");
 const Fournisseur = require("../Models/FournisseurSchema");
 const Product = require("../Models/ProductSchema");
+const nodemailer = require("nodemailer");
 
 const addBonLivraison = async (req, res) => {
   try {
@@ -148,6 +149,66 @@ const removeBonLivraison = async (req, res) => {
   }
 };
 
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "myinvoice06@gmail.com",
+    pass: "ekiv afoc wbnb mrep",
+  },
+});
+
+const sendEmail = async (req, res) => {
+  const { fournisseurEmail, fournisseurName, userName, _id, itemsTable, amount, formattedDateLivraison, userPhone, userAddress, userEmail } = req.body;
+  const itemsTableHTML = itemsTable.map(item => `<tr><td>${item.productName}</td><td>${item.quantity}</td><td>${item.price.toFixed(2)} DHs</td></tr>`).join('');
+  const body = `
+  <p>Cher Client(e) Mr/Mme.<strong> ${fournisseurName}</strong>,</br></p>
+  <p>Vous avez reçu une bon de livraison de l'entreprise <strong><i>${userName}</i></strong>, vérifiez les détails ci-dessous:</br></p>
+  <p> - Numéro de bon de livraison :<strong> #${_id}</strong></p></br>
+  <table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+      <tr>
+        <th><strong>Nom du Produit</strong></th>
+        <th><strong>Quantité</strong></th>
+        <th><strong>Prix</strong></th>
+      </tr>
+    </thead>
+    <tbody>
+      ${itemsTableHTML}
+    </tbody>
+    <tfoot>
+      <tr>
+        <th><strong>Montant : </strong></th>
+        <td colspan="2"> <strong>${amount.toFixed(2)} DHs</strong> </td>
+      </tr>
+    </tfoot>
+  </table>
+  </br>
+  <p>Considérez s'il vous plaît que la date de livraison de votre bon de livraison est le <strong>"<font color="red">${formattedDateLivraison}</font>"</strong>.</p></br>
+  <p>Si vous avez des questions, vous trouverez ci-dessus les coordonnées de l'entreprise :</p></br>
+  <ul>
+    <li> Téléphone :<strong> ${userPhone}</strong></li>
+    <li> Adresse :<strong> ${userAddress}</strong></li>
+    <li> Email :<strong> ${userEmail}</strong></li>
+  </ul></br>
+  <p>Cordialement,</p></br>
+  <p><strong>MY INVOICE TEAM</strong></p>
+`;
+  var mailOptions = {
+    from: "myinvoice06@gmail.com",
+    to: fournisseurEmail,
+    subject: `Facture envoyée depuis ${userName}`,
+    html: body,
+  }
+  try {
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ message: 'Email sent successfully' }); 
+  } catch (error) {
+    console.error('Error sending email:', error.message);
+    res.status(500).json({ error: 'Failed to send email' });
+  }
+};
+
 module.exports = {
   addBonLivraison,
   getAllBonLivraisons,
@@ -155,4 +216,5 @@ module.exports = {
   updateBonLivraison,
   removeBonLivraison,
   prepareBonLivraisonDetails,
+  sendEmail,
 };

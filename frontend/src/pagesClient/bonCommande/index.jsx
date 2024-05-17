@@ -251,7 +251,7 @@ const BonCommandes = () => {
   };
 
   const handleEmail = (id) => {
-    // Logic for sending email
+    navigate(`/bon-commandes/email/${id}`);
   };
 
   const handleEdit = (id) => {
@@ -271,7 +271,7 @@ const BonCommandes = () => {
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
         <Header
-          title="BON COMMANDES"
+          title="BON DE COMMANDES"
           subtitle="Liste des bon de commandes "
           total={bonCommandes ? bonCommandes.length : 0}
         />
@@ -282,7 +282,7 @@ const BonCommandes = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Add
+            Ajoute de bon de commandes
           </Button>
         </Link>
       </FlexBetween>
