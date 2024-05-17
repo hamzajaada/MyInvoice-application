@@ -10,8 +10,8 @@ import tr from "Services/tr";
 import Cookies from "js-cookie";
 const Login = () => {
   //UseState de Translate :
-  const [L , setL] = useState("L");
-  const [Ogin , setOgin] = useState("ogin");
+
+  const [login , setlogin] = useState("Connexion");
   const [Bien , setBien] = useState("Bienvenue ! S'il vous plaît entrez vos coordonnées.");
   const [EmailPlace , setEmailPlace] = useState("Adresse Email");
   const [Motpass , setMotpass] = useState("Mot de passe");
@@ -26,8 +26,7 @@ const Login = () => {
     // fonction multiThreads
     const translateData = async () => {
      if (langto != "fra" && langto) {
-      setL(await tr(L , "fra", langto));
-      setOgin(await tr(Ogin , "fra", langto));
+      setlogin(await tr(login , "fra", langto));
       setBien(await tr(Bien , "fra", langto))
       setEmailPlace(await tr(EmailPlace , "fra", langto));
       setMotpass(await tr(Motpass , "fra", langto))
@@ -135,7 +134,7 @@ const Login = () => {
         </div>
         <div className="  dark:bg-black w-full lg:w-1/2  bg-[#f5F5F5] p-8 lg:rounded-r-lg lg:shadow-2xl  dark:text-white font-Quicksand font-semibold  ">
           <h2 className="text-4xl font-semibold mb-4 dark:text-white">
-            <span className="text-accent">{L}</span>{Ogin}
+            {login}
           </h2>
           <p className="text-base mb-4 dark:text-white font-Quicksand font-semibold">
             {Bien}
