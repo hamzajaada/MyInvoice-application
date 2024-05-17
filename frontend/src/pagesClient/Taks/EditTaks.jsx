@@ -1,0 +1,83 @@
+import React, { useState, useEffect } from "react";
+import { TextField, useTheme, Button, Box } from "@mui/material";
+import Header from "componentsAdmin/Header";
+import { useUpdateCategorieMutation, useGetOneCategorieQuery, useRemoveCategorieMutation } from "state/api";
+import { useNavigate, useParams } from "react-router-dom";
+
+const EditCategorie = () => {
+  const navigate = useNavigate()
+  if(!localStorage.getItem('userId')) {
+    navigate('/');
+  }
+  const theme = useTheme();
+  const [categorie, setCategorie] = useState({
+    categoryName: "",
+  });
+  const {id} = useParams();
+  console.log("id  : ", id)
+  const {data : categorieData} = useGetOneCategorieQuery(id);
+  const [editCategorie] = useUpdateCategorieMutation();
+  const [removeCategorie] = useRemoveCategorieMutation();
+
+  useEffect(() => {
+    if (categorieData) {
+      setCategorie(categorieData);
+    }
+  }, [categorieData]);
+
+  const handleChange = (e) => {
+    setCategorie({ ...categorie, [e.target.name]: e.target.value });
+  };
+
+  const handleDelete = async () => {
+    try {
+      await removeCategorie(id);
+      navigate("/categories");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      console.log(categorie);
+      await editCategorie({ id, categorie });
+      navigate("/categories");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <Box m="1.5rem 2.5rem">
+      <Header title="ADD SERVICES" subtitle="Ajout d'un nouveau pack" />
+      <form onSubmit={handleSubmit} sx={{
+        backgroundImage: "none",
+        backgroundColor: theme.palette.background.alt,
+        borderRadius: "0.55rem",
+      }} >
+        <TextField
+          label="Nom de catégorie"
+          name="categoryName"
+          value={categorie.categoryName}
+          onChange={handleChange}
+          fullWidth
+          required
+          margin="normal"
+        />
+        <Box mt={2}>
+        <Button type="submit" variant="contained" color="primary">
+            Modifier la catégorie
+          </Button>
+          <Button type="button" onClick={handleDelete} aria-label="delete" sx={{ ml: 2 }} variant="contained" color="primary">
+            Supprimer la catégorie
+          </Button>
+        </Box>
+      </form>
+    </Box>
+  );
+};
+
+export default EditCategorie;
+

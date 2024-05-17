@@ -1,0 +1,88 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:wght@100;300;400;500;700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-primary text-lg;
+    
+
+  }
+  
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-dark;
+  }
+  .title,
+  .section-title {
+    @apply text-6xl lg:text-5xl mb-6 font-Quicksand font-bold;
+  }
+  .h2 {
+    @apply text-5xl lg:text-7xl font-Quicksand font-bold;
+  }
+  .pretitle {
+    @apply text-lg lg:text-[22px] text-light font-Quicksand font-semibold mb-4 lg:mb-6 uppercase font-normal;
+  }
+  .lead {
+    @apply text-lg text-light font-Quicksand font-semibold lg:mb-[15px] ;
+  }
+  .link {
+    @apply text-lg text-dark;
+  }
+  .section {
+    @apply py-8 lg:py-[142px];
+  }
+  .btn {
+    @apply rounded-lg transition flex justify-center items-center;
+  }
+  .btn-lg {
+    @apply h-[75px] px-6 text-xl font-bodyfont ;
+  }
+  .btn-md {
+    @apply h-[60px] px-[26px] ml-[60px]  text-sm  font-bodyfont ;
+  }
+  .btn-sm {
+    @apply h-[48px] px-[16px] text-sm  font-bodyfont ;
+  }
+  .btn-accent {
+    @apply text-white bg-accent hover:bg-accentHover;
+  }
+  .btn-white {
+    @apply text-accent bg-white hover:bg-white/90;
+  }
+  .btn-outline {
+    @apply bg-transparent text-accent border border-accent hover:bg-accent hover:text-white;
+  }
+  .btn-link {
+    @apply text-accent text-xl lg:text-lg font-bold;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #7a7f9d;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #21295c;
+}
+
+/* Handle on Hover */
+::-webkit-scrollbar-track:hover {
+  background: #21295c;
+}
