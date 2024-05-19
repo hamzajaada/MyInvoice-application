@@ -139,137 +139,106 @@ const Header = () => {
 
   return (
     <header
-      className={`${
-        isActive
-          ? "lg:top-0 top-0 bg-white shadow-sm z-10"
-          : "lg:top-[0px] top-0 bg-white  z-10"
-      } py-6 lg:py-4 fixed w-full transition-all dark:bg-black `}
-    >
-      <div className="container mx-auto flex justify-between items-center  ">
-        <a
-          href="#"
-          data-aos="fade-down"
-          data-aos-delay="200"
-          className=" font-bodyfont inline-block relative mt-3 md:mt-0 lg:ml-[-100px] "
-        >
-          <Link
-            to="/"
-            data-aos="fade-down"
-            data-aos-delay="100"
-            className="font-bodyfont inline-block relative mt-3 md:mt-0 ml-5"
-          >
-            <img className="w-[160px] " src={logo} alt="Logo" />
-          </Link>
-        </a>
-
-        <div
-          className=" hidden lg:flex"
+    className={`${
+      isActive
+        ? "lg:top-0 top-0 bg-white shadow-sm z-10"
+        : "lg:top-[0px] top-0 bg-white z-10"
+    } py-6 lg:py-4 fixed w-full transition-all dark:bg-black`}
+  >
+    <div className="container mx-auto flex justify-between items-center">
+      <a
+        href="#"
+        data-aos="fade-down"
+        data-aos-delay="200"
+        className="font-bodyfont inline-block relative mt-3 md:mt-0"
+      >
+        <Link to="/" data-aos="fade-down" data-aos-delay="100">
+          <img className="w-[100px] md:w-[120px] lg:w-[160px] h-auto" src={logo} alt="Logo" />
+        </Link>
+      </a>
+  
+      <div className="hidden lg:flex" data-aos="fade-down" data-aos-delay="100">
+        <Nav />
+      </div>
+  
+      <div className="flex items-center gap-x-4 ml-auto">
+        <button
+          className="text-accent"
           data-aos="fade-down"
           data-aos-delay="100"
+          onClick={toggletheme}
         >
-          <Nav />
-        </div>
-        <div className=" flex justify-evenly gap-x-6 ml-[10px]">
-          <select
-            onChange={handleLanguageChange}
-            value={lang}
-            className=" border border-accent dark:bg-black bg-white text-accent block rounded-md  py-2 pl-[10px] focus:outline-none focus:border-accent  font-Quicksand cursor-pointer"
-            // data-aos="fade-down"
-            // data-aos-delay="100"
-          >
-            <option
-              value="eng"
-              className="text-accent hover:accent-accentHover "
-            >
-              English
-            </option>
-            <option
-              value="fra"
-              className="text-accent hover:accent-accentHover "
-            >
-              French
-            </option>
-            <option
-              value="spa"
-              className="text-accent hover:accent-accentHover "
-            >
-              Espagnol
-            </option>
-            <option
-              value="chi"
-              className="text-accent hover:accent-accentHover "
-            >
-              Chinois
-            </option>
-            <option
-              value="ara"
-              className="text-accent hover:accent-accentHover "
-            >
-              العربية
-            </option>
-            {/* Ajoutez d'autres options de langues au besoin */}
-          </select>
+          {theme === "dark" ? IconSun : IconMon}
+        </button>
+        {localStorage.getItem("userId") && (
           <button
-            className="w-45 text-accent ml-[140px] lg:ml-[0px] "
+            className="text-accent"
             data-aos="fade-down"
             data-aos-delay="100"
-            onClick={toggletheme}
+            onClick={toggleHome}
           >
-            {theme === "dark" ? IconSun : IconMon}
+            {IconeHome}
           </button>
-          {localStorage.getItem("userId") ? (
-            <button
-              className="w-45 text-accent lg:ml-[0px]  "
-              data-aos="fade-down"
-              data-aos-delay="100"
-              onClick={toggleHome}
-            >
-              {IconeHome}
-            </button>
+        )}
+        <button className="lg:hidden" onClick={() => setMobileNav(!mobileNav)}>
+          {mobileNav ? (
+            <HiOutlineX className="text-3xl text-accent" />
           ) : (
-            " "
+            <HiMenuAlt4 className="text-3xl text-accent" />
           )}
+        </button>
+        {!localStorage.getItem("userId") ? (
           <button
-            className="lg:hidden"
-            onClick={() => setMobileNav(!mobileNav)}
+            className="btn btn-sm btn-outline hidden lg:flex"
+            data-aos="fade-down"
+            data-aos-delay="100"
+            onClick={handleLoginClick}
           >
-            {mobileNav ? (
-              <HiOutlineX className="text-3xl text-accent" />
-            ) : (
-              <HiMenuAlt4 className="text-3xl text-accent" />
-            )}
+            {btnText}
           </button>
-          {!localStorage.getItem("userId") ? (
-            <button
-              className="btn btn-sm btn-outline hidden lg:flex"
-              data-aos="fade-down"
-              data-aos-delay="100"
-              onClick={handleLoginClick}
-            >
-              {btnText}
-            </button>
-          ) : (
-            <button
-              className="btn btn-sm btn-outline hidden lg:flex"
-              data-aos="fade-down"
-              data-aos-delay="100"
-              onClick={handleLogout}
-            >
-              {btnTextDec}
-            </button>
-          )}
-        </div>
+        ) : (
+          <button
+            className="btn btn-sm btn-outline hidden lg:flex"
+            data-aos="fade-down"
+            data-aos-delay="100"
+            onClick={handleLogout}
+          >
+            {btnTextDec}
+          </button>
+        )}
+        <select
+          onChange={handleLanguageChange}
+          value={lang}
+          className="border border-accent dark:bg-black bg-white text-accent rounded-md py-2 pl-3 focus:outline-none focus:border-accent font-Quicksand cursor-pointer"
+        >
+          <option value="eng" className="text-accent hover:bg-accentHover">
+            English
+          </option>
+          <option value="fra" className="text-accent hover:bg-accentHover">
+            French
+          </option>
+          <option value="spa" className="text-accent hover:bg-accentHover">
+            Espagnol
+          </option>
+          <option value="chi" className="text-accent hover:bg-accentHover">
+            Chinois
+          </option>
+          <option value="ara" className="text-accent hover:bg-accentHover">
+            العربية
+          </option>
+        </select>
       </div>
-
-      <div
-        className={`${
-          mobileNav ? "left-0" : "-left-full"
-        }  fixed top-0 bottom-0 w-[60vw] 
-      lg:hidden transition-all`}
-      >
-        <MobileNav />
-      </div>
-    </header>
+    </div>
+  
+    <div
+      className={`${
+        mobileNav ? "left-0" : "-left-full"
+      } fixed top-0 bottom-0 w-[60vw] lg:hidden transition-all`}
+    >
+      <MobileNav />
+    </div>
+  </header>
+  
   );
 };
 
