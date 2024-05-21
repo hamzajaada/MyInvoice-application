@@ -40,7 +40,7 @@ const Cards = () => {
       translatedData.map((card , cardIndex)=>{
         const { icon , title , subtitle , delay} = card;
         return (
-          <div key={cardIndex} data-aos = 'zoom-out' data-aos-offset='300' data-aos-delay="delay" >
+          <div key={cardIndex}   >
             <div 
             onClick={()=>setIndex(cardIndex)}
             className={`${index === cardIndex &&  'dark:bg-gray-800 bg-white shadow-2xl'} w-[350px] h-[350px] flex flex-col 

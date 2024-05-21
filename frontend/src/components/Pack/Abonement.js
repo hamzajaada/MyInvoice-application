@@ -7,6 +7,7 @@ import { useGetAllPacksThreeServiceQuery } from "state/api";
 import { HiCheck, HiOutlineArrowNarrowRight } from "react-icons/hi";
 import tr from "Services/tr";
 import Cookies from "js-cookie";
+import { useNavigate } from 'react-router-dom';
 // les donnes n'affiche pas dans le cas de fr
 const Abonement = () => {
   const [index, setIndex] = useState(1);
@@ -59,16 +60,24 @@ const Abonement = () => {
     console.log(translatedItems);
     setTranslatedData(translatedItems);
   };
+   // Navigation :
+   const navigate = useNavigate();
+   const id = localStorage.getItem("userId")
+   const username = localStorage.getItem("userName")
+   function handelPack() {
+ 
+     const redirectPath = id ? `${username}/add-demande` : "/login";
+     navigate(redirectPath);
+     
+   } 
 
   return (
     <>
       <Header />
-      <div className="dark:bg-black lg:flex justify-between mt-[90px]">
+      <div className="dark:bg-black lg:flex justify-between lg:mt-[90px]">
         <div
           className="lg:w-[50%] w-[100%] pt-[100px]"
-          data-aos="fade-up"
-          data-aos-delay="300"
-          data-aos-offset="300"
+         
         >
           <h1 className="dark:text-white text-3xl font-Quicksand font-bold text-center">
             {title}
@@ -79,9 +88,7 @@ const Abonement = () => {
         </div>
         <div
           className="lg:w-[50%] w-[100%] flex justify-center items-center"
-          data-aos="fade-up"
-          data-aos-delay="300"
-          data-aos-offset="300"
+          
         >
           <img
             src={imgPay}
@@ -93,9 +100,7 @@ const Abonement = () => {
       <div className="dark:bg-black pt-[20px]">
         <h1
           className="mb-[20px] text-3xl font-Quicksand font-bold text-center dark:text-white"
-          data-aos="fade-up"
-          data-aos-delay="300"
-          data-aos-offset="300"
+         
         >
           {Nos} <span className="text-accent">{abonnements}</span>
         </h1>
@@ -106,9 +111,7 @@ const Abonement = () => {
               return (
                 <div
                   key={packIndex}
-                  data-aos="fade-up"
-                  data-aos-delay="300"
-                  data-aos-offset="300"
+                  
                 >
                   <div
                     onClick={() => setIndex(packIndex)}
@@ -160,6 +163,7 @@ const Abonement = () => {
                           ? "bg-accent hover:bg-accentHover text-white"
                           : "border border-accent text-accent"
                       } btn btn-sm space-x-[14px]`}
+                      onClick={handelPack}
                     >
                       <span>{btnCom}</span>
                       <HiOutlineArrowNarrowRight />

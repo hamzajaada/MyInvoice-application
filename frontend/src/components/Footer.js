@@ -71,11 +71,11 @@ const Footer = () => {
       <div className="container mx-auto">
         <div className="flex flex-col items-center text-center lg:flex-row lg:items-start lg:text-left lg:justify-between gap-y-8">
           {/* logo */}
-          <div data-aos="fade-up" data-aos-offset="200" data-aos-delay="300">
+          <div >
             <img className="w-[160px]" src={logo} alt="" />
           </div>
           {/* list 1 */}
-          <div data-aos="fade-up" data-aos-offset="200" data-aos-delay="500">
+          <div >
             <div className="dark:text-white text-2xl uppercase font-Quicksand font-medium mb-6">
               {lien}
             </div>
@@ -96,7 +96,7 @@ const Footer = () => {
             </ul>
           </div>
           {/* list 2 */}
-          <div data-aos="fade-up" data-aos-offset="200" data-aos-delay="700">
+          <div >
             <div className="dark:text-white text-2xl uppercase font-Quicksand font-medium mb-6">
               {legale}
             </div>
@@ -117,7 +117,7 @@ const Footer = () => {
             </ul>
           </div>
           {/* newsletter */}
-          <div data-aos="fade-up" data-aos-offset="200" data-aos-delay="900">
+          <div >
             <div className="dark:text-white text-2xl uppercase mb-6 font-Quicksand font-medium">
               {newsletter.title}
             </div>
@@ -152,9 +152,7 @@ const Footer = () => {
         </div>
         <hr
           className="mt-10 mb-5"
-          data-aos="fade-up"
-          data-aos-offset="100"
-          data-aos-delay="200"
+          
         />
         <Copyright />
       </div>

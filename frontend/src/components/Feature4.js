@@ -34,22 +34,21 @@ const Feature4 = () => {
 
 
   return <section className='dark:bg-black section '>
-    <div className='container mx-auto'>
+   <div className='container mx-auto'>
       <div className='flex flex-col lg:flex-row lg:items-center lg:gap-x-[30px]'>
-        {/* image */}
-        <div className='flex-1 order-2 lg:order-1'  data-aos = "fade-right" data-aos-offset ='300'>
-          <img className ='rounded-lg' src= {image} ></img>
-        </div> 
-        {/* text */}
-        <div className='mb-[20px]   lg:mb-[0px] flex-1 order-1 lg:order-2' data-aos = "fade-right" data-aos-offset ='400' >
-          <div className='dark:text-white pretitle'>{pretitle}</div>
-          <div className='dark:text-white title'>{title}</div>
-          <div className='dark:text-white lead'>{subtitle}</div>
-          {/* <button className='btn-link flex items-center gap-x-3 hover:gap-x-5 transition-all font-Quicksand font-semibold'>
-            {btnLink} <img src={btnIcon} alt=''></img>
-          </button> */}
+          {/* image */}
+        <div className='flex-1' >
+          <img className =' mb-[10px] lg:mb-[5px] rounded-sm lg:rounded-lg' src= {image} ></img>
         </div>
-
+        {/* text */}
+        <div className='flex-1'  >
+          <div className=' dark:text-white lg:pretitle font-bold text-[23px] mb-[7px] lg:mb-[0px] text-gray-600  '>{pretitle}</div>
+          <div className="w-[150px] h-[5px] my-[10px] bg-accent"></div>
+          <div className=' dark:text-white lg:title font-bold text-[17px]  '>{title}</div>
+          <div className='dark:text-white lg:lead '>{subtitle}</div>
+          
+        </div>
+      
       </div>
     </div>
   </section>;

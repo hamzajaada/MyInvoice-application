@@ -28,15 +28,12 @@ const Testimonials = () => {
     <section className='dark:bg-black section'>
       <div className='container mx-auto'>
         {/* title */}
-        <h2 className='dark:text-white title mb-10 lg:mb-20 text-center max-w-[920px] mx-auto'
-        data-aos= 'fade-up'
-        data-aos-delay='200'
-        >
+        <h2 className='dark:text-white lg:title  text-[25px] font-bold font-Quicksand mb-10 lg:mb-20 text-center max-w-[920px] mx-auto'>
           {Titre}
         </h2>
+        
         {/* slider */}
-        <div   data-aos= 'fade-up'
-        data-aos-delay='400'> 
+        <div   > 
           <ClientSlider clients ={clients} />
         </div>
       </div>

@@ -4,6 +4,7 @@ import { pricing } from "../data";
 import { HiCheck, HiOutlineArrowNarrowRight } from "react-icons/hi";
 import { useGetThreePacksQuery } from "state/api";
 import logoIm from '../assets/img/pricing/icon1.svg'
+import { useNavigate } from 'react-router-dom';
 import tr from "Services/tr";
 import Cookies from "js-cookie";
 const Pricing = () => {
@@ -52,7 +53,16 @@ const Pricing = () => {
     console.log(translatedItems);
     setTranslatedData(translatedItems);
   };
-  
+  // Navigation :
+  const navigate = useNavigate();
+  const id = localStorage.getItem("userId")
+  const username = localStorage.getItem("userName")
+  function handelPack() {
+
+    const redirectPath = id ? `${username}/add-demande` : "/login";
+    navigate(redirectPath);
+    
+  } 
   
 
 
@@ -62,13 +72,13 @@ const Pricing = () => {
     <section className="dark:bg-black section">
       <div className="container mx-auto">
         {/* title */}
+       
         <h2
-          className=" dark:text-white h2 mb-10 lg:mb-20 text-center font-Quicksand font-bold"
-          data-aos="fade-up"
-          data-aos-offset="200"
+          className=" dark:text-white h2 mb-10 lg:mb-20 text-center lg:font-Quicksand text-[30px] font-bold  lg:font-bold"
         >
           {Titre}
         </h2>
+        
         {/* card */}
         <div className="flex flex-col lg:flex-row lg:gap-x-[30px] gap-y-[30px] lg:gap-y-0 justify-center items-center">
           {translatedData && translatedData.map((pack, packIndex) => {
@@ -77,9 +87,8 @@ const Pricing = () => {
             return (
               <div
                 key={packIndex}
-                data-aos="fade-up"
-                data-aos-delay="300"
-                data-aos-offset="300"
+               
+               
               >
                 <div
                   onClick={() => setIndex(packIndex)}
@@ -133,6 +142,8 @@ const Pricing = () => {
                         ? "bg-accent hover:bg-accentHover text-white"
                         : "border border-accent text-accent"
                     } btn btn-sm space-x-[14px]`}
+
+                    onClick={handelPack}
                   >
                     <span>{btnCom}</span>
                     <HiOutlineArrowNarrowRight />
@@ -144,9 +155,7 @@ const Pricing = () => {
         </div>
         {/* Voir plus */}
         <div className="flex justify-center items-center mt-10"
-        data-aos="fade-up"
-        data-aos-delay="300"
-        data-aos-offset="300">
+        >
           <a
             href="/pack"
             className="inline-flex  items-center mt-[20px] inline-block bg-accent text-white font-Quicksand font-semibold py-2 px-4 rounded-md hover:bg-accentHover "

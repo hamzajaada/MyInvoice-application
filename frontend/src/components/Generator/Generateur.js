@@ -9,13 +9,9 @@ import Cookies from "js-cookie";
 const Generateur = () => {
 // destructure d'objet generatorData qui impoter de fichier data.js:
   const {
-    
-   
-   
     imgGenerator,
     f1Img,
     steps,
-  
   } = generatorData;
   const [headerText, setheaderText] = useState(generatorData.headerText);
   const [headerDescription, setheaderDescription] = useState(generatorData.headerDescription);
@@ -25,25 +21,6 @@ const Generateur = () => {
   const [sectext, setsectext] = useState(generatorData.sectext);
   const [sectitle, setsectitle] = useState(generatorData.sectitle);
   const [Steps, setSteps] = useState(generatorData.steps);
-  // useEffect(() => {
-  //   const langto = Cookies.get("to");
-  //   // fonction multiThreads
-  //   const translateData = async () => {
-  //    if (langto != "fra" && langto) {
-       
-  //     setheaderText(await tr(headerText , "fra", langto))
-  //     setheaderDescription(await tr(headerDescription , "fra", langto))
-  //     setcreateButtonText(await tr(createButtonText , "fra", langto))
-  //     sethowItWorksTitle(await tr(howItWorksTitle , "fra", langto))
-  //     sethowItWorksDescription(await tr(howItWorksDescription , "fra", langto))
-  //     setsectext(await tr(sectext , "fra", langto))
-  //     setsectitle(await tr(sectitle , "fra", langto))
-      
-  //    }
-  //   };
-
-  //   translateData();
-  // }, []);
   useEffect(() => {
     const translateData = async () => {
       const langto = Cookies.get("to");

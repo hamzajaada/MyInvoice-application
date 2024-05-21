@@ -40,7 +40,7 @@
     @apply text-lg text-dark;
   }
   .section {
-    @apply py-8 lg:py-[142px];
+    @apply py-8 lg:py-[62px];
   }
   .btn {
     @apply rounded-lg transition flex justify-center items-center;
