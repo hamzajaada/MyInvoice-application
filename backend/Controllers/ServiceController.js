@@ -5,15 +5,15 @@ const addService = async (req, res) => {
     const ServiceData = req.body;
     const service = new Service(ServiceData);
     await service.save();
-    res.status(201).json(service);
+    res.status(201).json({success : true, service});
   } catch (error) {
-    res.status(500).send("Erreur serveur lors de l'ajout du service");
+    res.status(500).json({success: false, message: "Erreur serveur lors de l'ajout du service", error});
   }
 }
 
 const  getAllservices = async (req, res) => {
   try {
-    const  services = await Service.find();
+    const  services = await Service.find({active:true});
     res.status(201).json(services);
   } catch (error) {
     res.status(500).send("Erreur serveur lors de la recherche des services");
@@ -25,7 +25,7 @@ const  getOneService = async (req, res) => {
     const  service = await Service.findById(req.params.id);
     res.status(201).json(service);
   } catch (error) {
-    res.status(500).send("Erreur serveur lors de la recherche de service");
+    res.status(201).json({success : false, error});
   }
 }
 
@@ -33,7 +33,7 @@ const  updateService = async (req,res)=>{
   try {
     
     const  service = await Service.findByIdAndUpdate(req.params.id, req.body, {new: true});
-    res.status(201).json(service);
+    res.status(201).json({success : true, service});
   } catch (error) {
     res.status(500).send("Erreur serveur lors de la mise à jour de service");
   }
@@ -42,9 +42,9 @@ const  updateService = async (req,res)=>{
 const  removeService = async (req, res) => {
   try {
     const  service = await Service.findByIdAndDelete(req.params.id);
-    res.status(201).json(service);
+    res.status(201).json({success : true});
   } catch (error) {
-    res.status(500).send("Erreur serveur lors de la suppression de service");
+    res.status(201).json({success : false, error});
   }
 }
 

@@ -162,6 +162,13 @@ export const api = createApi({
         body: pack,
       }),
     }),
+    updatePackActive: build.mutation({
+      query: ({ id, pack }) => ({
+        url: `Pack/edit/active/${id}`,
+        method: "PUT",
+        body: pack,
+      }),
+    }),
     removePack: build.mutation({
       query: (id) => ({
         url: `Pack/remove/${id}`,
@@ -254,6 +261,13 @@ export const api = createApi({
         url: `Model/edit/${id}`,
         method: "PUT",
         body: ModelData,
+      }),
+    }),
+    updateModelActive: build.mutation({
+      query: ({ id, model }) => ({
+        url: `Model/edit/active/${id}`,
+        method: "PUT",
+        body: model,
       }),
     }),
     removeModel: build.mutation({
@@ -446,17 +460,17 @@ export const api = createApi({
       providesTags: ["BonCommandes"],
     }),
     updateBonCommande: build.mutation({
-      query: ({ id, InvoiceData }) => ({
+      query: ({ id, bonCommandeData }) => ({
         url: `BonCommandes/edit/${id}`,
         method: "PUT",
-        body: InvoiceData,
+        body: bonCommandeData,
       }),
     }),
     addBonCommande: build.mutation({
-      query: (invoice) => ({
+      query: (bonCommande) => ({
         url: `BonCommandes/add`,
         method: "POST",
-        body: invoice,
+        body: bonCommande,
       }),
     }),
     getBonCommandeDetails: build.query({
@@ -624,7 +638,7 @@ export const {
   useRemovePackMutation,
   useGetThreePacksQuery,
   useGetAllPacksThreeServiceQuery,
-  //useGetPackByServiceIdQuery,
+  useUpdatePackActiveMutation,
 
   useGetAllServicesQuery,
   useGetOneServiceQuery,
@@ -637,6 +651,7 @@ export const {
   useAddModelMutation,
   useUpdateModelMutation,
   useRemoveModelMutation,
+  useUpdateModelActiveMutation,
 
   useGetSubscriptionsQuery,
   useAddSubscriptionMutation,

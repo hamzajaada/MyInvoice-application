@@ -158,7 +158,7 @@ const Profil = () => {
         >
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Avatar
-              src={`http://localhost:3001/Images/${enterpriseDetails.logo}`}
+              src={`${enterpriseDetails.logo.url}`}
               alt={enterpriseDetails.name}
               sx={{ width: 70, height: 70 }}
             />

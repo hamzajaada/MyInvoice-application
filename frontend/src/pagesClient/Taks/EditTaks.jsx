@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { TextField, useTheme, Button, Box } from "@mui/material";
 import Header from "componentsAdmin/Header";
-import { useUpdateTaxMutation, useGetOneTaxQuery, useRemoveTaksMutation } from "state/api";
+import { useUpdateTaxMutation, useGetOneTaxQuery } from "state/api";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const EditCategorie = () => {
   const navigate = useNavigate()
@@ -19,7 +20,6 @@ const EditCategorie = () => {
   const {id} = useParams();
   const {data : taxData} = useGetOneTaxQuery(id);
   const [editTax] = useUpdateTaxMutation();
-  const [removeTax] = useRemoveTaksMutation();
 
   useEffect(() => {
     if (taxData) {
@@ -33,8 +33,15 @@ const EditCategorie = () => {
 
   const handleDelete = async () => {
     try {
-      await removeTax(id);
-      navigate(`/${userName}/Taks`);
+      if(taxData) {
+        const {data} = await editTax({ id, taxData: { ...taxData, active: false } });
+        if(data.success) {
+          toast.success("La suppresion de tax se passe correctement");
+          navigate(`/${userName}/Taks`);
+        } else {
+          toast.error("La suppresion de tax ne s'est pas dés  ");
+        }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -44,8 +51,13 @@ const EditCategorie = () => {
     event.preventDefault();
     try {
       console.log(tax);
-      await editTax({ id, taxData: tax });
-      navigate(`/${userName}/Taks`);
+      const {data} = await editTax({ id, taxData: tax });
+      if(data.success) {
+        toast.success("La suppresion de tax se passe correctement");
+        navigate(`/${userName}/Taks`);
+      } else {
+        toast.error("La suppresion de tax ne s'est pas dés  ");
+      }
     } catch (error) {
       console.log(error);
     }

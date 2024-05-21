@@ -3,45 +3,53 @@ import { TextField, useTheme, Button, Box, FormControl, InputLabel, Input } from
 import Header from "componentsAdmin/Header";
 import {  useAddModelMutation } from "state/api";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AddModel = () => {
-  const [icon, setIcon] = useState(null);
+  
   const navigate = useNavigate()
   if(!localStorage.getItem('userId')) {
     navigate('/');
   }
   const theme = useTheme();
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-  });
-  
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [icon, setIcon] = useState([]);
   const [addModel] = useAddModelMutation();
   const Navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+    setFileToBase(file);
   };
 
-  const handleIconChange = (e) => {
-    setIcon(e.target.files[0]);
+  const setFileToBase = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setIcon(reader.result);
+    };
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formDataWithLogo = new FormData();
-    if (icon) {
-      formDataWithLogo.append("icon", icon);
-    }
-    Object.entries(formData).forEach(([key, value]) => {
-      formDataWithLogo.append(key, value); // Enveloppez les données sous la clé 'pack'
-    });
+    const model = {
+      name,
+      description,
+      icon,
+    };
     try {
-      console.log("model : ", formData);
-      console.log("model with icon : ", formDataWithLogo);
-      await addModel(formDataWithLogo);
-      Navigate("/models");
+      const { data } = await addModel(model);
+      if (data.success) {
+        toast.success("L'enregistrement de model se passe correctement");
+        Navigate("/models");
+      } else {
+        toast.error(
+          "L'enregistrement de model ne s'est pas passé correctement : " + data.error
+        );
+      }
     } catch (error) {
+      toast.error("Erreur lors de l'ajoute de model : " + error.message);
       console.log(error);
     }
   };
@@ -58,8 +66,8 @@ const AddModel = () => {
         <TextField
           label="Nom de model"
           name="name"
-          value={formData.name}
-          onChange={handleChange}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           fullWidth
           required
           margin="normal"
@@ -67,8 +75,8 @@ const AddModel = () => {
         <TextField
           label="Description"
           name="description"
-          value={formData.description}
-          onChange={handleChange}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           fullWidth
           required
           margin="normal"
@@ -79,7 +87,7 @@ const AddModel = () => {
             id="icon-input"
             type="file"
             name="icon"
-            onChange={handleIconChange}
+            onChange={handleImage}
             accept="image/*"
           />
         </FormControl>

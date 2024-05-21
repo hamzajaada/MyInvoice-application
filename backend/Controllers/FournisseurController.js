@@ -5,7 +5,10 @@ const addFournisseur = async (req, res) => {
     const fournisseurData = req.body.fournisseur;
     const fournisseur = new Fournisseur(fournisseurData);
     await fournisseur.save();
-    res.status(201).json(fournisseur);
+    res.status(200).json({
+      success: true,
+      fournisseur,
+    });
   } catch (error) {
     res.status(500).send("Erreur serveur lors de l'ajout du fournisseur");
   }
@@ -13,7 +16,7 @@ const addFournisseur = async (req, res) => {
 
 const getAllFournisseursEnt = async (req, res) => {
   try {
-    const Allfournisseurs = await Fournisseur.find();
+    const Allfournisseurs = await Fournisseur.find({active:true});
     const fournisseurs = Allfournisseurs.filter(
       (fournisseur) => fournisseur.userId.toString() === req.params.id
     );
@@ -35,7 +38,10 @@ const getOneFournisseur = async (req, res) => {
 const updateFournisseur = async (req, res) => {
   try {
     const fournisseur = await Fournisseur.findByIdAndUpdate(req.params.id, req.body, {new: true});
-    res.status(201).json(fournisseur);
+    res.status(200).json({
+      success: true,
+      fournisseur,
+    });
   } catch (error) {
     res.status(500).send("Erreur serveur lors de la mise à jour de fournisseur");
   }

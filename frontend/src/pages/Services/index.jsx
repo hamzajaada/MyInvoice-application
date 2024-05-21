@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, useTheme, Button, IconButton } from "@mui/material";
-import { useGetAllServicesQuery, useRemoveServiceMutation } from "state/api";
+import {  useUpdateServiceMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import FlexBetween from "componentsAdmin/FlexBetween";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Services = () => {
   
@@ -22,8 +23,8 @@ const Services = () => {
     ServiceName: "",
   })
   const theme = useTheme();
-  const [removeService] = useRemoveServiceMutation();
-  // hadi
+  const [updateService] = useUpdateServiceMutation();
+
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -74,7 +75,17 @@ const Services = () => {
 
   const handleDelete = async (id) => {
     try {
-      await removeService(id);
+      const thisService = service.find((s) => s._id === id)
+      if(thisService) {
+        thisService.active = false
+        const {data} = await updateService({ id, ServiceData : thisService });
+        if(data.success) {
+          toast.success("La suppresion de service se passe correctement");
+          setService(service.filter((s) => s._id !== id));
+        } else {
+          toast.error("La suppresion de service ne s'est pas dés correctement");
+        }
+      }
       window.location.reload();
     } catch (error) {
       console.log(error);
@@ -92,7 +103,7 @@ const Services = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Add
+            Ajoute de service
           </Button>
         </Link>
       </FlexBetween>

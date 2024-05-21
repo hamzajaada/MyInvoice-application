@@ -7,7 +7,10 @@ const addBonLivraison = async (req, res) => {
   try {
     const bonLivraison = new BonLivraison(req.body.bonLivraison);
     await bonLivraison.save();
-    res.status(201).json(bonLivraison);
+    res.status(200).json({
+      success: true,
+      bonLivraison,
+    });
   } catch (error) {
     res.status(500).send("Erreur serveur lors de l'ajout de facture");
   }
@@ -16,7 +19,7 @@ const addBonLivraison = async (req, res) => {
 const getAllBonLivraisons = async (req, res) => {
   try {
     console.log("start");
-    const AllbonLivraisons = await BonLivraison.find()
+    const AllbonLivraisons = await BonLivraison.find({active:true})
       .populate("bonCommandeId")
       .limit(50)
       .sort({ createdOn: -1 });
@@ -126,7 +129,6 @@ const getOneBonLivraison = async (req, res) => {
 
 const updateBonLivraison = async (req, res) => {
   try {
-    console.log(req)
     const bonLivraison = await BonLivraison.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -134,7 +136,10 @@ const updateBonLivraison = async (req, res) => {
         new: true,
       }
     );
-    res.status(201).json(bonLivraison);
+    res.status(200).json({
+      success: true,
+      bonLivraison,
+    });
   } catch (error) {
     res.status(500).send("Erreur serveur lors de la mise à jour de facture");
   }

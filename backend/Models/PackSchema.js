@@ -8,7 +8,17 @@ const PackSchema = new Schema({
     serviceId: { type: Schema.Types.ObjectId, ref: 'Service', required: true },
   }],
   price: { type: Number, required: true },
-  logo: { type: String },
+  logo: {
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
+  },
+  active: { type: Boolean, default: true },
 },
 {timestamps: true}
 );

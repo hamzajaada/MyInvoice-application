@@ -12,6 +12,7 @@ const DemandeSchema = new Schema(
       default: "en attent",
     },
     amount: { type: Number, required: true },
+    active: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

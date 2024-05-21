@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, useTheme, IconButton, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { useGetOnePackQuery, useRemoveInvoiceMutation } from "state/api";
+import { useGetOnePackQuery, useUpdateInvoiceMutation } from "state/api";
 import Header from "componementClient/Header";
 import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
 import FlexBetween from "componentsAdmin/FlexBetween";
@@ -19,13 +19,15 @@ import InfoIcon from "@mui/icons-material/Info";
 import EmailIcon from "@mui/icons-material/Email";
 import PrintIcon from "@mui/icons-material/Print";
 import axios from "axios";
+import { toast } from "react-toastify";
+
 const Invoices = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   if (!localStorage.getItem("userId")) {
     navigate("/");
   }
-  const removeInvoice = useRemoveInvoiceMutation();
+  const [updateInvoice] = useUpdateInvoiceMutation();
   const packId = localStorage.getItem("packId");
   const id = localStorage.getItem("userId");
   const userName = localStorage.getItem("userName");
@@ -260,8 +262,18 @@ const Invoices = () => {
 
   const handleDelete = async (id) => {
     try {
-      await removeInvoice(id);
-      window.location.reload();
+      const thisInvoice = Facture.find((f) => f._id === id)
+      if(thisInvoice) {
+        thisInvoice.active = false
+        const {data} = await updateInvoice({id, InvoiceData: thisInvoice})
+        if(data.success) {
+          toast.success("La suppresion de facture se passe correctement");
+          setFacture(Facture.filter((f) => f._id !== id));
+        } else {
+          toast.error("La suppresion de facture ne s'est pas passé correctement");
+        }
+      }
+      // window.location.reload();
     } catch (error) {
       console.log(error);
     }

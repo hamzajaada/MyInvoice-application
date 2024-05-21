@@ -6,7 +6,7 @@ const addDemande = async (req, res) => {
     const demandeData = req.body;
     const demande = new Demande(demandeData);
     await demande.save();
-    res.status(201).json({message: "Envoie avec success"});
+    res.status(201).json({success: true});
   } catch (error) {
     res.status(500).send("Erreur serveur lors de l'ajout du demande");
   }

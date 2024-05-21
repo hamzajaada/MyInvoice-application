@@ -9,7 +9,10 @@ const addDevi = async (req, res) => {
   try {
     const devi = new Devi(req.body.devi);
     await devi.save();
-    res.status(201).json(devi);
+    res.status(200).json({
+      success: true,
+      devi,
+    });
   } catch (error) {
     console.error('err : ', error)
     res.status(500).send("Erreur serveur lors de l'ajout de devi");
@@ -18,7 +21,7 @@ const addDevi = async (req, res) => {
 
 const getAllDevis = async (req, res) => {
   try {
-    const Alldevis = await Devi.find().populate("clientId").limit(50).sort({ createdOn: -1 });
+    const Alldevis = await Devi.find({active:true}).populate("clientId").limit(50).sort({ createdOn: -1 });
     const devis = Alldevis.filter(devi => devi.userId.toString() === req.params.id);
     res.status(200).json(devis);
   } catch (error) {
@@ -104,7 +107,10 @@ const updateDevi = async (req, res) => {
     const devi = await Devi.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    res.status(201).json(devi);
+    res.status(200).json({
+      success: true,
+      devi,
+    });
   } catch (error) {
     res.status(500).send("Erreur serveur lors de la mise à jour de facture");
   }
@@ -113,7 +119,9 @@ const updateDevi = async (req, res) => {
 const removeDevi = async (req, res) => {
   try {
     const devi = await Devi.findByIdAndDelete(req.params.id);
-    res.status(201).json(devi);
+    res.status(200).json({
+      success: true,
+    });
   } catch (error) {
     res.status(500).send("Erreur serveur lors de la suppression de facture");
   }
