@@ -1,91 +1,88 @@
 import React, { useState, useEffect } from "react";
-import {
-  TextField,
-  Input,
-  useTheme,
-  Button,
-  Box,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Chip,
-} from "@mui/material";
-import Header from "componentsAdmin/Header";
-import {
-  useGetAllServicesQuery,
-  useGetOnePackQuery,
-  useRemovePackMutation,
-  useUpdatePackMutation,
-} from "state/api";
 import { useNavigate, useParams } from "react-router-dom";
+import { TextField,Input,useTheme,Button,Box,FormControl,InputLabel,Select,MenuItem,Chip} from "@mui/material";
+import Header from "componentsAdmin/Header";
+import {useGetAllServicesQuery, useGetOnePackQuery, useUpdatePackMutation, useUpdatePackActiveMutation } from "state/api";
+import { toast } from "react-toastify";
 
 const EditPack = () => {
-  const [logo, setLogo] = useState(null);
   const navigate = useNavigate();
   if (!localStorage.getItem("userId")) {
     navigate("/");
   }
   const theme = useTheme();
-  const [pack, setPack] = useState({
-    name: "",
-    description: "",
-    services: [],
-    price: 0,
-  });
+  const [logo, setLogo] = useState([]);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [services, setServices] = useState([]);
+  const [price, setPrice] = useState(0);
   const { id } = useParams();
   const { data: packData } = useGetOnePackQuery(id);
   const [updatePack] = useUpdatePackMutation();
-  const [removePack] = useRemovePackMutation();
+  const [updateActivePack] = useUpdatePackActiveMutation()
+  // const [removePack] = useRemovePackMutation();
   const { data: serviceData } = useGetAllServicesQuery();
 
-  const handleIconChange = (e) => {
-    setLogo(e.target.files[0]);
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+    setLogo(file); 
   };
 
   useEffect(() => {
     if (packData) {
-      setPack({
-        name: packData.name || "",
-        description: packData.description || "",
-        services: packData.services.map((service) => service.serviceId) || [],
-        price: packData.price || 0,
+      setName(packData.name);
+      setDescription(packData.description);
+      setPrice(packData.price);
+      setServices(packData.services.map(service => service.serviceId));
+      setLogo({
+        public_id: packData.logo.public_id,
+        url: packData.logo.url
       });
+      
     }
   }, [packData]);
 
-  const handleChange = (e) => {
-    setPack({ ...pack, [e.target.name]: e.target.value });
-  };
-
   const handleServiceChange = (event) => {
-    const selectedServices = event.target.value;
-    setPack({ ...pack, services: selectedServices });
+    setServices(event.target.value);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+  
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("services", JSON.stringify(services.map(service => ({ serviceId: service }))));
+    formData.append("logo", logo);
+  
     try {
-      const formData = new FormData();
-      formData.append("name", pack.name);
-      formData.append("description", pack.description);
-      formData.append("price", pack.price);
-      const serviceObjects = pack.services.map((serviceId) => ({ serviceId }));
-      formData.append("services", JSON.stringify(serviceObjects));
-      if (logo) {
-        formData.append("logo", logo);
+      const { data } = await updatePack({ id, pack: formData });
+      if (data.success) {
+        toast.success("La modification de pack s'est bien passée");
+        navigate("/packadmin");
+      } else {
+        toast.error("La modification de pack ne s'est pas passée correctement ");
       }
-      await updatePack({ id, pack: formData });
-      navigate("/packadmin");
     } catch (error) {
+      toast.error("Erreur lors de la modification de pack");
       console.log(error);
     }
   };
+  
 
   const handleDelete = async () => {
     try {
-      await removePack(id);
-      navigate("/packadmin");
+      if(packData) {
+        const updatedPackData = { ...packData, active: false }; // Créer une copie modifiable de packData
+        const { data } = await updateActivePack({ id, pack: updatedPackData });
+        if (data.success) {
+          toast.success("La suppression de pack s'est bien passée");
+          navigate("/packadmin");
+        } else {
+          toast.error("La suppression de pack ne s'est pas passée correctement ");
+        }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -106,8 +103,8 @@ const EditPack = () => {
         <TextField
           label="Nom de pack"
           name="name"
-          value={pack.name}
-          onChange={handleChange}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           fullWidth
           required
           margin="normal"
@@ -115,8 +112,8 @@ const EditPack = () => {
         <TextField
           label="Description"
           name="description"
-          value={pack.description}
-          onChange={handleChange}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           fullWidth
           required
           margin="normal"
@@ -125,8 +122,8 @@ const EditPack = () => {
           label="Prix"
           name="price"
           type="number"
-          value={pack.price}
-          onChange={handleChange}
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
           fullWidth
           required
           margin="normal"
@@ -137,7 +134,7 @@ const EditPack = () => {
             labelId="services-label"
             id="services"
             multiple
-            value={pack.services}
+            value={services}
             onChange={handleServiceChange}
             renderValue={(selected) => (
               <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -173,7 +170,7 @@ const EditPack = () => {
             id="icon-input"
             type="file"
             name="logo"
-            onChange={handleIconChange}
+            onChange={handleImage}
             accept="image/*"
           />
         </FormControl>

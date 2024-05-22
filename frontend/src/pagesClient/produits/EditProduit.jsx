@@ -14,10 +14,10 @@ import Header from "componentsAdmin/Header";
 import {
   useGetAllCategoriesQuery,
   useUpdateProduitMutation,
-  useRemoveProduitMutation,
   useGetOneProduitQuery,
 } from "state/api";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const EditProduit = () => {
   const Navigate = useNavigate();
@@ -43,7 +43,6 @@ const EditProduit = () => {
   }, [produitData]);
 
   const [editProduit] = useUpdateProduitMutation();
-  const [removeProduit] = useRemoveProduitMutation();
   const userName = localStorage.getItem("userName");
 
   const handleChange = (e) => {
@@ -62,8 +61,13 @@ const EditProduit = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await editProduit({ id, ProduitData: produit });
-      Navigate(`/${userName}/produits`);
+      const {data} = await editProduit({ id, ProduitData: produit });
+      if(data.success) {
+        toast.success("La modification du produit se passe correctement")
+        Navigate(`/${userName}/produits`);
+      } else {
+        toast.error("La modification du produit ne s'est pas correctement")
+      }
     } catch (error) {
       console.log(error);
     }
@@ -71,8 +75,16 @@ const EditProduit = () => {
 
   const handleDelete = async () => {
     try {
-      await removeProduit(id);
-      Navigate(`/${userName}/produits`);
+      if(produitData) {
+        const {data} = await editProduit({ id, ProduitData: { ...produitData, active: false } })
+        if(data.success) {
+          toast.success("La suppression du produit se passe correctement")
+          Navigate(`/${userName}/produits`);
+        } else {
+          toast.error("La suppression du produit ne s'est pas correctement")
+        }
+      }
+      
     } catch (error) {
       console.log(error);
     }

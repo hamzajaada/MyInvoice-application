@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Box, useTheme, IconButton, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import {
-  useGetFournisseursQuery,
-  useRemoveFournisseurMutation,
-} from "state/api";
+import {useUpdateFournisseurMutation} from "state/api";
 import Header from "componementClient/Header";
 import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
 import PersonIcon from "@mui/icons-material/Person";
@@ -16,6 +13,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 const Fournisseurs = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -42,7 +41,7 @@ const Fournisseurs = () => {
       navigate("/");
     }
   }, [id, navigate]); 
-  const [removeFournisseur] = useRemoveFournisseurMutation();
+  const [updateFournisseur] = useUpdateFournisseurMutation();
   const columns = [
     {
       field: "name",
@@ -112,8 +111,18 @@ const Fournisseurs = () => {
 
   const handleDelete = async (id) => {
     try {
-      await removeFournisseur(id);
-      window.location.reload();
+      const thisFournisseur = Fourinsseur.find((f) => f._id === id)
+      if(thisFournisseur) {
+        thisFournisseur.active = false
+        const {data} = await updateFournisseur({id, fournisseur: thisFournisseur})
+        if(data.success) {
+          toast.success("La suppresion de fournisseur se passe correctement");
+          setFourinsseur(Fourinsseur.filter((f) => f._id !== id));
+        } else {
+          toast.error("La suppresion de fournisseur ne s'est pas passé correctement");
+        }
+      }
+      // window.location.reload();
     } catch (error) {
       console.log(error);
     }

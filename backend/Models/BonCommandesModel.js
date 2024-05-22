@@ -33,6 +33,7 @@ const BonCommandeSchema = new Schema(
     ],
     status: { type: String, enum: ["attent de traitement", "au cour de traitement", "expédié"], default: "attent de traitement" },
     amount: { type: Number, required: true },
+    active: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

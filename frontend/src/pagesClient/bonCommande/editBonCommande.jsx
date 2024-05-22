@@ -17,12 +17,12 @@ import Header from "componentsAdmin/Header";
 import {
   useGetOneBonCommandeQuery,
   useUpdateBonCommandeMutation,
-  useRemoveBonCommandeMutation,
   useGetFournisseursQuery,
   useGetProductsQuery,
   useGetAllTaxEntrepriseQuery,
 } from "state/api";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const EditBonCommande = () => {
   const navigate = useNavigate();
@@ -78,8 +78,7 @@ const EditBonCommande = () => {
     }
   }, [allTaxData]);
 
-  const [updateInvoice] = useUpdateBonCommandeMutation();
-  const [removeBonCommande] = useRemoveBonCommandeMutation();
+  const [updateBonCommande] = useUpdateBonCommandeMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -141,8 +140,13 @@ const EditBonCommande = () => {
 
       updatedBonCommande = { ...updatedBonCommande, amount: totalAmount };
 
-      await updateInvoice({ id, InvoiceData: updatedBonCommande });
-      navigate(`/${userName}/bon-commandes`);
+      const {data} = await updateBonCommande({ id, bonCommandeData: updatedBonCommande });
+      if(data.success) {
+        toast.success("La modification de bon de commande se passe correctement");
+        navigate(`/${userName}/bon-commandes`);
+      } else {
+        toast.error("La modification de bon de commande ne s'est pas réussie");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -164,8 +168,17 @@ const EditBonCommande = () => {
 
   const handleDelete = async () => {
     try {
-      await removeBonCommande(id);
-      navigate(`/${userName}/bon-commandes`);
+      if(bonCommandeData) {
+        const newBon = {...bonCommandeData, active: false}
+        const {data} = await updateBonCommande({id, bonCommandeData: newBon});
+        if(data.success) {
+          toast.success("La suppresion de bon de commande se passe correctement");
+          navigate(`/${userName}/bon-commandes`);
+        } else {
+          toast.error("La suppresion de bon de commande ne s'est pas réussie");
+        }
+      }
+      
     } catch (error) {
       console.log(error);
     }

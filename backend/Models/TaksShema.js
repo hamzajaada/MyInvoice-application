@@ -5,6 +5,7 @@ const TaksShema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'Enterprise', required: true },
   TaksValleur: { type: Number, required: true },
   name: { type: String, required: true },
+  active: { type: Boolean, default: true },
 });
 
 const Taks = mongoose.model('Taks', TaksShema);

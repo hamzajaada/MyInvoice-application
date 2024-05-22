@@ -148,24 +148,22 @@ const Header = () => {
     <div className="container mx-auto flex justify-between items-center">
       <a
         href="#"
-        data-aos="fade-down"
-        data-aos-delay="200"
-        className="font-bodyfont inline-block relative mt-3 md:mt-0"
+        
+        className="inline-block relative mt-3 md:mt-0"
       >
-        <Link to="/" data-aos="fade-down" data-aos-delay="100">
-          <img className="w-[100px] md:w-[120px] lg:w-[160px] h-auto" src={logo} alt="Logo" />
+        <Link to="/" >
+          <img className="w-[140px] mb-[15px] md:w-[120px] lg:w-[160px] h-auto" src={logo} alt="Logo" />
         </Link>
       </a>
   
-      <div className="hidden lg:flex" data-aos="fade-down" data-aos-delay="100">
+      <div className="hidden lg:flex" >
         <Nav />
       </div>
   
       <div className="flex items-center gap-x-4 ml-auto">
         <button
           className="text-accent"
-          data-aos="fade-down"
-          data-aos-delay="100"
+         
           onClick={toggletheme}
         >
           {theme === "dark" ? IconSun : IconMon}
@@ -173,8 +171,7 @@ const Header = () => {
         {localStorage.getItem("userId") && (
           <button
             className="text-accent"
-            data-aos="fade-down"
-            data-aos-delay="100"
+          
             onClick={toggleHome}
           >
             {IconeHome}
@@ -190,8 +187,7 @@ const Header = () => {
         {!localStorage.getItem("userId") ? (
           <button
             className="btn btn-sm btn-outline hidden lg:flex"
-            data-aos="fade-down"
-            data-aos-delay="100"
+          
             onClick={handleLoginClick}
           >
             {btnText}
@@ -199,8 +195,7 @@ const Header = () => {
         ) : (
           <button
             className="btn btn-sm btn-outline hidden lg:flex"
-            data-aos="fade-down"
-            data-aos-delay="100"
+          
             onClick={handleLogout}
           >
             {btnTextDec}

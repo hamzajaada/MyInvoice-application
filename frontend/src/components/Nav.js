@@ -55,7 +55,7 @@ const Nav = () => {
 
   return (
     <nav className="flex justify-evenly ">
-      <ul className="flex gap-x-10">
+      <ul className="flex gap-x-10 ml-[36px]">
         {translatedData.map((item) => {
           //destructure item
           return (

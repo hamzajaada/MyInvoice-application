@@ -2,6 +2,7 @@ const Client = require("../Models/ClientSchema");
 
 const addClient = async (req, res) => {
   try {
+    console.log(req.body)
     const ClientData = req.body.client;
     const client = new Client(ClientData);
     await client.save();
@@ -13,14 +14,11 @@ const addClient = async (req, res) => {
 
 const getAllClientsEnt = async (req, res) => {
   try {
-    const AllClients = await Client.find();
+    const AllClients = await Client.find({active : true});
     const clients = AllClients.filter(
       (client) => client.userId.toString() === req.params.id
     );
-    // const totalItems = await Client.countDocuments({ userId: req.params.id });
-    // console.log('total : ', totalItems)
-    res.status(200).json(
-      clients);
+    res.status(200).json(clients);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -41,7 +39,7 @@ const updateClient = async (req, res) => {
     const client = await Client.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    res.status(201).json(client);
+    res.status(200).json({success: true, client});
   } catch (error) {
     res.status(500).send("Erreur serveur lors de la mise à jour de client");
   }

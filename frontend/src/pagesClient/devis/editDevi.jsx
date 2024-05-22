@@ -17,12 +17,12 @@ import Header from "componentsAdmin/Header";
 import {
   useGetOneDeviQuery,
   useUpdateDeviMutation,
-  useRemoveDeviMutation,
   useGetClientsQuery,
   useGetProductsQuery,
   useGetAllTaxEntrepriseQuery,
 } from "state/api";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const EditInvoice = () => {
   const Navigate = useNavigate();
@@ -76,7 +76,6 @@ const EditInvoice = () => {
   }, [allTaxData]);
 
   const [updateDevi] = useUpdateDeviMutation();
-  const [removeDevi] = useRemoveDeviMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -143,8 +142,13 @@ const EditInvoice = () => {
       }
       updatedDevi = { ...updatedDevi, amount: totalAmount };
 
-      await updateDevi({ id, deviData: updatedDevi });
-      Navigate(`/${userName}/devis`);
+      const {data} = await updateDevi({ id, deviData: updatedDevi });
+      if(data.success) {
+        toast.success("La modification de devi se passe correctement");
+        Navigate(`/${userName}/devis`);
+      } else {
+        toast.error("La modification de devi ne s'est pas réussi");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -159,8 +163,16 @@ const EditInvoice = () => {
 
   const handleDelete = async () => {
     try {
-      await removeDevi(id);
-      Navigate(`/${userName}/devis`);
+      if(deviData) {
+        const {data} = await updateDevi({ id, deviData: { ...deviData, active: false } });
+        if(data.success) {
+          toast.success("La suppresion de devi se passe correctement");
+          Navigate(`/${userName}/devis`);
+        } else {
+          toast.error("La suppresion de devi ne s'est pas réussi");
+        }
+      }
+      
     } catch (error) {
       console.log(error);
     }

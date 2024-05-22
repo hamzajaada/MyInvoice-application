@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { useGetPacksQuery, useAddDemandeMutation } from "state/api";
 import Header from "componentsAdmin/Header";
+import { toast } from "react-toastify";
 
 const Profil = () => {
   const navigate = useNavigate();
@@ -43,13 +44,6 @@ const Profil = () => {
     setDemande({ ...demande, packId: event.target.value });
   };
 
-  const handleFieldChange = (field, value) => {
-    setDemande((prevDemande) => ({
-      ...prevDemande,
-      [field]: value,
-    }));
-  };
-
   const handleNombreAnneeChange = (event) => {
     setDemande({ ...demande, nombreAnnee: Number(event.target.value) });
   };
@@ -61,9 +55,12 @@ const Profil = () => {
       const amount = packSelect.price * demande.nombreAnnee;
       const updatedDemande = { ...demande, amount: amount };
       setDemande(updatedDemande);
-      console.log(updatedDemande);
-      const res = await AddDemande(updatedDemande);
-      console.log(res)
+      const {data} = await AddDemande(updatedDemande);
+      if(data.success) {
+        toast.success("La demande est envoyé correctement")
+      } else {
+        toast.error("Erreur lors de l'envoie du demande")
+      }
     } catch (error) {
       console.log(error);
     }

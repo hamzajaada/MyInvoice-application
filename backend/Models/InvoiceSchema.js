@@ -22,6 +22,7 @@ const InvoiceSchema = new Schema({
   ],
   status: { type: String, enum: ['sent', 'paid', 'late'], default: 'sent' },
   amount: { type: Number, required: true },
+  active: { type: Boolean, default: true },
 },
 {timestamps: true}
 );

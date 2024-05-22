@@ -5,16 +5,8 @@ const Auth = require("../Middlewares/Auth");
 const multer = require("multer");
 const path = require("path");
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../Public/Images")); 
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
-  },
-});
-
-const upload = multer({ storage: storage });
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 EntrepriseRouter.get( "/EntrepriseGoogle/:id", EntrepriseController.getEntrepriseByGoogleId); 
 EntrepriseRouter.get( "/entreprisedetail/:id", EntrepriseController.getEntrepriseDetail);
@@ -23,7 +15,7 @@ EntrepriseRouter.get('/EnterpriseStat', EntrepriseController.getEnterpriseCountB
 EntrepriseRouter.get( "/", EntrepriseController.getAllEntreprises); 
 EntrepriseRouter.get( "/:id", EntrepriseController.getOneEntreprise); 
 EntrepriseRouter.put('/changePassword/:id', EntrepriseController.changePassword);
-EntrepriseRouter.post('/register', upload.single('logo'), EntrepriseController.addEntreprise);
+EntrepriseRouter.post('/register', EntrepriseController.addEntreprise);
 EntrepriseRouter.put('/edit/:id', upload.single('logo'), EntrepriseController.updateEntreprise);
 EntrepriseRouter.delete("/remove/:id", EntrepriseController.removeEntreprise);
 EntrepriseRouter.post('/login',Auth, EntrepriseController.login);

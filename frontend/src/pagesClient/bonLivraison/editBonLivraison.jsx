@@ -14,10 +14,10 @@ import Header from "componentsAdmin/Header";
 import {
   useGetOneBonLivraisonQuery,
   useUpdateBonLivraisonMutation,
-  useRemoveBonLivraisonMutation,
   useGetBonCommandesQuery,
 } from "state/api";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const EditInvoice = () => {
   const Navigate = useNavigate();
@@ -46,7 +46,6 @@ const EditInvoice = () => {
   }, [bonLivraisonData]);
 
   const [updateBonLivraison] = useUpdateBonLivraisonMutation();
-  const [removeBonLivraison] = useRemoveBonLivraisonMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -81,8 +80,13 @@ const EditInvoice = () => {
         updatedBonLivraison = { ...updatedBonLivraison, amount: 0 };
       }
       console.log(updatedBonLivraison);
-      await updateBonLivraison({ id, BonLivraisonData: updatedBonLivraison });
-      Navigate(`/${userName}/bon-livraison`);
+      const {data} = await updateBonLivraison({ id, BonLivraisonData: updatedBonLivraison });
+      if(data.success) {
+        toast.success("La modification de bon de livraison se passe correctement");
+        Navigate(`/${userName}/bon-livraison`);
+      } else {
+        toast.error("La modification de bon de livraison ne s'est pas réussie");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -91,8 +95,16 @@ const EditInvoice = () => {
 
   const handleDelete = async () => {
     try {
-      await removeBonLivraison(id);
-      Navigate(`/${userName}/bon-livraison`);
+      if(bonLivraisonData) {
+        const newBon = {...bonLivraisonData, active: false} 
+        const {data} = await updateBonLivraison({ id, BonLivraisonData: newBon });
+        if(data.success) {
+          toast.success("La suppresion de bon de livraison se passe correctement");
+          Navigate(`/${userName}/bon-livraison`);
+        } else {
+          toast.error("La suppresion de bon de livraison ne s'est pas réussie");
+        }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -101,7 +113,6 @@ const EditInvoice = () => {
   const handleBonCommandeChange = (event) => {
     setBonLivraison({ ...bonLivraison, bonCommandeId: event.target.value });
   };
-
 
   const handleCancel = () => {
     Navigate(`/${userName}/bon-livraison`);

@@ -36,16 +36,15 @@ const Product = () => {
       {/* title subtitle */}
       <div className='flex flex-col items-center
        lg:flex-row mb-10 lg:mb-20 lg:ml-[90px]'>
-        <h2 className='dark:text-white section-title '
-         data-aos="fade-up"
-         data-aos-offset='400'
-         data-aos-delay='300'
+        <div>
+        <h2 className='dark:text-white font-bold text-[25px] mb-[20px] lg:mb-[0px] lg:section-title '
+       
         > {title}
         </h2>
-        <p className='lead lg:max-w-[350px] lg:ml-[80px] lg:mt-[100px] '
-         data-aos="fade-up"
-         data-aos-offset='400'
-         data-aos-delay='300'
+        <div className="w-[150px] h-[7px] my-[15px] bg-accent"></div>
+       </div>
+        <p className='lg:lead lg:max-w-[350px] dark:text-white lg:ml-[80px] lg:mt-[100px] '
+         
         >{subtitle}
         </p>
       </div>

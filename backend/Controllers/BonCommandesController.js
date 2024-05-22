@@ -18,7 +18,7 @@ const addBonCommande = async (req, res) => {
 
 const getAllBonCommandes = async (req, res) => {
   try {
-    const AllbonCommandes = await BonCommande.find()
+    const AllbonCommandes = await BonCommande.find({active:true})
       .populate("fournisseurId")
       .limit(50)
       .sort({ createdOn: -1 });
@@ -120,7 +120,7 @@ const updateBonCommande = async (req, res) => {
         new: true,
       }
     );
-    res.status(201).json(bonCommande);
+    res.status(201).json({success : true, bonCommande});
   } catch (error) {
     res.status(500).send("Erreur serveur lors de la mise à jour de facture");
   }

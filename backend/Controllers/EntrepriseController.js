@@ -5,26 +5,31 @@ const Pack = require('../Models/PackSchema')
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const nodemailer = require('nodemailer')
+const cloudinary = require("../Utils/cloudinary")
 
 const addEntreprise = async (req, res) => {
   try {
-    const { name, email, password, phone, address } = req.body;
+    const { name, email, password, phone, logo, address } = req.body;
     const existeEntreprise = await Entreprise.findOne({ email: email });
     if (!existeEntreprise) {
       const hashedPassword = await bcrypt.hash(password, 10);
-      const logo = req.file ? req.file.filename : null;
+      const result = await cloudinary.uploader.upload(logo, {
+        folder: "Entreprises",
+      });
       const entreprise = new Entreprise({
         name,
         email,
         password: hashedPassword,
         phone,
         address,
-        logo,
+        logo: {
+          public_id: result.public_id,
+          url: result.secure_url,
+        },
       });
       await entreprise.save();
-      const pack = await Pack.findOne({name: "Pack Standard"})
-      console.log("pack : ",pack)
-      if(pack) {
+      const pack = await Pack.findOne({ name: "Pack Standard" });
+      if (pack) {
         const subscription = new Subscription({
           userId: entreprise._id,
           packId: pack._id,
@@ -32,21 +37,26 @@ const addEntreprise = async (req, res) => {
           endDate: Date.now() + 1000 * 60 * 60 * 24 * 30, // 30 days
           status: "active",
           price: 0,
-        })
-        subscription.save()
-        return res.status(201).json(entreprise);
+        });
+        await subscription.save();
+        return res.status(201).json({ success: true, entreprise });
       } else {
-        return res.status(400).json({ message: "Le pack n'existe pas" });
+        return res
+          .status(400)
+          .json({ success: false, message: "Le pack n'existe pas" });
       }
-      
     } else {
-      return res.status(400).json({ message: "L'entreprise existe déjà" });
+      return res
+        .status(400)
+        .json({ success: false, message: "L'entreprise existe déjà" });
     }
   } catch (error) {
     console.error("Erreur lors de l'ajout de l'entreprise :", error);
-    return res
-      .status(500)
-      .send("Erreur serveur lors de l'ajout d'entreprise");
+    return res.status(500).json({
+      success: false,
+      message: `Erreur serveur lors de l'ajout d'entreprise : ${error}`,
+      error,
+    });
   }
 };
 
@@ -135,20 +145,73 @@ const uploadSignature = async (req, res) => {
 
 const updateEntreprise = async (req, res) => {
   try {
-    const logo = req.file ? req.file.filename : null;
-    let { name, email, phone, address } = req.body;
-    const updatedEntrepriseData = {name, email, phone, address};
-    if (logo) {
-      updatedEntrepriseData.logo = logo;
+    const currentEntreprise = await Entreprise.findById(req.params.id);
+    const data = {
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+      address: req.body.address,
+    };
+
+    if (req.file) {
+      const ImgId = currentEntreprise.logo.public_id;
+      if (ImgId) {
+        await cloudinary.uploader.destroy(ImgId);
+      }
+
+      const result = await cloudinary.uploader
+        .upload_stream(
+          {
+            folder: "Entreprises",
+          },
+          async (error, result) => {
+            if (error) {
+              console.error(error);
+              res.status(500).send({
+                success: false,
+                message: "Erreur serveur lors de la mise à jour d'entreprise",
+                error,
+              });
+            } else {
+              data.logo = {
+                public_id: result.public_id,
+                url: result.secure_url,
+              };
+
+              const entreprise = await Entreprise.findByIdAndUpdate(
+                req.params.id,
+                data,
+                {
+                  new: true,
+                }
+              );
+              res.status(200).json({
+                success: true,
+                entreprise,
+              });
+            }
+          }
+        )
+        .end(req.file.buffer);
+    } else {
+      const entreprise = await Entreprise.findByIdAndUpdate(
+        req.params.id,
+        data,
+        {
+          new: true,
+        }
+      );
+      res.status(200).json({
+        success: true,
+        entreprise,
+      });
     }
-    const entreprise = await Entreprise.findByIdAndUpdate(
-      req.params.id,
-      updatedEntrepriseData,
-      { new: true }
-    );
-    res.status(201).json(entreprise);
   } catch (error) {
-    res.status(500).send("Erreur serveur lors de la mise à jour d'entreprise");
+    res.status(500).json({
+      success: false,
+      message: "Erreur serveur lors de la mise à jour d'entreprise",
+      error,
+    });
   }
 };
 
@@ -164,10 +227,7 @@ const removeEntreprise = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    console.log("entrer dans la fonction login");
-    
     const jsenwebtkn = req.token;
-    console.log(req.user);
     const user = req.user;
     //erreur : 
     const sub = await Subscription.findOne({userId: user._id});
@@ -175,7 +235,6 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "Utilisateur non trouvé" });
     }
-
     res.json({ jsenwebtkn, user, pack  });
   } catch (error) {
     console.error(error);

@@ -23,9 +23,7 @@ const Copyright = () => {
   return (
     <div
       className="dark:bg-black flex flex-col items-center gap-y-2 lg:flex-row lg:justify-between"
-      data-aos="fade-up"
-      data-aos-offset="0"
-      data-aos-delay="200"
+   
     >
       {/* links */}
       <div className="flex gap-x-6">

@@ -39,8 +39,8 @@ const Model = () => {
   return (
     <>
       <Header />
-      <div className="dark:bg-black lg:flex justify-evenly mt-[90px]">
-        <div className="pt-[100px] lg:ml-[140px]">
+      <div className="dark:bg-black lg:flex justify-evenly lg:mt-[80px] mt-[30px] ">
+        <div className="pt-[100px] lg:ml-[140px] lg:w-[900px] w-[380px] ">
           <h1 className="dark:text-white mb-[20px] text-4xl font-Quicksand font-bold text-center">
             {translatedTitle}
           </h1>
@@ -49,7 +49,7 @@ const Model = () => {
           <img
             src={modelData[0].imageDark}
             alt=""
-            className="ml-[160px] lg:ml-[0px] w-[50%] lg:w-[25%] lg:mb-[50px] lg:ml-[500px]"
+            className=" hidden  lg:block ml-[160px] lg:ml-[0px] lg:mt-[50px]  lg:w-[25%] lg:mb-[50px] lg:ml-[500px]"
           />
         </div>
       </div>

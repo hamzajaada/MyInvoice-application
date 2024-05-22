@@ -3,8 +3,7 @@ import { Box, useTheme, IconButton, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import {
   useGetOnePackQuery,
-  useRemoveDeviMutation,
-  useGetDeviDetailsQuery,
+  useUpdateDeviMutation,
 } from "state/api";
 import Header from "componementClient/Header";
 import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
@@ -23,6 +22,8 @@ import InfoIcon from "@mui/icons-material/Info";
 import EmailIcon from "@mui/icons-material/Email";
 import PrintIcon from "@mui/icons-material/Print";
 import axios from "axios";
+import { toast } from "react-toastify";
+
 const Devis = () => {
   const navigate = useNavigate();
   if (!localStorage.getItem("userId")) {
@@ -66,8 +67,7 @@ const Devis = () => {
       navigate("/");
     }
   }, [id, navigate]); 
-  const [removeDevi] = useRemoveDeviMutation();
-  const [idDevi, setIdDevi] = useState("");
+  const [updateDevi] = useUpdateDeviMutation();
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -240,7 +240,6 @@ const Devis = () => {
     },
   ];
 
-  const { data: deviDetail } = useGetDeviDetailsQuery(idDevi);
 
   const handleDetails = (id) => {
     window.location.href = `/${userName}/devis/details/${id}`;
@@ -260,8 +259,18 @@ const Devis = () => {
 
   const handleDelete = async (id) => {
     try {
-      await removeDevi(id);
-      window.location.reload();
+      const thisDevi = Devis.find((d) => d._id === id)
+      if(thisDevi) {
+        thisDevi.active = false
+        const {data} = await updateDevi({id, deviData: thisDevi})
+        if(data.success) {
+          toast.success("La suppresion de devi se passe correctement");
+          setDevis(Devis.filter((d) => d._id !== id));
+        } else {
+          toast.error("La suppresion de devi ne s'est pas passé correctement");
+        }
+      }
+      // window.location.reload();
     } catch (error) {
       console.log(error);
     }
