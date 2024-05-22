@@ -48,6 +48,7 @@ const PrintBonCommande = () => {
     userPhone,
     userAddress,
     userLogo,
+    userSignature,
     fournisseurName,
     fournisseurEmail,
     fournisseurPhone,
@@ -55,12 +56,18 @@ const PrintBonCommande = () => {
     formattedDate,
     formattedDueDate,
     itemsTable,
+    taxesTable,
     amount,
   } = data;
 
   const printInvoice = () => {
     window.print();
   };
+
+  const sousTotale = itemsTable.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -88,7 +95,11 @@ const PrintBonCommande = () => {
               Numéro de bon de commande: #{_id}
             </Typography>
           </Box>
-          <Box bgcolor={getStatusColor(bonCommandeStatus)} borderRadius={4} p={2}>
+          <Box
+            bgcolor={getStatusColor(bonCommandeStatus)}
+            borderRadius={4}
+            p={2}
+          >
             <Typography
               variant="h6"
               sx={{
@@ -113,7 +124,7 @@ const PrintBonCommande = () => {
               <Box
                 component="img"
                 alt="profile"
-                src={`http://localhost:3001/Images/${userLogo}`}
+                src={`${userLogo.url}`}
                 height="50px"
                 width="50px"
                 borderRadius="50%"
@@ -206,6 +217,34 @@ const PrintBonCommande = () => {
                 </TableRow>
               ))}
               <TableRow sx={{ backgroundColor: "#fd8B36" }}>
+                <TableCell colSpan={2}>
+                  <Typography fontWeight="bold">Taxes </Typography>
+                </TableCell>
+                <TableCell colSpan={1}>
+                  <Typography fontWeight="bold">Taux</Typography>
+                </TableCell>
+              </TableRow>
+              {taxesTable.map((tax, index) => (
+                <TableRow key={index} sx={{ backgroundColor: "white" }}>
+                  <TableCell colSpan={2}>
+                    <Typography>{tax.taxeName}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>{tax.value}%</Typography>
+                  </TableCell>
+                </TableRow>
+              ))}
+              <TableRow sx={{ backgroundColor: "#fd8B36" }}>
+                <TableCell colSpan={2} align="right">
+                  <Typography fontWeight="bold">Sous - Totale:</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight="bold">
+                    {sousTotale.toFixed(2)} DH
+                  </Typography>
+                </TableCell>
+              </TableRow>
+              <TableRow sx={{ backgroundColor: "#fd8B36" }}>
                 <TableCell colSpan={2} align="right">
                   <Typography fontWeight="bold">Montant Totale:</Typography>
                 </TableCell>
@@ -218,6 +257,24 @@ const PrintBonCommande = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        <Box m={7} />
+        <Box mt={2} sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Box p={1}>
+            <Typography variant="body1" fontWeight="bold">
+              Signature:
+            </Typography>
+            <Box
+              component="img"
+              src={`${userSignature.url}`}
+              alt="Signature"
+              sx={{
+                width: "200px",
+                height: "170px",
+                marginLeft: "10px",
+              }}
+            />
+          </Box>
+        </Box>
       </Paper>
       <Grid
         container

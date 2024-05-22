@@ -144,7 +144,7 @@ const PrintInvoice = () => {
           <Typography variant="body1" fontWeight="bold">Signature:</Typography>
           <Box
               component="img"
-              src={`http://localhost:3001/Images/${userSignature}`}
+              src={`${userSignature.url}`}
               alt="Signature"
               sx={{
                 width: '170px',

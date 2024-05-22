@@ -1,12 +1,16 @@
 const Entreprise = require("../Models/EntrepriseSchema");
 const Subscription = require("../Models/SubscriptionSchema");
 const Invoice = require("../Models/InvoiceSchema");
-const Pack = require('../Models/PackSchema')
+const Devi = require('../Models/DeviModel')
+const BonCommande = require('../Models/BonCommandesModel')
+const BonLivraison = require('../Models/BonLivraisonModel')
+const Pack = require("../Models/PackSchema");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const nodemailer = require('nodemailer')
-const cloudinary = require("../Utils/cloudinary")
-
+const nodemailer = require("nodemailer");
+const cloudinary = require("../Utils/cloudinary");
+const Client = require("../Models/ClientSchema")
+const Fournisseur = require("../Models/FournisseurSchema")
 const addEntreprise = async (req, res) => {
   try {
     const { name, email, password, phone, logo, address } = req.body;
@@ -80,7 +84,7 @@ const getOneEntreprise = async (req, res) => {
 
 const getEntrepriseByGoogleId = async (req, res) => {
   try {
-    const entreprise = await Entreprise.findOne({googleId: req.id});
+    const entreprise = await Entreprise.findOne({ googleId: req.id });
     return entreprise;
   } catch (error) {
     console.error("Erreur serveur lors de la recherche d'entreprise");
@@ -91,28 +95,49 @@ const getEntrepriseDetail = async (req, res) => {
   try {
     const entreprise = await Entreprise.findById(req.params.id);
     const subscriptions = await Subscription.find();
-    const filteredSubscriptions = subscriptions.find(subscription => subscription.userId.toString() === entreprise._id.toString());
+    const filteredSubscriptions = subscriptions.find(
+      (subscription) =>
+        subscription.userId.toString() === entreprise._id.toString()
+    );
     const packEntreprise = await Pack.find();
-    const filteredpackEntreprise = packEntreprise.find(pack => {
-      return filteredSubscriptions && filteredSubscriptions.packId.toString() === pack._id.toString();
+    const filteredpackEntreprise = packEntreprise.find((pack) => {
+      return (
+        filteredSubscriptions &&
+        filteredSubscriptions.packId.toString() === pack._id.toString()
+      );
     });
-    const startDate = new Date(filteredSubscriptions.startDate).toLocaleDateString('fr-FR');
-    const endDate = new Date(filteredSubscriptions.endDate).toLocaleDateString('fr-FR');
+    const startDate = new Date(
+      filteredSubscriptions.startDate
+    ).toLocaleDateString("fr-FR");
+    const endDate = new Date(filteredSubscriptions.endDate).toLocaleDateString(
+      "fr-FR"
+    );
+
+    const nombreClient = await Client.countDocuments({active: true, userId : entreprise._id.toString()})
+    const nombreFournisseur = await Fournisseur.countDocuments({active: true, userId : entreprise._id.toString()})
+    const totalInvoices = await Invoice.countDocuments({ active: true, userId : entreprise._id.toString() });
+    const totalDevis = await Devi.countDocuments({ active: true , userId : entreprise._id.toString()});
+    const totalBonCommandes = await BonCommande.countDocuments({ active: true, userId : entreprise._id.toString() });
+    const totalBonLivraison = await BonLivraison.countDocuments({ active: true, userId : entreprise._id.toString() });
+    const totalDocuments = totalInvoices + totalDevis + totalBonCommandes + totalBonLivraison;
     const entrepriseDetail = {
-      _id : entreprise._id,
-      name : entreprise.name,
-      email : entreprise.email,
-      phone : entreprise.phone,
-      address : entreprise.address,
-      logo : entreprise.logo,
-      signature : entreprise.signature,
-      subscriptionStatue : filteredSubscriptions.status,
-      subscriptionStartDate : startDate,
-      subscriptionEndDate : endDate,
-      pack : filteredpackEntreprise.name,
+      _id: entreprise._id,
+      name: entreprise.name,
+      email: entreprise.email,
+      phone: entreprise.phone,
+      address: entreprise.address,
+      logo: entreprise.logo,
+      subscriptionStatue: filteredSubscriptions.status,
+      subscriptionStartDate: startDate,
+      subscriptionEndDate: endDate,
+      pack: filteredpackEntreprise.name,
       packId: filteredpackEntreprise._id,
-      price : filteredpackEntreprise.price,
+      price: filteredpackEntreprise.price,
+      nombreFournisseur: nombreFournisseur,
+      nombreClient: nombreClient,
+      nombreDocument: totalDocuments,
     };
+    console.log(entrepriseDetail)
     res.status(200).json(entrepriseDetail);
   } catch (error) {
     console.error("Error occurred: ", error);
@@ -120,28 +145,67 @@ const getEntrepriseDetail = async (req, res) => {
   }
 };
 
+
 const uploadSignature = async (req, res) => {
   const { id } = req.params;
 
   if (!req.file) {
-    return res.status(400).json({ message: 'No file uploaded.' });
+    return res.status(400).json({ message: "No file uploaded." });
   }
 
   try {
     const enterprise = await Entreprise.findById(id);
     if (!enterprise) {
-      return res.status(404).json({ message: 'Enterprise not found.' });
+      return res.status(404).json({ message: "Enterprise not found." });
     }
 
-    enterprise.signature = req.file.filename;
-    await enterprise.save();
+    if (req.file) {
+      const ImgId = enterprise.signature.public_id;
+      if (ImgId) {
+        await cloudinary.uploader.destroy(ImgId);
+      }
 
-    res.status(200).json({ message: 'Signature uploaded successfully.', signature: req.file.filename });
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: "Entreprises",
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+        stream.end(req.file.buffer);
+      });
+
+      if (result) {
+        enterprise.signature = {
+          public_id: result.public_id,
+          url: result.secure_url,
+        };
+
+        const updatedEnterprise = await Entreprise.findByIdAndUpdate(
+          req.params.id,
+          enterprise,
+          {
+            new: true,
+          }
+        );
+        return res.status(200).json({
+          success: true,
+          enterprise: updatedEnterprise,
+        });
+      }
+    }
   } catch (error) {
-    console.error('Error uploading signature:', error);
-    res.status(500).json({ message: 'Internal server error.' });
+    console.error("Error uploading signature:", error);
+    return res.status(500).json({ message: "Internal server error." });
   }
 };
+
 
 const updateEntreprise = async (req, res) => {
   try {
@@ -224,18 +288,17 @@ const removeEntreprise = async (req, res) => {
   }
 };
 
-
 const login = async (req, res) => {
   try {
     const jsenwebtkn = req.token;
     const user = req.user;
-    //erreur : 
-    const sub = await Subscription.findOne({userId: user._id});
+    //erreur :
+    const sub = await Subscription.findOne({ userId: user._id });
     const pack = await Pack.findById(sub.packId);
     if (!user) {
       return res.status(404).json({ error: "Utilisateur non trouvé" });
     }
-    res.json({ jsenwebtkn, user, pack  });
+    res.json({ jsenwebtkn, user, pack });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Erreur serveur" });
@@ -249,10 +312,14 @@ const getDashboardInfo = async (req, res) => {
     const revenueBySubscription = await Subscription.aggregate([
       { $group: { _id: "$packId", totalRevenue: { $sum: "$price" } } },
     ]);
-    const totalInvoices = await Invoice.countDocuments();
-    const paidInvoices = await Invoice.countDocuments({ status: "paid" });
+    const totalInvoices = await Invoice.countDocuments({ active: true });
+    const totalDevis = await Devi.countDocuments({ active: true });
+    const totalBonCommandes = await BonCommande.countDocuments({ active: true });
+    const totalBonLivraison = await BonLivraison.countDocuments({ active: true });
+    const totalDocuments = totalInvoices + totalDevis + totalBonCommandes + totalBonLivraison;
+    const paidInvoices = await Invoice.countDocuments({ status: "paid", active: true });
     const unpaidInvoices = await Invoice.countDocuments({
-      status: { $ne: "paid" },
+      status: { $ne: "paid" }, active: true
     });
     const subscriptionCounts = await Subscription.aggregate([
       { $group: { _id: "$status", count: { $sum: 1 } } },
@@ -261,7 +328,7 @@ const getDashboardInfo = async (req, res) => {
     const dashboardData = {
       totalEntreprises,
       revenueBySubscription,
-      totalInvoices,
+      totalDocuments,
       paidInvoices,
       unpaidInvoices,
       subscriptionCounts,
@@ -278,55 +345,55 @@ const getDashboardInfo = async (req, res) => {
   }
 };
 
-const getEnterpriseCountByMonthAndYear = async(req, res) => {
+const getEnterpriseCountByMonthAndYear = async (req, res) => {
   try {
     const enterpriseCountByMonthAndYear = await Entreprise.aggregate([
       {
         $project: {
           year: { $year: "$createdAt" },
-          month: { $month: "$createdAt" }
-        }
+          month: { $month: "$createdAt" },
+        },
       },
       {
         $group: {
           _id: { year: "$year", month: "$month" },
-          count: { $sum: 1 }
-        }
+          count: { $sum: 1 },
+        },
       },
       {
-        $sort: { "_id.year": 1, "_id.month": 1 }
-      }
+        $sort: { "_id.year": 1, "_id.month": 1 },
+      },
     ]);
     res.status(200).json(enterpriseCountByMonthAndYear);
-  } catch (error) {
-    
-  }
-}
+  } catch (error) {}
+};
 const ForgoutPass = async (req, res) => {
   try {
-      console.log(req.body);
-      const { email } = req.body;
+    console.log(req.body);
+    const { email } = req.body;
 
-      // Chercher l'entreprise avec l'email fourni
-      const entreprise = await Entreprise.findOne({ email: email });
-      if (!entreprise) {
-          return res.json({ message: "Utilisateur non trouvé" });
-      }
+    // Chercher l'entreprise avec l'email fourni
+    const entreprise = await Entreprise.findOne({ email: email });
+    if (!entreprise) {
+      return res.json({ message: "Utilisateur non trouvé" });
+    }
 
-      // Créer un token JWT
-      const token = jwt.sign({ id: entreprise._id }, "AbdelilahElgallati1230", { expiresIn: "1d" });
+    // Créer un token JWT
+    const token = jwt.sign({ id: entreprise._id }, "AbdelilahElgallati1230", {
+      expiresIn: "1d",
+    });
 
-      // Configurer le transporteur de nodemailer
-      var transporter = nodemailer.createTransport({
-          service: 'gmail',
-          auth: {
-              user: "myinvoice06@gmail.com",
-              pass: "ekiv afoc wbnb mrep", // Assurez-vous de stocker le mot de passe en toute sécurité
-          },
-      });
+    // Configurer le transporteur de nodemailer
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "myinvoice06@gmail.com",
+        pass: "ekiv afoc wbnb mrep", // Assurez-vous de stocker le mot de passe en toute sécurité
+      },
+    });
 
-      // Contenu HTML de l'email avec du style
-      const htmlContent = `
+    // Contenu HTML de l'email avec du style
+    const htmlContent = `
           <div style="font-family: Arial, sans-serif; line-height: 1.6;">
               <h2 style="color: #333;">Réinitialisation du mot de passe</h2>
               <p>Bonjour,</p>
@@ -343,26 +410,30 @@ const ForgoutPass = async (req, res) => {
           </div>
       `;
 
-      // Définir les options de l'email
-      var mailOptions = {
-          from: 'myinvoice06@gmail.com',
-          to: email,
-          subject: 'Réinitialisation du mot de passe',
-          html: htmlContent
-      };
+    // Définir les options de l'email
+    var mailOptions = {
+      from: "myinvoice06@gmail.com",
+      to: email,
+      subject: "Réinitialisation du mot de passe",
+      html: htmlContent,
+    };
 
-      // Envoyer l'email
-      transporter.sendMail(mailOptions, function (error, info) {
-          if (error) {
-              console.error('Erreur lors de l\'envoi de l\'email:', error.message);
-              res.status(500).json({ message: 'Échec de l\'envoi de l\'email' });
-          } else {
-              res.status(200).json({ message: 'Email envoyé avec succès ! Vérifiez votre email.' });
-          }
-      });
+    // Envoyer l'email
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.error("Erreur lors de l'envoi de l'email:", error.message);
+        res.status(500).json({ message: "Échec de l'envoi de l'email" });
+      } else {
+        res
+          .status(200)
+          .json({
+            message: "Email envoyé avec succès ! Vérifiez votre email.",
+          });
+      }
+    });
   } catch (error) {
-      console.error('Erreur dans ForgotPass:', error.message);
-      res.status(500).json({ message: 'Erreur du serveur' });
+    console.error("Erreur dans ForgotPass:", error.message);
+    res.status(500).json({ message: "Erreur du serveur" });
   }
 };
 // const ForgoutPass = async (req, res)=>{
@@ -380,44 +451,45 @@ const ForgoutPass = async (req, res) => {
 //           pass: "ekiv afoc wbnb mrep",
 //         },
 //       });
-      
+
 //       var mailOptions = {
 //         from: 'myinvoice06@gmail.com',
 //         to: email,
 //         subject: 'Reset password',
 //         text: `http://localhost:3000/reset-password/${entreprise._id}/${token}`
 //       };
-      
+
 //       transporter.sendMail(mailOptions, function(error, info){
 //         if (error) {
 //           console.error('Error sending email:', error.message);
 //            res.status(500).json({ message: 'Failed to send email' })
 //         } else {
-//           res.status(200).json({ message: 'Email envoyez avec succes!!!!! Verifiez votre email  ' }); 
+//           res.status(200).json({ message: 'Email envoyez avec succes!!!!! Verifiez votre email  ' });
 //         }
 //       });
 //     })
 // }
-const ResetPass = async(req,res)=>{
-   console.log(req.body)
-   const id  = req.body.id;
-   const token  = req.body.token;
-   const password= req.body.password;
-    console.log(password);
-   jwt.verify(token , "AbdelilahElgallati1230" , (err,decoded)=>{
-    if(err){
-      return res.json({Status : "Error with token"})
-    }else{
-        bcrypt.hash(password ,10).then(
-          hash=>{
-            Entreprise.findByIdAndUpdate({_id :id},{password : hash})
-            .then(u=> res.send({Status : "Success"}))
-            .catch(err=>res.send({Status:err}))
-          }
-        ).catch(err=>res.send({Status:err}))
-      }
-   })
-}
+const ResetPass = async (req, res) => {
+  console.log(req.body);
+  const id = req.body.id;
+  const token = req.body.token;
+  const password = req.body.password;
+  console.log(password);
+  jwt.verify(token, "AbdelilahElgallati1230", (err, decoded) => {
+    if (err) {
+      return res.json({ Status: "Error with token" });
+    } else {
+      bcrypt
+        .hash(password, 10)
+        .then((hash) => {
+          Entreprise.findByIdAndUpdate({ _id: id }, { password: hash })
+            .then((u) => res.send({ Status: "Success" }))
+            .catch((err) => res.send({ Status: err }));
+        })
+        .catch((err) => res.send({ Status: err }));
+    }
+  });
+};
 
 const changePassword = async (req, res) => {
   try {

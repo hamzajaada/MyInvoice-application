@@ -1,9 +1,9 @@
 const Invoice = require("../Models/InvoiceSchema");
-const OverallStat = require ("../Models/OverallStateSchema");
-const Client = require  ("../Models/ClientSchema");
-const Product = require  ("../Models/ProductSchema");
+const OverallStat = require("../Models/OverallStateSchema");
+const Client = require("../Models/ClientSchema");
+const Product = require("../Models/ProductSchema");
 const Enterprise = require("../Models/EntrepriseSchema");
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
 const addInvoice = async (req, res) => {
   try {
@@ -21,8 +21,13 @@ const addInvoice = async (req, res) => {
 
 const getAllInvoices = async (req, res) => {
   try {
-    const Allinvoices = await Invoice.find({active:true}).populate("clientId").limit(50).sort({ createdOn: -1 });
-    const invoices = Allinvoices.filter(invoice => invoice.userId.toString() === req.params.id);
+    const Allinvoices = await Invoice.find({ active: true })
+      .populate("clientId")
+      .limit(50)
+      .sort({ createdOn: -1 });
+    const invoices = Allinvoices.filter(
+      (invoice) => invoice.userId.toString() === req.params.id
+    );
     res.status(200).json(invoices);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -32,17 +37,17 @@ const getAllInvoices = async (req, res) => {
 const prepareInvoiceDetails = async (req, res) => {
   try {
     const invoice = await Invoice.findById(req.params.id)
-      .populate('userId', 'name email phone address logo signature') 
-      .populate('clientId', 'name email phone address') 
+      .populate("userId", "name email phone address logo signature")
+      .populate("clientId", "name email phone address")
       .populate({
-        path: 'items.productId',
-        select: 'name price', 
+        path: "items.productId",
+        select: "name price",
       })
       .populate({
-        path: 'taxes.taxId',
-        select: 'TaksValleur name', 
+        path: "taxes.taxId",
+        select: "TaksValleur name",
       });
-   
+
     const formattedDate = formatDate(invoice.date);
     const formattedDueDate = formatDate(invoice.dueDate);
     const itemsTable = invoice.items.map((item) => {
@@ -58,56 +63,55 @@ const prepareInvoiceDetails = async (req, res) => {
         value: elem.taxId.TaksValleur,
       };
     });
-      _id= invoice._id;
-      invoiceStatus = invoice.status;
-      userName = invoice.userId.name;
-      userEmail = invoice.userId.email;
-      userPhone = invoice.userId.phone;
-      userAddress = invoice.userId.address;
-      userLogo = invoice.userId.logo;
-      userSignature = invoice.userId.signature;
-      clientName = invoice.clientId.name;
-      clientEmail = invoice.clientId.email;
-      clientPhone = invoice.clientId.phone;
-      clientAddress = invoice.clientId.address;
-      amount = invoice.amount;
-      
-      res.status(200).json({
-        _id,
-        invoiceStatus,
-        userName,
-        userEmail,
-        userPhone,
-        userAddress,
-        userLogo,
-        userSignature,
-        clientName,
-        clientEmail,
-        clientPhone,
-        clientAddress,
-        formattedDate,
-        formattedDueDate,
-        itemsTable,
-        taxesTable,
-        amount,
-      });
+    _id = invoice._id;
+    invoiceStatus = invoice.status;
+    userName = invoice.userId.name;
+    userEmail = invoice.userId.email;
+    userPhone = invoice.userId.phone;
+    userAddress = invoice.userId.address;
+    userLogo = invoice.userId.logo;
+    userSignature = invoice.userId.signature;
+    clientName = invoice.clientId.name;
+    clientEmail = invoice.clientId.email;
+    clientPhone = invoice.clientId.phone;
+    clientAddress = invoice.clientId.address;
+    amount = invoice.amount;
+
+    res.status(200).json({
+      _id,
+      invoiceStatus,
+      userName,
+      userEmail,
+      userPhone,
+      userAddress,
+      userLogo,
+      userSignature,
+      clientName,
+      clientEmail,
+      clientPhone,
+      clientAddress,
+      formattedDate,
+      formattedDueDate,
+      itemsTable,
+      taxesTable,
+      amount,
+    });
   } catch (error) {
-    console.error('Error fetching invoice details:', error.message);
+    console.error("Error fetching invoice details:", error.message);
     throw error;
   }
 };
 
 const formatDate = (dateString) => {
-  if (!dateString) return '';
+  if (!dateString) return "";
   const date = new Date(dateString);
   if (isNaN(date.getTime())) {
-    console.error('Invalid date string:', dateString);
-    return '';
+    console.error("Invalid date string:", dateString);
+    return "";
   }
   const options = { year: "numeric", month: "2-digit", day: "2-digit" };
   return date.toLocaleDateString("fr-FR", options);
 };
-
 
 const getSales = async (req, res) => {
   try {
@@ -119,7 +123,6 @@ const getSales = async (req, res) => {
   }
 };
 
-
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -129,14 +132,33 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendEmail = async (req, res) => {
-  const { clientEmail, clientName, userName, _id, itemsTable, amount, formattedDueDate, userPhone, userAddress, userEmail } = req.body;
+  const {
+    clientEmail,
+    clientName,
+    userName,
+    _id,
+    itemsTable,
+    amount,
+    formattedDueDate,
+    userPhone,
+    userAddress,
+    userEmail,
+  } = req.body;
 
-  const itemsTableHTML = itemsTable.map(item => `
+  const itemsTableHTML = itemsTable
+    .map(
+      (item) => `
   <tr>
     <td style="border: 1px solid #ddd; padding: 8px;">${item.productName}</td>
-    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${item.quantity}</td>
-    <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">${item.price.toFixed(2)} DHs</td>
-  </tr>`).join('');
+    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${
+      item.quantity
+    }</td>
+    <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">${item.price.toFixed(
+      2
+    )} DHs</td>
+  </tr>`
+    )
+    .join("");
 
   const body = `
   <div style="font-family: Arial, sans-serif; line-height: 1.6;">
@@ -157,7 +179,9 @@ const sendEmail = async (req, res) => {
       <tfoot>
         <tr>
           <th colspan="2" style="border: 1px solid #ddd; padding: 8px; text-align: right;">Montant :</th>
-          <td style="border: 1px solid #ddd; padding: 8px; text-align: right;"><strong>${amount.toFixed(2)} DHs</strong></td>
+          <td style="border: 1px solid #ddd; padding: 8px; text-align: right;"><strong>${amount.toFixed(
+            2
+          )} DHs</strong></td>
         </tr>
       </tfoot>
     </table>
@@ -177,14 +201,14 @@ const sendEmail = async (req, res) => {
     to: clientEmail,
     subject: `Facture envoyée depuis ${userName}`,
     html: body,
-  }
+  };
   try {
     await transporter.sendMail(mailOptions);
 
-    res.status(200).json({ message: 'Email sent successfully' }); 
+    res.status(200).json({ message: "Email sent successfully" });
   } catch (error) {
-    console.error('Error sending email:', error.message);
-    res.status(500).json({ error: 'Failed to send email' });
+    console.error("Error sending email:", error.message);
+    res.status(500).json({ error: "Failed to send email" });
   }
 };
 
@@ -193,18 +217,39 @@ const getDashboardStats = async (req, res) => {
     const currentMonth = "Mai";
     const currentYear = 2024;
     const currentDay = "2024-05-05";
-    const Allinvoices = await Invoice.find().populate("clientId").limit(50).sort({ createdOn: -1 });
-    const invoices = Allinvoices.filter(invoice => invoice.userId.toString() === req.params.id);
-    const totalCustomers = await Client.countDocuments({ userId: req.params.id });
-    const totalProducts = await Product.countDocuments({ userId: req.params.id });
-    const totalInvoices = await Invoice.countDocuments({ userId: req.params.id });
-    const totalPaidInvoices = await Invoice.countDocuments({ userId: req.params.id, status: "paid" });
+    const Allinvoices = await Invoice.find()
+      .populate("clientId")
+      .limit(50)
+      .sort({ createdOn: -1 });
+    const invoices = Allinvoices.filter(
+      (invoice) => invoice.userId.toString() === req.params.id
+    );
+    const totalCustomers = await Client.countDocuments({
+      userId: req.params.id,
+    });
+    const totalProducts = await Product.countDocuments({
+      userId: req.params.id,
+    });
+    const totalInvoices = await Invoice.countDocuments({
+      userId: req.params.id,
+    });
+    const totalPaidInvoices = await Invoice.countDocuments({
+      userId: req.params.id,
+      status: "paid",
+    });
     const totalUnpaidInvoices = await Invoice.countDocuments({
-      userId: req.params.id, status: { $nin: ["paid"] },
+      userId: req.params.id,
+      status: { $nin: ["paid"] },
     });
     const overallStat = await OverallStat.find({ year: currentYear });
-    const paidInvoices = await Invoice.find({ userId: req.params.id, status: "paid" });
-    const totalPaidAmount = paidInvoices.reduce((total, invoice) => total + invoice.amount, 0);
+    const paidInvoices = await Invoice.find({
+      userId: req.params.id,
+      status: "paid",
+    });
+    const totalPaidAmount = paidInvoices.reduce(
+      (total, invoice) => total + invoice.amount,
+      0
+    );
     const {
       yearlyTotalSoldUnits,
       yearlySalesTotal,
@@ -219,7 +264,7 @@ const getDashboardStats = async (req, res) => {
     const todayStats = overallStat[0].dailyData.find(({ date }) => {
       return date === currentDay;
     });
-   /* console.log(  invoices,
+    /* console.log(  invoices,
       totalPaidAmount,
       totalCustomers,
       totalProducts,
@@ -278,7 +323,7 @@ const removeInvoice = async (req, res) => {
   try {
     const invoice = await Invoice.findByIdAndDelete(req.params.id);
     res.status(200).json({
-      success: true
+      success: true,
     });
   } catch (error) {
     res.status(500).send("Erreur serveur lors de la suppression de facture");
