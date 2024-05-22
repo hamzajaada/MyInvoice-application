@@ -34,6 +34,7 @@ const PrintInvoice = () => {
     userPhone,
     userAddress,
     userLogo,
+    userSignature, 
     clientName,
     clientEmail,
     clientPhone,
@@ -41,12 +42,15 @@ const PrintInvoice = () => {
     formattedDate,
     formattedDueDate,
     itemsTable,
+    taxesTable, 
     amount,
   } = data;
 
   const printInvoice = () => {
     window.print();
   };
+
+  const sousTotale = itemsTable.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -114,6 +118,20 @@ const PrintInvoice = () => {
               </TableRow>
             ))}
             <TableRow sx={{ backgroundColor: "#fd8B36"}}>
+              <TableCell colSpan={2} align="center"><Typography fontWeight="bold" >Taxes </Typography></TableCell>
+              <TableCell colSpan={1} ><Typography fontWeight="bold" >Taux</Typography></TableCell>
+            </TableRow>
+            {taxesTable.map((tax, index) => (
+                  <TableRow key={index}  sx={{ backgroundColor: "white"}}>
+                    <TableCell colSpan={2} align="center"><Typography>{tax.taxeName}</Typography></TableCell>
+                    <TableCell ><Typography>{tax.value}%</Typography></TableCell>
+                  </TableRow>
+                ))}
+            <TableRow sx={{ backgroundColor: "#fd8B36"}}>
+              <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Sous - Totale:</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">{sousTotale.toFixed(2)} DH</Typography></TableCell>
+            </TableRow>
+            <TableRow sx={{ backgroundColor: "#fd8B36"}}>
               <TableCell colSpan={2} align="right"><Typography fontWeight="bold" >Montant Totale:</Typography></TableCell>
               <TableCell><Typography fontWeight="bold">{amount.toFixed(2)} DH</Typography></TableCell>
             </TableRow>
@@ -124,9 +142,20 @@ const PrintInvoice = () => {
       <Box mt={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Box p={1}>
           <Typography variant="body1" fontWeight="bold">Signature:</Typography>
-          <Box sx={{ width: '200px', height: '100px', border: '1px solid #000', marginLeft: '10px' }}></Box>
+          <Box
+              component="img"
+              src={`http://localhost:3001/Images/${userSignature}`}
+              alt="Signature"
+              sx={{
+                width: '170px',
+                height: '170px',
+                border: '1px solid #000',
+                marginLeft: '10px',
+                objectFit: 'cover',
+              }}
+            />
+          </Box>
         </Box>
-      </Box>
       </Paper>
       <Grid container spacing={2} justifyContent="center" sx={{ '@media print': { display: 'none' } }}>
         <Grid item>

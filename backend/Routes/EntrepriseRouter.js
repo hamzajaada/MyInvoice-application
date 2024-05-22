@@ -21,5 +21,6 @@ EntrepriseRouter.delete("/remove/:id", EntrepriseController.removeEntreprise);
 EntrepriseRouter.post('/login',Auth, EntrepriseController.login);
 EntrepriseRouter.post('/ForgoutPass', EntrepriseController.ForgoutPass);
 EntrepriseRouter.post('/reset-password/:id/:token', EntrepriseController.ResetPass);
+EntrepriseRouter.put('/uploadSignature/:id', upload.single('signature'), EntrepriseController.uploadSignature);
 
 module.exports = EntrepriseRouter;

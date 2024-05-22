@@ -15,7 +15,7 @@ const InvoiceSchema = new Schema({
     {
       taxId: {
         type: Schema.Types.ObjectId,
-        ref: "Tax",
+        ref: "Taks",
         required: true,
       }
     }

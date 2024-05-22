@@ -32,11 +32,15 @@ const getAllInvoices = async (req, res) => {
 const prepareInvoiceDetails = async (req, res) => {
   try {
     const invoice = await Invoice.findById(req.params.id)
-      .populate('userId', 'name email phone address logo') 
+      .populate('userId', 'name email phone address logo signature') 
       .populate('clientId', 'name email phone address') 
       .populate({
         path: 'items.productId',
         select: 'name price', 
+      })
+      .populate({
+        path: 'taxes.taxId',
+        select: 'TaksValleur name', 
       });
    
     const formattedDate = formatDate(invoice.date);
@@ -48,6 +52,12 @@ const prepareInvoiceDetails = async (req, res) => {
         price: item.productId.price,
       };
     });
+    const taxesTable = invoice.taxes.map((elem) => {
+      return {
+        taxeName: elem.taxId.name,
+        value: elem.taxId.TaksValleur,
+      };
+    });
       _id= invoice._id;
       invoiceStatus = invoice.status;
       userName = invoice.userId.name;
@@ -55,6 +65,7 @@ const prepareInvoiceDetails = async (req, res) => {
       userPhone = invoice.userId.phone;
       userAddress = invoice.userId.address;
       userLogo = invoice.userId.logo;
+      userSignature = invoice.userId.signature;
       clientName = invoice.clientId.name;
       clientEmail = invoice.clientId.email;
       clientPhone = invoice.clientId.phone;
@@ -69,6 +80,7 @@ const prepareInvoiceDetails = async (req, res) => {
         userPhone,
         userAddress,
         userLogo,
+        userSignature,
         clientName,
         clientEmail,
         clientPhone,
@@ -76,6 +88,7 @@ const prepareInvoiceDetails = async (req, res) => {
         formattedDate,
         formattedDueDate,
         itemsTable,
+        taxesTable,
         amount,
       });
   } catch (error) {
@@ -117,39 +130,47 @@ const transporter = nodemailer.createTransport({
 
 const sendEmail = async (req, res) => {
   const { clientEmail, clientName, userName, _id, itemsTable, amount, formattedDueDate, userPhone, userAddress, userEmail } = req.body;
-  const itemsTableHTML = itemsTable.map(item => `<tr><td>${item.productName}</td><td>${item.quantity}</td><td>${item.price.toFixed(2)} DHs</td></tr>`).join('');
+
+  const itemsTableHTML = itemsTable.map(item => `
+  <tr>
+    <td style="border: 1px solid #ddd; padding: 8px;">${item.productName}</td>
+    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${item.quantity}</td>
+    <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">${item.price.toFixed(2)} DHs</td>
+  </tr>`).join('');
+
   const body = `
-  <p>Cher Client(e) Mr/Mme.<strong> ${clientName}</strong>,</br></p>
-  <p>Vous avez reçu une facture de l'entreprise <strong><i>${userName}</i></strong>, vérifiez les détails ci-dessous:</br></p>
-  <p> - Numéro de facture :<strong> #${_id}</strong></p></br>
-  <table border="1" cellspacing="0" cellpadding="5">
-    <thead>
-      <tr>
-        <th><strong>Nom du Produit</strong></th>
-        <th><strong>Quantité</strong></th>
-        <th><strong>Prix</strong></th>
-      </tr>
-    </thead>
-    <tbody>
-      ${itemsTableHTML}
-    </tbody>
-    <tfoot>
-      <tr>
-        <th><strong>Montant : </strong></th>
-        <td colspan="2"> <strong>${amount.toFixed(2)} DHs</strong> </td>
-      </tr>
-    </tfoot>
-  </table>
-  </br>
-  <p>Considérez s'il vous plaît le paiement de votre facture avant le <strong>"<font color="red">${formattedDueDate}</font>"</strong>.</p></br>
-  <p>Si vous avez des questions, vous trouverez ci-dessus les coordonnées de l'entreprise :</p></br>
-  <ul>
-    <li> Téléphone :<strong> ${userPhone}</strong></li>
-    <li> Adresse :<strong> ${userAddress}</strong></li>
-    <li> Email :<strong> ${userEmail}</strong></li>
-  </ul></br>
-  <p>Cordialement,</p></br>
-  <p><strong>MY INVOICE TEAM</strong></p>
+  <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+    <p style="font-size: 16px;">Cher Client(e) Mr/Mme. <strong>${clientName}</strong>,</p>
+    <p style="font-size: 16px;">Vous avez reçu une facture de l'entreprise <strong><i>${userName}</i></strong>, vérifiez les détails ci-dessous:</p>
+    <p style="font-size: 16px;">- Numéro de facture : <strong>#${_id}</strong></p>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+      <thead>
+        <tr>
+          <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Nom du Produit</th>
+          <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2; text-align: center;">Quantité</th>
+          <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2; text-align: right;">Prix</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${itemsTableHTML}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="2" style="border: 1px solid #ddd; padding: 8px; text-align: right;">Montant :</th>
+          <td style="border: 1px solid #ddd; padding: 8px; text-align: right;"><strong>${amount.toFixed(2)} DHs</strong></td>
+        </tr>
+      </tfoot>
+    </table>
+    <p style="font-size: 16px; margin-top: 20px;">Considérez s'il vous plaît le paiement de votre facture avant le <strong style="color: red;">${formattedDueDate}</strong>.</p>
+    <p style="font-size: 16px;">Si vous avez des questions, vous trouverez ci-dessus les coordonnées de l'entreprise :</p>
+    <ul style="font-size: 16px;">
+      <li>Téléphone : <strong>${userPhone}</strong></li>
+      <li>Adresse : <strong>${userAddress}</strong></li>
+      <li>Email : <strong>${userEmail}</strong></li>
+    </ul>
+    <p style="font-size: 16px;">Cordialement,</p>
+    <p style="font-size: 16px;"><strong>MY INVOICE TEAM</strong></p>
+  </div>
 `;
   var mailOptions = {
     from: "myinvoice06@gmail.com",

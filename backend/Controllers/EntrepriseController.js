@@ -105,6 +105,7 @@ const getEntrepriseDetail = async (req, res) => {
       phone : entreprise.phone,
       address : entreprise.address,
       logo : entreprise.logo,
+      signature : entreprise.signature,
       subscriptionStatue : filteredSubscriptions.status,
       subscriptionStartDate : startDate,
       subscriptionEndDate : endDate,
@@ -119,6 +120,28 @@ const getEntrepriseDetail = async (req, res) => {
   }
 };
 
+const uploadSignature = async (req, res) => {
+  const { id } = req.params;
+
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded.' });
+  }
+
+  try {
+    const enterprise = await Entreprise.findById(id);
+    if (!enterprise) {
+      return res.status(404).json({ message: 'Enterprise not found.' });
+    }
+
+    enterprise.signature = req.file.filename;
+    await enterprise.save();
+
+    res.status(200).json({ message: 'Signature uploaded successfully.', signature: req.file.filename });
+  } catch (error) {
+    console.error('Error uploading signature:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+};
 
 const updateEntreprise = async (req, res) => {
   try {
@@ -432,4 +455,5 @@ module.exports = {
   ForgoutPass,
   ResetPass,
   changePassword,
+  uploadSignature,
 };

@@ -94,7 +94,7 @@ const Dashboard = () => {
 
   const columns = [
     {
-      field: "invoiceNumber",
+      field: "_id",
       headerName: "Numéro de Facture",
       flex: 0.7,
       renderCell: (params) => (
