@@ -3,8 +3,7 @@ import { Box, useTheme, IconButton, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import {
   useGetOnePackQuery,
-  useGetBonLivraisonDetailsQuery,
-  useRemoveBonLivraisonMutation,
+  useUpdateBonLivraisonMutation,
 } from "state/api";
 import Header from "componementClient/Header";
 import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
@@ -23,6 +22,8 @@ import InfoIcon from "@mui/icons-material/Info";
 import EmailIcon from "@mui/icons-material/Email";
 import PrintIcon from "@mui/icons-material/Print";
 import axios from "axios";
+import { toast } from "react-toastify";
+
 const BonLivraison = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -63,13 +64,13 @@ const BonLivraison = () => {
       navigate("/");
     }
   }, [id, navigate]);
-  const [removeBonLivraison] = useRemoveBonLivraisonMutation();
+  const [updateBonLivraison] = useUpdateBonLivraisonMutation();
  
   
   if (!localStorage.getItem("userId")) {
     navigate("/");
   }
-  const [idBonLivraison, setIdBonLivraison] = useState("");
+
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -242,9 +243,6 @@ const BonLivraison = () => {
     },
   ];
 
-  const { data: bonLivraisonDetail } =
-    useGetBonLivraisonDetailsQuery(idBonLivraison);
-
   const handleDetails = (id) => {
     window.location.href = `/${userName}/bon-livraison/details/${id}`;
   };
@@ -263,8 +261,17 @@ const BonLivraison = () => {
 
   const handleDelete = async (id) => {
     try {
-      await removeBonLivraison(id);
-      window.location.reload();
+      const thisBon = bonLivraison.find((b) => b._id === id) 
+      if(thisBon) {
+        thisBon.active = false
+        const {data} = await updateBonLivraison({id, BonLivraisonData: thisBon})
+        if(data.success) {
+          toast.success("La suppresion de bon de livraison se passe correctement");
+          setbonLivraison(bonLivraison.filter((b) => b._id !== id));
+        } else {
+          toast.error("La suppresion de bon de livraison ne s'est pas passé correctement");
+        }
+      }
     } catch (error) {
       console.log(error);
     }

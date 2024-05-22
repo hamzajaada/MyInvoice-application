@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, useTheme, Button, IconButton } from "@mui/material";
-import { useGetAllCategoriesQuery, useRemoveCategorieMutation } from "state/api";
+import {  useUpdateCategorieMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -10,6 +10,8 @@ import { Link } from "react-router-dom";
 import FlexBetween from "componentsAdmin/FlexBetween";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
+
 const Categories = () => {
   const navigate = useNavigate();
   if(!localStorage.getItem('userId')) {
@@ -40,7 +42,7 @@ const Categories = () => {
       navigate("/");
     }
   }, [id, navigate]); 
-  const [removeCategorie] = useRemoveCategorieMutation();
+  const [updateCategorie] = useUpdateCategorieMutation();
 
   const columns = [
     {
@@ -78,8 +80,18 @@ const Categories = () => {
 
   const handleDelete = async (id) => {
     try {
-      await removeCategorie(id);
-      window.location.reload()
+      const thisCategorie = Categorie.find((c) => c._id === id)
+      if(thisCategorie) {
+        thisCategorie.active = false
+        const {data} = await updateCategorie({id, categorie: thisCategorie})
+        if(data.success) {
+          toast.success("La suppresion de catégorie se passe correctement");
+          setCategorie(Categorie.filter((c) => c._id !== id));
+        } else {
+          toast.error("La suppresion de catégorie ne s'est pas passé correctement");
+        }
+      }
+      // window.location.reload()
     } catch (error) {
       console.log(error);
     }

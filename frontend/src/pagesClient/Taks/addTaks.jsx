@@ -31,6 +31,7 @@ const AddClient = () => {
       console.log(Taks);
       await addTaks({ Taks });
       Navigate(`/${userName}/Taks`);
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, useTheme, Button, IconButton, Avatar } from "@mui/material";
-import { useGetAllModelsQuery, useRemoveModelMutation } from "state/api";
+import {  useUpdateModelMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -9,7 +9,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Link } from "react-router-dom";
 import FlexBetween from "componentsAdmin/FlexBetween";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
 import axios from "axios"; // Importer axios
 
 
@@ -24,9 +24,8 @@ const Models = () => {
     icon: "",
     description: "",
   })
-  
+  const [updateModel] = useUpdateModelMutation();
   const theme = useTheme();
-  const [removeModel] = useRemoveModelMutation();
   // hadi
   useEffect(() => {
     const fetchModels = async () => {
@@ -48,7 +47,7 @@ const Models = () => {
       flex: 0.6,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar src={`http://localhost:3001/Images/${params.row.icon}`} alt={params.row.name} />
+          <Avatar src={`https://my-invoice-api.vercel.app/Images/${params.row.icon}`} alt={params.row.name} />
           <Box ml={1}>
             <div>{params.row.name}</div>
           </Box>
@@ -90,8 +89,17 @@ const Models = () => {
 
   const handleDelete = async (id) => {
     try {
-      await removeModel(id);
-      window.location.reload();
+      const thisModel = model.find((m) => m._id === id);
+      if(thisModel) {
+        thisModel.active = false;
+        const {data} = await updateModel({ id: thisModel._id, model: thisModel });
+        if(data.success) {
+          toast.success("La suppresion de model se passe correctement");
+          setModel(model.filter((m) => m._id !== id));
+        } else {
+          toast.error("La suppresion de model ne s'est pas passé correctement");
+        }
+      }
     } catch (error) {
       console.log(error);
     }

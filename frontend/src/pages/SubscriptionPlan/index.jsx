@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, useTheme, IconButton } from "@mui/material";
-import { useGetSubscriptionsQuery, useRemoveSubscriptionMutation } from "state/api";
+import {  useRemoveSubscriptionMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";

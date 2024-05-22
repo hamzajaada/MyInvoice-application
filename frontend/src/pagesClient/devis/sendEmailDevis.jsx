@@ -86,7 +86,7 @@
 import React, { useEffect, useState } from 'react';
 import { useGetDeviDetailsQuery } from "state/api";
 import { useParams, useNavigate } from "react-router-dom";
-import { useTheme, CircularProgress, Typography, Button, Box } from '@mui/material';
+import { CircularProgress, Typography, Button, Box } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import axios from 'axios';

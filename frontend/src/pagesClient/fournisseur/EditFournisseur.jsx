@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { TextField, useTheme, Button, Box } from "@mui/material";
 import Header from "componentsAdmin/Header";
-import { useUpdateFournisseurMutation, useGetOneFournisseurQuery, useRemoveFournisseurMutation } from "state/api";
+import { useUpdateFournisseurMutation, useGetOneFournisseurQuery } from "state/api";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const EditFournisseur = () => {
   const navigate = useNavigate()
@@ -19,7 +20,6 @@ const EditFournisseur = () => {
   const {id} = useParams();
   const {data : fournisseurData} =useGetOneFournisseurQuery(id);
   const [editFournisseur] = useUpdateFournisseurMutation();
-  const [removeFournisseur] = useRemoveFournisseurMutation();
   const userName = localStorage.getItem("userName");
 
   useEffect(() => {
@@ -34,8 +34,15 @@ const EditFournisseur = () => {
 
   const handleDelete = async () => {
     try {
-      await removeFournisseur(id);
-      navigate(`/${userName}/fournisseurs`);
+      if(fournisseurData) {
+        const {data} = await editFournisseur({ id, fournisseur: { ...fournisseurData, active: false } });
+        if(data.success) {
+          toast.success("La suppresion du fournisseur se passe correctement");
+          navigate(`/${userName}/fournisseurs`);
+        } else {
+          toast.error("La suppresion du fournisseur ne s'est pas déséli");
+        }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -45,8 +52,13 @@ const EditFournisseur = () => {
     event.preventDefault();
     try {
       console.log(fournisseur);
-      await editFournisseur({ id, fournisseur });
-      navigate(`/${userName}/fournisseurs`);
+      const {data} = await editFournisseur({ id, fournisseur });
+      if(data.success) {
+        toast.success("La suppresion du fournisseur se passe correctement");
+        navigate(`/${userName}/fournisseurs`);
+      } else {
+        toast.error("La suppresion du fournisseur ne s'est pas déséli");
+      }
     } catch (error) {
       console.log(error);
     }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, useTheme, IconButton, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { useGetClientsQuery, useRemoveClientMutation } from "state/api";
+import { useUpdateClientMutation } from "state/api";
 import Header from "componementClient/Header";
 import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
 import PersonIcon from '@mui/icons-material/Person';
@@ -12,6 +12,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Clients  = () => {
   const theme = useTheme();
@@ -39,7 +40,7 @@ const Clients  = () => {
       navigate("/");
     }
   }, [id, navigate]); 
-  const [removeClient] = useRemoveClientMutation();
+  const [updateClient] = useUpdateClientMutation();
   // const totalInvoices = data ? data.totalItems : 0;
   const columns = [
     
@@ -109,8 +110,18 @@ const Clients  = () => {
   
   const handleDelete = async (id) => {
     try {
-      await removeClient(id);
-      window.location.reload();
+      const thisClient = Client.find((c) => c._id === id) 
+      if (thisClient) {
+        thisClient.active = false
+        const {data} = await updateClient({ id, client: thisClient });
+        if(data.success) {
+          toast.success("La suppresion de client se passe correctement");
+          setClient(Client.filter((c) => c._id !== id));
+        } else {
+          toast.error("La suppresion de client ne s'est pas passé correctement");
+        }
+      }
+      // window.location.reload();
     } catch (error) {
       console.log(error);
     }

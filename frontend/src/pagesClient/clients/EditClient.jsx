@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { TextField, useTheme, Button, Box } from "@mui/material";
 import Header from "componentsAdmin/Header";
-import { useUpdateClientMutation, useGetOneClientQuery, useRemoveClientMutation } from "state/api";
+import { useUpdateClientMutation, useGetOneClientQuery } from "state/api";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const EditClient = () => {
   const navigate = useNavigate()
@@ -19,7 +20,6 @@ const EditClient = () => {
   const {id} = useParams();
   const {data : clientData} =useGetOneClientQuery(id);
   const [editClient] = useUpdateClientMutation();
-  const [removeClient] = useRemoveClientMutation();
   const userName = localStorage.getItem("userName");
 
   useEffect(() => {
@@ -34,8 +34,17 @@ const EditClient = () => {
 
   const handleDelete = async () => {
     try {
-      await removeClient(id);
-      navigate(`/${userName}/clients`);
+      if(clientData) {
+        const newClient = {...clientData, active: false}
+        const {data} = await editClient({id, client: newClient});
+        if(data.success) {
+          toast.success("La suppresion de client se passe correctement");
+          navigate(`/${userName}/clients`);
+        } else {
+          toast.error("La suppresion de client ne s'est pas réussie");
+        }
+      }
+      
     } catch (error) {
       console.log(error);
     }
@@ -45,8 +54,13 @@ const EditClient = () => {
     event.preventDefault();
     try {
       console.log(client);
-      await editClient({ id, client });
-      navigate(`/${userName}/clients`);
+      const {data} = await editClient({ id, client });
+      if(data.success) {
+        toast.success("La modification de client se passe correctement");
+        navigate(`/${userName}/clients`);
+      } else {
+        toast.error("La modification de client ne s'est pas réussie");
+      }
     } catch (error) {
       console.log(error);
     }

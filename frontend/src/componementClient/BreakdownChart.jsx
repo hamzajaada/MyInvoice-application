@@ -13,14 +13,14 @@ const BreakdownChart = () => {
 
   const formattedData = [
     {
-        id: "Factures Payées",
-        label: "Payé",
+        id: "Payée",
+        label: "Factures Payées",
         value: data.totalPaidInvoices,
         color: theme.palette.secondary[400],
       },
       {
-        id: "Factures Impayées",
-        label: "Impayé",
+        id: "Impayée",
+        label: "Factures Impayées",
         value: data.totalUnpaidInvoices,
         color: theme.palette.secondary[200],
       },
@@ -95,7 +95,7 @@ const BreakdownChart = () => {
             justify: false,
             translateX:  20,
             translateY:  50, 
-            itemsSpacing: 0,
+            itemsSpacing: 30,
             itemWidth: 85,
             itemHeight: 18,
             itemTextColor: "#999",
@@ -115,18 +115,19 @@ const BreakdownChart = () => {
         ]}
       />
       <Box
+        width= "83px"
         position="absolute"
         top="50%"
-        left="50.5%"
+        left="50%"
         color={theme.palette.secondary[400]}
         textAlign="center"
         pointerEvents="none"
         sx={{
-          transform:  "translate(-75%, -170%)",
+          transform:  "translate(-67%, -110%)",
         }}
       >
-        <Typography variant="h6" color="orange">
-              {true && "Total:"} {data.totalPaidAmount} DH
+        <Typography variant="h6" color="#f57628" fontWeight="bold">
+              {true && "Total:"} {data.totalPaidAmount.toFixed(2)} DHs
         </Typography>
       </Box>
     </Box>

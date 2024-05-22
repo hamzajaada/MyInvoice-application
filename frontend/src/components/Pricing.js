@@ -3,7 +3,7 @@ import React , { useEffect,  useState } from "react";
 import { pricing } from "../data";
 import { HiCheck, HiOutlineArrowNarrowRight } from "react-icons/hi";
 import { useGetThreePacksQuery } from "state/api";
-import logoIm from '../assets/img/pricing/icon1.svg'
+// import logoIm from '../assets/img/pricing/icon1.svg'
 import { useNavigate } from 'react-router-dom';
 import tr from "Services/tr";
 import Cookies from "js-cookie";
@@ -102,7 +102,7 @@ const Pricing = () => {
                 >
                   {/* card icon */}
                   <div className="mb-8">
-                    <img src={`http://localhost:3001/Images/${logo}`} alt=""  />
+                    <img src={`${logo.url}`} alt=""  />
                   </div>
                   {/* card title */}
                   <div className="dark:text-white text-[32px] font-Quicksand font-semibold mb-8">

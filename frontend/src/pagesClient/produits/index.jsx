@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { Box, useTheme, Button, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { useGetProductsQuery, useRemoveProduitMutation } from "state/api";
+import {  useUpdateProduitMutation } from "state/api";
 import Header from "componementClient/Header";
 import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -12,8 +12,9 @@ import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
 import axios from "axios";
+
 const Products  = () => {
   const theme = useTheme();
   const id = localStorage.getItem('userId');
@@ -43,7 +44,7 @@ const Products  = () => {
     }
   }, [id, navigate]);  
 
-  const [removeProduit] = useRemoveProduitMutation();
+  const [updateProduit] = useUpdateProduitMutation();
   const columns = [
     {
       field: "name",
@@ -124,14 +125,24 @@ const Products  = () => {
     window.location.href = `/${userName}/produits/edit/${id}`;
     };
   
-  const handleDelete = async (id) => {
-    try {
-      await removeProduit(id);
-      window.location.reload()
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    const handleDelete = async (id) => {
+      try {
+        const thisProd = Product.find((p) => p._id === id)
+        if(thisProd) {
+          thisProd.active = false
+          const {data} = await updateProduit({id, ProduitData: thisProd})
+          if(data.success) {
+            toast.success("La suppression du produit se passe correctement")
+            setProduct(Product.filter((p) => p._id !== id))
+          } else {
+            toast.error("La suppression du produit ne s'est passé pas correctement")
+          }
+        }
+        // window.location.reload()
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
 
   return (

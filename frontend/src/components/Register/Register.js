@@ -1,47 +1,62 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import COVER_IMAGE from "../../assets/img/Login/Blue White Minimal Creative Illustration Short Link Application Online Instagram Story (4).png";
-import Gogle from "../../assets/img/Login/th.jpg";
-import Header from "components/Header";
+import { toast } from "react-toastify";import Header from "components/Header";
 import { useRegisterEntrepriseMutation } from "state/api";
 import tr from "Services/tr";
 import Cookies from "js-cookie";
 const SignUp = () => {
-  const [logo, setLogo] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    role: "standard",
-    subscription: "active",
-    phone: "",
-    address: "",
-    // logo: null,
-  });
+  const [logo, setLogo] = useState([]);
+  const [name, setName] = useState("");
+  const [email, setEmaile] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("standard");
+  const [subscription, setSubscription] = useState("active");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
 
   const navigate = useNavigate();
   const [register] = useRegisterEntrepriseMutation();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+    setFileToBase(file);
   };
 
-  const handleLogoChange = (e) => {
-    setLogo(e.target.files[0]);
+  const setFileToBase = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setLogo(reader.result);
+    };
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataWithLogo = new FormData();
-    formDataWithLogo.append("logo", logo);
-    Object.entries(formData).forEach(([key, value]) => {
-      formDataWithLogo.append(key, value);
-    });
+    const entreprise = {
+      name,
+      email,
+      password,
+      confirmPassword,
+      role,
+      subscription,
+      phone,
+      address,
+      logo,
+    };
     try {
-      await register(formDataWithLogo);
-      navigate("/login");
+      const { data } = await register(entreprise);
+      if (data.success) {
+        toast.success("Le registre se passe correctement");
+        navigate("/login");
+      } else {
+        toast.error(
+          "Le registre ne s'est pas passé correctement : " + data.message
+        );
+      }
     } catch (err) {
+      toast.error("Erreur lors de l'inscription : " + err.message);
       console.log(err);
     }
   };
@@ -63,7 +78,7 @@ const SignUp = () => {
     console.log(langto);
     // fonction multiThreads
     const translateData = async () => {
-     if (langto != "fra" && langto) {
+     if (langto !== "fra" && langto) {
       setInscrire(await tr(Inscrire , "fra", langto));
       setEntreprisename(await tr(Entreprisename , "fra", langto))
       setEmail(await tr(Email , "fra", langto));
@@ -101,8 +116,8 @@ const SignUp = () => {
               type="text"
               name="name"
               placeholder={Entreprisename}
-              value={formData.name}
-              onChange={handleChange}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="w-full text-black py-2 my-2 font-Quicksand font-semibold bg-transparent border-b border-black outline-none focus:outline-none dark:border dark:border-b-accent dark:text-white"
               required
             />
@@ -110,8 +125,8 @@ const SignUp = () => {
               type="email"
               name="email"
               placeholder={Email}
-              value={formData.email}
-              onChange={handleChange}
+              value={email}
+              onChange={(e) => setEmaile(e.target.value)}
               className="w-full text-black py-2 my-2 font-Quicksand font-semibold bg-transparent border-b border-black outline-none focus:outline-none dark:border dark:border-b-accent dark:text-white"
               required
             />
@@ -119,8 +134,8 @@ const SignUp = () => {
               type="password"
               name="password"
               placeholder={Motdepasse}
-              value={formData.password}
-              onChange={handleChange}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full text-black py-2 my-2 font-Quicksand font-semibold bg-transparent border-b border-black outline-none focus:outline-none dark:border dark:border-b-accent dark:text-white"
               required
             />
@@ -128,8 +143,8 @@ const SignUp = () => {
               type="password"
               name="confirmPassword"
               placeholder={Confirmezlemotdepasse}
-              value={formData.confirmPassword}
-              onChange={handleChange}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full text-black py-2 my-2 font-Quicksand font-semibold bg-transparent border-b border-black outline-none focus:outline-none dark:border dark:border-b-accent dark:text-white"
               required
             />
@@ -137,8 +152,8 @@ const SignUp = () => {
               type="text"
               name="phone"
               placeholder={Téléphone}
-              value={formData.phone}
-              onChange={handleChange}
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
               className="w-full text-black py-2 my-2 bg-transparent font-Quicksand font-semibold border-b border-black outline-none focus:outline-none dark:border dark:border-b-accent dark:text-white"
               required
             />
@@ -146,8 +161,8 @@ const SignUp = () => {
               type="text"
               name="address"
               placeholder={Adresse}
-              value={formData.address}
-              onChange={handleChange}
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
               className="w-full text-black py-2 my-2 bg-transparent font-Quicksand font-semibold border-b border-black outline-none focus:outline-none dark:border dark:border-b-accent dark:text-white"
               required
             />
@@ -155,7 +170,7 @@ const SignUp = () => {
               type="file"
               name="logo"
               accept="image/*"
-              onChange={handleLogoChange}
+              onChange={handleImage}
               className="w-full text-black py-2 my-2 bg-transparent font-Quicksand font-semibold border-b border-black outline-none focus:outline-none dark:border dark:border-b-accent dark:text-white"
             />
             <button

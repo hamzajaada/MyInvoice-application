@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, useTheme, IconButton, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "componementClient/Header";
-import { useGetOnePackQuery, useRemoveBonCommandeMutation } from "state/api";
+import { useGetOnePackQuery, useUpdateBonCommandeMutation } from "state/api";
 import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
 import { useNavigate } from "react-router-dom";
 import {
@@ -19,6 +19,7 @@ import FlexBetween from "componentsAdmin/FlexBetween";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const BonCommandes = () => {
   const theme = useTheme();
@@ -61,7 +62,7 @@ const BonCommandes = () => {
       navigate("/");
     }
   }, [id, navigate]);
-  const [removeBonCommandes] = useRemoveBonCommandeMutation();
+  const [updateBonCommandes] = useUpdateBonCommandeMutation();
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -260,8 +261,18 @@ const BonCommandes = () => {
 
   const handleDelete = async (id) => {
     try {
-      await removeBonCommandes(id);
-      window.location.reload();
+      const thisBon = bonCommandes.find((b) => b._id === id)
+      if(thisBon) {
+        thisBon.active = false
+        const {data} = await updateBonCommandes({id, bonCommandeData: thisBon})
+        if(data.success) {
+          toast.success("La suppresion de bon de commande se passe correctement");
+          setBonCommandes(bonCommandes.filter((b) => b._id !== id));
+        } else {
+          toast.error("La suppresion de bon de commande ne s'est pas passé correctement");
+        }
+      }
+      // window.location.reload();
     } catch (error) {
       console.log(error);
     }

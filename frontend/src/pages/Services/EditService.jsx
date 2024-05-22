@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { TextField, Box, Button, useTheme } from "@mui/material";
 import Header from "componentsAdmin/Header";
-import { useUpdateServiceMutation, useGetOneServiceQuery, useRemoveServiceMutation } from "state/api";
+import { useUpdateServiceMutation, useGetOneServiceQuery } from "state/api";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const EditService = () => {
   const navigate = useNavigate()
@@ -10,16 +11,16 @@ const EditService = () => {
     navigate('/');
   }
   const [serviceName, setServiceName] = useState("");
+  const [active, setActive] = useState(true)
   const [updateService] = useUpdateServiceMutation();
-  const [removeService] = useRemoveServiceMutation();
   const { id } = useParams();
-  const Navigate = useNavigate();
   const { data: serviceData } = useGetOneServiceQuery(id);
   const theme = useTheme();
 
   useEffect(() => {
     if (serviceData) {
       setServiceName(serviceData.ServiceName);
+      setActive(serviceData.active);
     }
   }, [serviceData]);
 
@@ -30,8 +31,13 @@ const EditService = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await updateService({ id, ServiceData: { ServiceName: serviceName } });
-      Navigate("/Services");
+      const { data } = await updateService({ id, ServiceData: { ServiceName: serviceName, active: active } });
+      if(data.success) {
+        toast.success("La modification de service se passe correctement");
+        navigate("/Services");
+      } else {
+        toast.error("La modification de service ne s'est pas dés correctement");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -39,8 +45,17 @@ const EditService = () => {
 
   const handleDelete = async () => {
     try {
-      await removeService(id);
-      Navigate("/Services");
+      if(active) {
+        setActive(false)
+        const {data} = await updateService({ id, ServiceData: { ServiceName: serviceName, active: active } });
+        if(data.success) {
+          toast.success("La suppresion de service se passe correctement");
+          navigate("/Services");
+        } else {
+          toast.error("La suppresion de service ne s'est pas dés correctement");
+        }
+      }
+      
     } catch (error) {
       console.log(error);
     }

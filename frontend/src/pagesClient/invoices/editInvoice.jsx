@@ -17,12 +17,12 @@ import Header from "componentsAdmin/Header";
 import {
   useGetOneInvoiceQuery,
   useUpdateInvoiceMutation,
-  useRemoveInvoiceMutation,
   useGetClientsQuery,
   useGetProductsQuery,
   useGetAllTaxEntrepriseQuery,
 } from "state/api";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const EditInvoice = () => {
   const Navigate = useNavigate();
@@ -77,7 +77,6 @@ const EditInvoice = () => {
   }, [allTaxData]);
 
   const [updateInvoice] = useUpdateInvoiceMutation();
-  const [removeInvoice] = useRemoveInvoiceMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -143,8 +142,13 @@ const EditInvoice = () => {
         totalAmount = totalAmount * (1 + taxesAmount / 100);
       }
       updatedInvoice = { ...updatedInvoice, amount: totalAmount };
-      await updateInvoice({ id, InvoiceData: updatedInvoice });
-      Navigate(`/${userName}/factures`);
+      const {data} = await updateInvoice({ id, InvoiceData: updatedInvoice });
+      if(data.success) {
+        toast.success("La modification de facture se passe correctement");
+        Navigate(`/${userName}/factures`);
+      } else {
+        toast.error("La modification de facture ne s'est pas défini");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -166,8 +170,16 @@ const EditInvoice = () => {
 
   const handleDelete = async () => {
     try {
-      await removeInvoice(id);
-      Navigate(`/${userName}/factures`);
+      if(invoiceData) {
+        const {data} = await updateInvoice({ id, InvoiceData: { ...invoiceData, active: false } })
+        if(data.success) {
+          toast.success("La suppresion de facture se passe correctement");
+          Navigate(`/${userName}/factures`);
+        } else {
+          toast.error("La suppresion de facture ne s'est pas défini");
+        }
+      }
+      
     } catch (error) {
       console.log(error);
     }
@@ -321,7 +333,7 @@ const EditInvoice = () => {
                     />
                     <Button
                       variant="contained"
-                      color="secondary"
+                      color="warning"
                       onClick={() => handleDeleteProduct(item.productId)}
                       style={{ marginLeft: "16px" }}
                     >
@@ -375,7 +387,7 @@ const EditInvoice = () => {
                     <Button
                       width={"40%"}
                       variant="contained"
-                      color="secondary"
+                      color="warning"
                       onClick={() => handleDeleteTax(index)}
                       style={{ marginLeft: "16px" }}
                     >

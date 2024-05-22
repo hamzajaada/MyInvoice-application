@@ -6,8 +6,10 @@ import { useMemo } from "react";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "aos/dist/aos.css";
+
 import WelcomePage from "components/WelcomePage";
 import Register from "components/Register/Register";
 import Model from "components/Modele/Model";
@@ -196,6 +198,7 @@ const App = () => {
             <Route path="/:userName/devis/details/:id" element={<AddThemeProvider theme={theme} pages={DetailsDevi} />}/>
             <Route path="/:userName/devis/email/:id" element={<AddThemeProvider theme={theme} pages={SendEmailDevis} />} />          </Route>
         </Routes>
+        <ToastContainer />
       </div>
     </BrowserRouter>
   );
@@ -209,4 +212,4 @@ const AddThemeProvider = ({ theme, children, pages }) => (
 );
 
 
-export default App;
+export default App;

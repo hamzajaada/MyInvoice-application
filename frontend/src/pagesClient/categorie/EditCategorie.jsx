@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { TextField, useTheme, Button, Box } from "@mui/material";
 import Header from "componentsAdmin/Header";
-import { useUpdateCategorieMutation, useGetOneCategorieQuery, useRemoveCategorieMutation } from "state/api";
+import { useUpdateCategorieMutation, useGetOneCategorieQuery } from "state/api";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const EditCategorie = () => {
   const navigate = useNavigate()
@@ -18,7 +19,6 @@ const EditCategorie = () => {
   console.log("id  : ", id)
   const {data : categorieData} = useGetOneCategorieQuery(id);
   const [editCategorie] = useUpdateCategorieMutation();
-  const [removeCategorie] = useRemoveCategorieMutation();
 
   useEffect(() => {
     if (categorieData) {
@@ -32,8 +32,17 @@ const EditCategorie = () => {
 
   const handleDelete = async () => {
     try {
-      await removeCategorie(id);
-      navigate(`/${userName}/categories`);
+      if(categorieData) {
+        const newCategorie = {...categorieData, active: false}
+        const {data} = await editCategorie({id, categorie: newCategorie});
+        if(data.success) {
+          toast.success("La suppresion de catégorie se passe correctement");
+          navigate(`/${userName}/categories`);
+        } else {
+          toast.error("La suppresion de catégorie ne s'est pas réussie");
+        }
+      }
+      
     } catch (error) {
       console.log(error);
     }
@@ -43,8 +52,13 @@ const EditCategorie = () => {
     event.preventDefault();
     try {
       console.log(categorie);
-      await editCategorie({ id, categorie });
-      navigate(`/${userName}/categories`);
+      const {data} = await editCategorie({ id, categorie });
+      if(data.success) {
+        toast.success("La modification de catégorie se passe correctement");
+        navigate(`/${userName}/categories`);
+      } else {
+        toast.error("La modification de catégorie ne s'est pas réussie");
+      }
     } catch (error) {
       console.log(error);
     }

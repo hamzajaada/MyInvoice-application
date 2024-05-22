@@ -1,31 +1,42 @@
 const Pack = require("../Models/PackSchema");
 const Service = require("../Models/ServiceSchema");
 const mongoose = require("mongoose");
+const cloudinary = require("../Utils/cloudinary");
 
 const addPack = async (req, res) => {
   try {
     const packData = req.body;
-    console.log("req : ", req);
-    const serviceIds = packData.services.split(",");
-    const logo = req.file ? req.file.filename : null;
+    if (!packData.logo) {
+      return res.status(400).json({ success: false, message: "Logo is missing" });
+    }
+    const result = await cloudinary.uploader.upload(packData.logo, {
+      folder: "Pack",
+    });
     const pack = new Pack({
       name: packData.name,
       description: packData.description,
-      services: serviceIds.map((serviceId) => ({ serviceId })),
+      services: packData.services,
       price: packData.price,
-      logo,
+      logo: {
+        public_id: result.public_id,
+        url: result.secure_url,
+      },
     });
     await pack.save();
-    res.status(201).json(pack);
+    res.status(201).json({ success: true, pack });
   } catch (error) {
     console.log(error);
-    res.status(500).send("Erreur serveur lors de l'ajout du pack");
+    res.status(500).send({
+      success: false,
+      message: `Erreur serveur lors de l'ajout de pack : ${error}`,
+      error,
+    });
   }
 };
 
 const getAllPacks = async (req, res) => {
   try {
-    const packs = await Pack.find().populate("services.serviceId");
+    const packs = await Pack.find({active:true}).populate("services.serviceId");
     res.status(201).json(packs);
   } catch (error) {
     res.status(500).send("Erreur serveur lors de la recherche des packs");
@@ -81,29 +92,82 @@ const getOnePack = async (req, res) => {
 
 const updatePack = async (req, res) => {
   try {
-    const logo = req.file ? req.file.filename : null;
-    let { name, description, services, price } = req.body;
-    services = JSON.parse(services);
-    const updatedPackData = {
-      name,
-      description,
-      services,
-      price,
+    const currentPack = await Pack.findById(req.params.id);
+    const data = {
+      name: req.body.name,
+      description: req.body.description,
+      services: JSON.parse(req.body.services),
+      price: req.body.price,
     };
-    if (logo) {
-      updatedPackData.logo = logo;
+    
+    if (req.file) {
+      const ImgId = currentPack.logo.public_id;
+      if (ImgId) {
+        await cloudinary.uploader.destroy(ImgId);
+      }
+
+      const result = await cloudinary.uploader.upload_stream({
+        folder: 'Pack'
+      }, async (error, result) => {
+        if (error) {
+          console.error(error);
+          res.status(500).send({
+            success: false,
+            message: "Erreur serveur lors de la mise à jour de pack",
+            error,
+          });
+        } else {
+          data.logo = {
+            public_id: result.public_id,
+            url: result.secure_url,
+          };
+          
+          const updatedPack = await Pack.findByIdAndUpdate(req.params.id, data, { new: true });
+          
+          // Send success response
+          res.status(200).json({
+            success: true,
+            updatedPack,
+          });
+        }
+      }).end(req.file.buffer);
+    } else {
+      const updatedPack = await Pack.findByIdAndUpdate(req.params.id, data, { new: true });
+      
+      res.status(200).json({
+        success: true,
+        updatedPack,
+      });
     }
-    const updatedPack = await Pack.findByIdAndUpdate(
-      req.params.id,
-      updatedPackData,
-      { new: true }
-    );
-    res.status(201).json(updatedPack);
   } catch (error) {
     console.log(error);
-    res.status(500).send("Erreur serveur lors de la mise à jour de pack");
+    // Send error response
+    res.status(500).json({
+      success: false,
+      message: "Erreur serveur lors de la mise à jour de pack",
+      error,
+    });
   }
 };
+
+const updatePackActive = async (req, res) => {
+  try {
+    const pack = await Pack.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    res.status(200).json({
+      success: true,
+      pack,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Erreur serveur lors de la suppression de pack",
+      error,
+    });
+  }
+}
+
 
 const removePack = async (req, res) => {
   try {
@@ -122,4 +186,5 @@ module.exports = {
   updatePack,
   removePack,
   getAllPacksThreeService,
+  updatePackActive,
 };

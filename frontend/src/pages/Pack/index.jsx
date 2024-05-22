@@ -14,12 +14,13 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Header from "componentsAdmin/Header";
-import { useGetPacksQuery, useRemovePackMutation } from "state/api";
 import { Link } from "react-router-dom";
 import FlexBetween from "componentsAdmin/FlexBetween";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useUpdatePackActiveMutation } from "state/api";
+import { toast } from "react-toastify";
 
 const Pack = ({
   _id,
@@ -27,24 +28,11 @@ const Pack = ({
   description,
   services,
   price,
-  startDate,
-  endDate,
+  handleDelete, 
 }) => {
-  const navigate = useNavigate();
-  if (!localStorage.getItem("userId")) {
-    navigate("/");
-  }
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [removePack] = useRemovePackMutation();
-  const handleDelete = async (id) => {
-    try {
-      await removePack(id);
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   return (
     <Card
       sx={{
@@ -73,14 +61,15 @@ const Pack = ({
         <Button
           variant="primary"
           size="small"
-          onClick={() => (window.location.href = `/Pack/edit/${_id}`)}
+          component={Link}
+          to={`/Pack/edit/${_id}`}
         >
           Update
         </Button>
         <Button
           variant="primary"
           size="small"
-          onClick={() => handleDelete(_id)}
+          onClick={() => handleDelete(_id)} // Utiliser la fonction de suppression
         >
           Delete
         </Button>
@@ -109,9 +98,10 @@ const Pack = ({
 };
 
 const Packs = () => {
-  
   const [packs, setPacks] = useState([]);
-  // hadi
+  // const navigate = useNavigate();
+  const [updatePack] = useUpdatePackActiveMutation();
+
   useEffect(() => {
     const fetchPacks = async () => {
       try {
@@ -124,8 +114,27 @@ const Packs = () => {
 
     fetchPacks();
   }, []);
+
   const isNonMobile = useMediaQuery("(min-width: 1000px)");
- 
+
+  const handleDelete = async (id) => {
+    try {
+      const thisPack = packs.find((pack) => pack._id === id);
+      if (thisPack) {
+        thisPack.active = false;
+        const {data} = await updatePack({ id, pack: thisPack });
+        if(data.success) {
+          toast.success("La suppresion de pack se passe correctement");
+          setPacks(packs.filter((pack) => pack._id !== id));
+        } else {
+          toast.error("La suppresion de pack ne s'est pas passé correctement");
+        }
+        
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -169,6 +178,7 @@ const Packs = () => {
                 description={description}
                 price={price}
                 services={services}
+                handleDelete={handleDelete} // Passer la fonction de suppression
               />
             )
           )}
@@ -181,3 +191,4 @@ const Packs = () => {
 };
 
 export default Packs;
+

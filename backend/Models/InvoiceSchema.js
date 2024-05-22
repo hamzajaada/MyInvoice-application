@@ -15,13 +15,14 @@ const InvoiceSchema = new Schema({
     {
       taxId: {
         type: Schema.Types.ObjectId,
-        ref: "Tax",
+        ref: "Taks",
         required: true,
       }
     }
   ],
   status: { type: String, enum: ['sent', 'paid', 'late'], default: 'sent' },
   amount: { type: Number, required: true },
+  active: { type: Boolean, default: true },
 },
 {timestamps: true}
 );

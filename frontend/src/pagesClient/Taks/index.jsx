@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, useTheme, Button, IconButton } from "@mui/material";
-import { useRemoveTaksMutation } from "state/api";
+import { useUpdateTaxMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -10,6 +10,9 @@ import { Link } from "react-router-dom";
 import FlexBetween from "componentsAdmin/FlexBetween";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
+// hello
+
 const Categories = () => {
   const navigate = useNavigate();
   if (!localStorage.getItem("userId")) {
@@ -43,7 +46,7 @@ const Categories = () => {
       navigate("/");
     }
   }, [id, navigate]);
-  const [removeTaks] = useRemoveTaksMutation();
+  const [updateTaks] = useUpdateTaxMutation();
 
   const columns = [
     {
@@ -90,8 +93,18 @@ const Categories = () => {
 
   const handleDelete = async (id) => {
     try {
-      await removeTaks(id);
-      window.location.reload();
+      const thisTax = Taks.find((t) => t._id === id)
+      if(thisTax) {
+        thisTax.active = false
+        const {data} = await updateTaks({id, taxData: thisTax})
+        if(data.success) {
+          toast.success("La suppresion de tax se passe correctement");
+          setTaks(Taks.filter((t) => t._id !== id));
+        } else {
+          toast.error("La suppresion de tax ne s'est pas passé correctement");
+        }
+      }
+      // window.location.reload();
     } catch (error) {
       console.log(error);
     }

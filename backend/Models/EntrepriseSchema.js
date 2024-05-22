@@ -9,10 +9,28 @@ const EnterpriseSchema = new Schema({
     subscription: { type: String, enum: ['active', 'expired', 'cancelled'], default: 'active' },
     phone: { type: String },
     address: { type: String},
-    logo: { type: String },
+    logo: {
+      public_id: {
+        type: String,
+        required: true,
+      },
+      url: {
+        type: String,
+        required: true,
+      },
+    },
     status: { type: String, enum: ['active', 'cancelled'], default: 'active' },
     googleId : String,
-    // secret : String,
+    signature: {
+      public_id: {
+        type: String,
+        required: true,
+      },
+      url: {
+        type: String,
+        required: true,
+      },
+    },
   },
   {timestamps: true}
 );
