@@ -1,34 +1,38 @@
 import React, { useState, useEffect } from "react";
-import { Box, useTheme, IconButton, Avatar } from "@mui/material";
 import {
-  useUpdateEntrepriseMutation
-} from "state/api";
+  Box,
+  useTheme,
+  IconButton,
+  Avatar,
+  useMediaQuery,
+} from "@mui/material";
+import { useUpdateEntrepriseMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Importer axios
+import axios from "axios";
 
 const Entreprises = () => {
   const navigate = useNavigate();
-  if (!localStorage.getItem("userId")) {
-    navigate("/");
-  }
-  const [entreprises, setEntreprises] = useState([]);
   const theme = useTheme();
-  // hadi
   const [isLoading, setIsLoading] = useState(true);
+  const [entreprises, setEntreprises] = useState([]);
   const [updateEntreprise] = useUpdateEntrepriseMutation();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   useEffect(() => {
     const fetchEntreprises = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/Api/Entreprise");
+        const response = await axios.get(
+          "http://localhost:3001/Api/Entreprise"
+        );
         setEntreprises(response.data);
-        setIsLoading(false); // Mettre à jour l'état de chargement une fois la requête terminée
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
-        setIsLoading(false); // Mettre à jour l'état de chargement en cas d'erreur
+        setIsLoading(false);
       }
     };
 
@@ -42,9 +46,9 @@ const Entreprises = () => {
   const handleDelete = async (id) => {
     try {
       const thisEntreprise = entreprises.find((d) => d._id === id);
-      const newEntreprise = {...thisEntreprise, status: "cancelled"}
-      await updateEntreprise({id, newEntreprise })
-      setEntreprises(entreprises.filter(entreprise => entreprise._id !== id));
+      const newEntreprise = { ...thisEntreprise, status: "cancelled" };
+      await updateEntreprise({ id, newEntreprise });
+      setEntreprises(entreprises.filter((entreprise) => entreprise._id !== id));
     } catch (error) {
       console.log(error);
     }
@@ -54,11 +58,7 @@ const Entreprises = () => {
     const { logo, name } = params.row;
     return (
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Avatar
-          src={`${logo.url}`}
-          alt={name}
-          sx={{ width: 35, height: 35 }} // Taille fixe pour l'avatar
-        />
+        <Avatar src={`${logo.url}`} alt={name} sx={{ width: 35, height: 35 }} />
         <Box ml={1}>
           <div>{name}</div>
         </Box>
@@ -70,33 +70,33 @@ const Entreprises = () => {
     {
       field: "name",
       headerName: "Entreprise",
-      flex: 0.5,
+      width: isSmallScreen ? 150 : 200,
       renderCell: renderAvatarCell,
     },
     {
       field: "email",
       headerName: "Email",
-      flex: 0.5,
+      width: isSmallScreen ? 150 : 200,
     },
     {
       field: "phone",
       headerName: "Phone Number",
-      flex: 0.5,
+      width: isSmallScreen ? 150 : 200,
     },
     {
       field: "address",
       headerName: "Address",
-      flex: 0.8,
+      width: isSmallScreen ? 200 : 300,
     },
     {
       field: "role",
       headerName: "Role",
-      flex: 0.4,
+      width: isSmallScreen ? 100 : 150,
     },
     {
       field: "actions",
       headerName: "Actions",
-      flex: 0.3,
+      width: isSmallScreen ? 100 : 150,
       sortable: false,
       renderCell: (params) => (
         <Box>
@@ -106,7 +106,6 @@ const Entreprises = () => {
           >
             <InfoOutlinedIcon />
           </IconButton>
-
           <IconButton
             onClick={() => handleDelete(params.row._id)}
             aria-label="delete"
@@ -123,8 +122,9 @@ const Entreprises = () => {
       <Header title="ENTREPRISES" subtitle="Liste d'entreprises" />
       <Box
         mt="40px"
-        height="100vh"
         sx={{
+          overflowX: isSmallScreen ? "auto" : "hidden",
+          width: "100%",
           "& .MuiDataGrid-root": {
             border: "none",
           },
@@ -156,6 +156,10 @@ const Entreprises = () => {
           getRowId={(row) => row._id}
           rows={entreprises}
           columns={columns}
+          sx={{
+            overflowX: isSmallScreen ? "auto" : "hidden",
+            width: "100%",
+          }}
         />
       </Box>
     </Box>
@@ -163,4 +167,3 @@ const Entreprises = () => {
 };
 
 export default Entreprises;
-

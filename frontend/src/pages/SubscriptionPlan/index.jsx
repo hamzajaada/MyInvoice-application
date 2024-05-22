@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, useTheme, IconButton } from "@mui/material";
+import { Box, useTheme, IconButton, useMediaQuery } from "@mui/material";
 import {  useRemoveSubscriptionMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
@@ -23,7 +23,7 @@ const SubscriptionPalns = () => {
     status: "",
   })
   const theme = useTheme();
-  // hadi
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   useEffect(() => {
     const fetchSubscription = async () => {
       try {
@@ -43,37 +43,37 @@ const SubscriptionPalns = () => {
     {
       field: "enterpriseName",
       headerName: "Entreprise",
-      flex: 0.5,
+      width: isSmallScreen ? 150 : 200,
     },
     {
       field: "packName",
       headerName: "Pack",
-      flex: 0.5,
+      width: isSmallScreen ? 150 : 200,
     },
     {
       field: "packPrice",
       headerName: "Prix",
-      flex: 0.5,
+      width: isSmallScreen ? 100 : 150,
     },
     {
       field: "startDate",
       headerName: "Date de début",
-      flex: 0.5,
+      width: isSmallScreen ? 100 : 150,
     },
     {
       field: "endDate",
       headerName: "Date de fin",
-      flex: 0.5,
+      width: isSmallScreen ? 100 : 150,
     },
     {
       field: "status",
       headerName: "Statue",
-      flex: 0.5,
+      width: isSmallScreen ? 100 : 150,
     },
     {
       field: "actions",
       headerName: "Actions",
-      flex: 0.4,
+      width: isSmallScreen ? 100 : 150,
       sortable: false,
       renderCell: (params) => (
         <Box>
@@ -112,8 +112,10 @@ const SubscriptionPalns = () => {
       <Header title="SUBSCRIPTION PLANS" subtitle="Les plans d'abonnement" />
       <Box
         mt="40px"
-        height="75vh"
+        // height="75vh"
         sx={{
+          overflowX: isSmallScreen ? "auto" : "hidden",
+          width: "100%",
           "& .MuiDataGrid-root": {
             border: "none",
           },
@@ -143,6 +145,10 @@ const SubscriptionPalns = () => {
           getRowId={(row) => row._id}
           rows={subscriptionPlan || []}
           columns={columns}
+          sx={{
+            overflowX: isSmallScreen ? "auto" : "hidden",
+            width: "100%",
+          }}
         />
       </Box>
     </Box>
