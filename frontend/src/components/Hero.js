@@ -49,7 +49,7 @@ const Hero = () => {
           {/* text */}
           <div className=' p-[20px] lg:p-[0px] h-auto w-auto lg:w-[50%]   '>
             <h1
-              className='dark:text-white lg:text-[37px] text-center lg:text-left text-[27px]   mt-[280Px]   font-Quicksand  title mb-2 lg:mb-5  font-bold'
+              className='dark:text-white lg:text-[37px] text-center lg:text-left text-[27px] mt-[320Px]    lg:mt-[280Px]   font-Quicksand  title mb-2 lg:mb-5  font-bold'
             
             >
               {title}
@@ -63,7 +63,7 @@ const Hero = () => {
               {subtitle}
             </p>
                 <div
-                  className=' max-w-sm lg:max-w-full mx-auto ml-[-23px]    lg:ml-[0px]  gap-x-2 lg:gap-x-6'
+                  className=' max-w-sm lg:max-w-full mx-auto ml-[-35px]    lg:ml-[0px]  gap-x-2 lg:gap-x-6'
                 >
                   <button className='btn btn-md lg:btn-lg btn-accent px-[40px] ] flex justify-center items-center lg:gap-x-4 md:ml-0'
                   onClick={handleLoginClick}>
