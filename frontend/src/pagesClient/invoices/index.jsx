@@ -27,11 +27,7 @@ const Invoices = () => {
   if (!localStorage.getItem("userId")) {
     navigate("/");
   }
-<<<<<<< HEAD
-  const [removeInvoice] = useRemoveInvoiceMutation();
-=======
   const [updateInvoice] = useUpdateInvoiceMutation();
->>>>>>> 1e46a688aeb50c9a724d2774fea52e0ff1c8ca95
   const packId = localStorage.getItem("packId");
   const id = localStorage.getItem("userId");
   const userName = localStorage.getItem("userName");
