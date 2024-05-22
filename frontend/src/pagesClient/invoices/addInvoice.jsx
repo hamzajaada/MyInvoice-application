@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
+  Typography,
   TextField,
   useTheme,
   Button,
@@ -39,6 +40,35 @@ const AddInvoice = () => {
 
   const Navigate = useNavigate();
 
+  const [totalAmount, setTotalAmount] = useState(0);
+
+  useEffect(() => {
+    if (productsData && taxData) {
+      calculateTotalAmount();
+    }
+  }, [invoice.items, invoice.taxes, productsData, taxData]);
+
+    const calculateTotalAmount = () => {
+      let totalAmount = 0;
+      totalAmount = invoice.items.reduce(
+          (acc, item) =>
+            acc +
+            (productsData?.find((product) => product._id === item.productId)?.price || 0) *
+            item.quantity,
+          0
+        );
+
+        const taxValue = invoice.taxes.reduce(
+          (acc, item) => {
+            const tax = taxData?.find((taxe) => taxe._id === item.taxId);
+            return acc + (tax ? tax.TaksValleur : 0);
+          },
+          0
+        );
+        totalAmount = totalAmount * (1 + taxValue / 100);
+      setTotalAmount(totalAmount);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "dueDate") {
@@ -52,7 +82,6 @@ const AddInvoice = () => {
     } else {
       setInvoice({ ...invoice, [name]: value });
     }
-    // setInvoice({ ...invoice, [e.target.name]: e.target.value });
   };
 
   const handleProductAdd = () => {
@@ -108,7 +137,6 @@ const AddInvoice = () => {
         },
         0
       );
-      console.log('taxes : ', taxes);
       amount = amount * (1 + taxes / 100);
       await AddInvoice({ invoice: { ...invoice, amount } });
       Navigate(`/${userName}/factures`);
@@ -215,7 +243,7 @@ const AddInvoice = () => {
                 startIcon={<AddShoppingCartIcon />}
                 fullWidth
               >
-                Ajouter de tax
+                Ajouter taxe
               </Button>
             </Grid>
             {invoice.taxes.map((tax, index) => (
@@ -242,12 +270,36 @@ const AddInvoice = () => {
                 </Grid>
               </React.Fragment>
             ))}
+
+            <Grid item xs={12} display="flex" justifyContent="center">
+              <Box 
+                p={2}
+                border={`2px solid ${theme.palette.primary.light}`}
+                borderRadius="0.5rem"
+                bgcolor={theme.palette.background.alt}
+              >
+                 <Typography variant="h6" fontWeight="bold" color={theme.palette.secondary.main}>
+                  Montant Total: {totalAmount.toFixed(2)} DH
+                </Typography>
+              </Box>
+            </Grid>
+
           <Grid item xs={12}>
             <Button type="submit" variant="contained" color="primary">
               Ajouter la facture
             </Button>
           </Grid>
         </Grid>
+          <Box mt={2} display="flex" justifyContent="center"> 
+            <Button
+              onClick={() => navigate(-1)}
+              aria-label="cancel"
+              variant="contained"
+              color="warning"
+            >
+              Annuler
+            </Button>
+          </Box>
       </form>
     </Box>
   </Box>

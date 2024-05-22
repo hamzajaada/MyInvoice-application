@@ -33,6 +33,7 @@ const Profil = () => {
   });
 
   const [logo, setLogo] = useState(null);
+  const [signature, setSignature] = useState(null);
   const [updateEntreprise] = useUpdateEntrepriseMutation();
   // const [Profil, setProfil] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -78,7 +79,7 @@ const Profil = () => {
   };
 
   const handleSubmit = async (event) => {
-    console.log("Détails de l'entreprise modifiés :", enterpriseDetails);
+    console.log("Détails de l'entreprise modifiés :", enterpriseDetails); 
     event.preventDefault();
     try {
       const formData = new FormData();
@@ -130,6 +131,32 @@ const Profil = () => {
   const handleIconChange = (e) => {
     setLogo(e.target.files[0]);
   };
+
+  const handleSignatureChange = (e) => {
+    setSignature(e.target.files[0]);
+  };
+
+  const handleSignatureUpload = async () => {
+    if (!signature) {
+      console.log("No signature file selected");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("signature", signature);
+
+    try {
+      const response = await axios.put(`http://localhost:3001/Api/Entreprise/uploadSignature/${id}`, formData);
+      setEnterpriseDetails((prevDetails) => ({
+        ...prevDetails,
+        signature: response.data.signature,
+      }));
+      console.log("Signature uploaded successfully");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error uploading signature:", error);
+    }
+  };
+
 
   return (
     <Box m="2rem 2.5rem">
@@ -300,6 +327,37 @@ const Profil = () => {
             </Button>
           </Box>
         </form>
+      </Box>
+      <Typography marginTop={"20px"}>Importer votre signature</Typography>
+      <Box
+        fullWidth
+        border={`1px solid ${theme.palette.primary.main}`}
+        margin="normal"
+        borderRadius="0.5rem"
+        p="1rem"
+      >
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Avatar
+            src={`http://localhost:3001/Images/${enterpriseDetails.signature}`}
+            alt="Signature"
+            sx={{ width: 70, height: 70 }}
+          />
+          <Box ml={2}>
+            <Input
+              id="signature-input"
+              type="file"
+              name="signature"
+              fullWidth
+              onChange={handleSignatureChange}
+              accept="image/*"
+            />
+          </Box>
+        </Box>
+        <Box mt={2}>
+          <Button variant="contained" color="primary" onClick={handleSignatureUpload}>
+            Modifier
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

@@ -32,6 +32,7 @@ const BonLivraisonRouter = require('./Routes/BonLivraisonRouter');
 const DeviRouter = require('./Routes/DeviRouter');
 const DemandeRouter = require('./Routes/DemandeRouter');
 const GoogleAuthRouter = require("./Routes/GoogleAuth");
+
 const {
   updateSubscriptionStatus,
   EmailSubscriptionStatus,
@@ -93,6 +94,6 @@ cron.schedule(
 );
 
 app.listen(Port, () => {
-  // OverallStat.insertMany(dataOverallStat)
+  
   console.log("the platform is running well");
 });

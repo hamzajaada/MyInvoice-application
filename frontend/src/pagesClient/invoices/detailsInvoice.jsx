@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGetInvoiceDetailsQuery } from "state/api";
 import { useParams, useNavigate } from "react-router-dom";
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, useTheme, Button } from "@mui/material";
+import { CircularProgress, Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, useTheme, Button } from "@mui/material";
 import Header from "componentsAdmin/Header";
 
 const DetailsInvoice = () => {
@@ -23,7 +23,7 @@ const DetailsInvoice = () => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div><CircularProgress /></div>;
   if (!data) return <div>No data found</div>;
 
   const {
@@ -41,8 +41,11 @@ const DetailsInvoice = () => {
     formattedDate,
     formattedDueDate,
     itemsTable,
+    taxesTable, 
     amount,
   } = data;
+
+  const sousTotale = itemsTable.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -101,6 +104,20 @@ const DetailsInvoice = () => {
                 <TableCell>{item.price.toFixed(2)} DH</TableCell>
               </TableRow>
             ))}
+             <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
+              <TableCell colSpan={2} align="center"><Typography fontWeight="bold" >Taxes </Typography></TableCell>
+              <TableCell colSpan={1} ><Typography fontWeight="bold" >Taux</Typography></TableCell>
+            </TableRow>
+            {taxesTable.map((tax, index) => (
+                  <TableRow key={index}>
+                    <TableCell colSpan={2} align="center">{tax.taxeName}</TableCell>
+                    <TableCell>{tax.value}%</TableCell>
+                  </TableRow>
+                ))}
+            <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
+              <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Sous - Totale:</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">{sousTotale.toFixed(2)} DH</Typography></TableCell>
+            </TableRow>
             <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
               <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Montant Totale:</Typography></TableCell>
               <TableCell><Typography fontWeight="bold">{amount.toFixed(2)} DH</Typography></TableCell>

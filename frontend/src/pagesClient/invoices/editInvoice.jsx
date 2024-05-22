@@ -321,7 +321,7 @@ const EditInvoice = () => {
                     />
                     <Button
                       variant="contained"
-                      color="secondary"
+                      color="warning"
                       onClick={() => handleDeleteProduct(item.productId)}
                       style={{ marginLeft: "16px" }}
                     >
@@ -375,7 +375,7 @@ const EditInvoice = () => {
                     <Button
                       width={"40%"}
                       variant="contained"
-                      color="secondary"
+                      color="warning"
                       onClick={() => handleDeleteTax(index)}
                       style={{ marginLeft: "16px" }}
                     >

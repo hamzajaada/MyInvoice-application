@@ -25,7 +25,7 @@ const Invoices = () => {
   if (!localStorage.getItem("userId")) {
     navigate("/");
   }
-  const removeInvoice = useRemoveInvoiceMutation();
+  const [removeInvoice] = useRemoveInvoiceMutation();
   const packId = localStorage.getItem("packId");
   const id = localStorage.getItem("userId");
   const userName = localStorage.getItem("userName");
@@ -221,16 +221,16 @@ const Invoices = () => {
           >
             <EmailIcon />
           </IconButton>
-          {generatePdf === true ? (
+          {/*{generatePdf === true ? (*/}
             <IconButton
               onClick={() => handlePrint(params.row._id)}
               aria-label="print"
             >
               <PrintIcon />
             </IconButton>
-          ) : (
+         {/*  ) : (
             ""
-          )}
+          )}*/}
           <IconButton
             onClick={() => handleDelete(params.row._id)}
             aria-label="delete"
@@ -272,7 +272,7 @@ const Invoices = () => {
       <FlexBetween>
         <Header
           title="FACTURES"
-          subtitle="Liste des bon de facutures "
+          subtitle="Liste des bons des "
           total={Facture ? Facture.length : 0}
         />
         <Link to={`/${userName}/ajouterFacture`}>
