@@ -144,10 +144,10 @@ const EditInvoice = () => {
       updatedInvoice = { ...updatedInvoice, amount: totalAmount };
       const {data} = await updateInvoice({ id, InvoiceData: updatedInvoice });
       if(data.success) {
-        toast.success("La modification de facture se passe correctement");
+        toast.success("La Facture a été modifiée avec succés");
         Navigate(`/${userName}/factures`);
       } else {
-        toast.error("La modification de facture ne s'est pas défini");
+        toast.error("La modification de facture a échoué");
       }
     } catch (error) {
       console.log(error);
@@ -173,10 +173,10 @@ const EditInvoice = () => {
       if(invoiceData) {
         const {data} = await updateInvoice({ id, InvoiceData: { ...invoiceData, active: false } })
         if(data.success) {
-          toast.success("La suppresion de facture se passe correctement");
+          toast.success("La Facture a été supprimée avec succés");
           Navigate(`/${userName}/factures`);
         } else {
-          toast.error("La suppresion de facture ne s'est pas défini");
+          toast.error("La suppression de facture a échoué");
         }
       }
       

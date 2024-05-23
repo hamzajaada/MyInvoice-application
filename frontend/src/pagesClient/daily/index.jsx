@@ -6,10 +6,16 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const Daily = () => {
-  const [startDate, setStartDate] = useState(new Date("2021-02-01"));
-  const [endDate, setEndDate] = useState(new Date("2021-03-01"));
-  const { data } = useGetSalesQuery();
   const theme = useTheme();
+
+  const today = new Date();
+  const firstDayOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const firstDayOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+  const [startDate, setStartDate] = useState(firstDayOfCurrentMonth);
+  const [endDate, setEndDate] = useState(firstDayOfNextMonth);
+  const id = localStorage.getItem("userId");
+  const { data } = useGetSalesQuery(id);
+  
 
   const [formattedData] = useMemo(() => {
     if (!data) return [];
@@ -86,6 +92,8 @@ const Daily = () => {
 
         {data ? (
           <ResponsiveLine
+            enableArea={true}
+            areaOpacity ={0.3}
             data={formattedData}
             theme={{
               axis: {
@@ -148,8 +156,8 @@ const Daily = () => {
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 0,
-              legend: "Total",
-              legendOffset: -50,
+              legend: "Total (DHs)",
+              legendOffset: -56,
               legendPosition: "middle",
             }}
             enableGridX={false}

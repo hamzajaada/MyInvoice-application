@@ -229,7 +229,7 @@ const AddInvoice = () => {
                   onChange={(e) => handleQuantityChange(index, e.target.value)}
                   fullWidth
                   required
-                  margin="normal"
+                  margin="20px"
                 />
               </Grid>
             </React.Fragment>

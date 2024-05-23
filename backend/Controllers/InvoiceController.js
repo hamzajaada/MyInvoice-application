@@ -1,9 +1,7 @@
 const Invoice = require("../Models/InvoiceSchema");
-const OverallStat = require("../Models/OverallStateSchema");
-const Client = require("../Models/ClientSchema");
-const Product = require("../Models/ProductSchema");
-const Enterprise = require("../Models/EntrepriseSchema");
-const nodemailer = require("nodemailer");
+const Client = require  ("../Models/ClientSchema");
+const Product = require  ("../Models/ProductSchema");
+const nodemailer = require('nodemailer');
 
 const addInvoice = async (req, res) => {
   try {
@@ -115,9 +113,37 @@ const formatDate = (dateString) => {
 
 const getSales = async (req, res) => {
   try {
-    const overallStats = await OverallStat.find();
+    
+    const invoices = await Invoice.find({ userId: req.params.id, status: "paid", active:true }); 
 
-    res.status(200).json(overallStats[0]);
+    const monthlyData = {};
+    const dailyData = {};
+
+    invoices.forEach(invoice => {
+      const month = invoice.date.toLocaleString('default', { month: 'long' });
+      const day = invoice.date.toISOString().split('T')[0];
+
+      if (!monthlyData[month]) {
+        monthlyData[month] = { month, totalSales: 0, totalUnits: 0 };
+      }
+
+      if (!dailyData[day]) {
+        dailyData[day] = { date: day, totalSales: 0, totalUnits: 0 };
+      }
+
+      monthlyData[month].totalSales += invoice.amount;
+      dailyData[day].totalSales += invoice.amount;
+
+      invoice.items.forEach(item => {
+        monthlyData[month].totalUnits += item.quantity;
+        dailyData[day].totalUnits += item.quantity;
+      });
+    });
+
+    res.status(200).json({
+      monthlyData: Object.values(monthlyData),
+      dailyData: Object.values(dailyData),
+    });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -143,6 +169,8 @@ const sendEmail = async (req, res) => {
     userPhone,
     userAddress,
     userEmail,
+    taxesTable,
+    sousTotale,
   } = req.body;
 
   const itemsTableHTML = itemsTable
@@ -156,6 +184,16 @@ const sendEmail = async (req, res) => {
     <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">${item.price.toFixed(
       2
     )} DHs</td>
+  </tr>`
+    )
+    .join("");
+
+    const taxesTableHTML = taxesTable
+    .map(
+      (tax) => `
+  <tr>
+    <td  colspan="2" style=" border: 1px solid #ddd; padding: 8px; text-align: center;">${tax.taxeName}</td>
+    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${tax.value}%</td>
   </tr>`
     )
     .join("");
@@ -175,11 +213,20 @@ const sendEmail = async (req, res) => {
       </thead>
       <tbody>
         ${itemsTableHTML}
+        <tr>
+        <th colspan="2" style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2; text-align: center;">Taxes</th>
+        <th colspan="1" style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2; text-align: center;">Taux</th>
+        </tr>
+        ${taxesTableHTML}
       </tbody>
       <tfoot>
+      <tr>
+        <th colspan="2" style="border: 1px solid #ddd; padding: 8px; text-align: right;">Sous-Total :</th>
+        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;"><strong>${sousTotale.toFixed(2)} DHs</strong></td>
+      </tr>
         <tr>
           <th colspan="2" style="border: 1px solid #ddd; padding: 8px; text-align: right;">Montant :</th>
-          <td style="border: 1px solid #ddd; padding: 8px; text-align: right;"><strong>${amount.toFixed(
+          <td style="border: 1px solid #ddd; padding: 8px; text-align: center;"><strong>${amount.toFixed(
             2
           )} DHs</strong></td>
         </tr>
@@ -214,69 +261,18 @@ const sendEmail = async (req, res) => {
 
 const getDashboardStats = async (req, res) => {
   try {
-    const currentMonth = "Mai";
-    const currentYear = 2024;
-    const currentDay = "2024-05-05";
-    const Allinvoices = await Invoice.find()
-      .populate("clientId")
-      .limit(50)
-      .sort({ createdOn: -1 });
-    const invoices = Allinvoices.filter(
-      (invoice) => invoice.userId.toString() === req.params.id
-    );
-    const totalCustomers = await Client.countDocuments({
-      userId: req.params.id,
-    });
-    const totalProducts = await Product.countDocuments({
-      userId: req.params.id,
-    });
-    const totalInvoices = await Invoice.countDocuments({
-      userId: req.params.id,
-    });
-    const totalPaidInvoices = await Invoice.countDocuments({
-      userId: req.params.id,
-      status: "paid",
-    });
+    const Allinvoices = await Invoice.find({active : true}).populate("clientId").limit(50).sort({ createdOn: -1 });
+    const invoices = Allinvoices.filter(invoice => invoice.userId.toString() === req.params.id);
+    const totalCustomers = await Client.countDocuments({ userId: req.params.id , active : true });
+    const totalProducts = await Product.countDocuments({ userId: req.params.id , active : true });
+    const totalInvoices = await Invoice.countDocuments({ userId: req.params.id , active : true});
+    const totalPaidInvoices = await Invoice.countDocuments({ userId: req.params.id, status: "paid" , active : true });
     const totalUnpaidInvoices = await Invoice.countDocuments({
-      userId: req.params.id,
-      status: { $nin: ["paid"] },
+      userId: req.params.id, status: { $nin: ["paid"] }, active : true,
     });
-    const overallStat = await OverallStat.find({ year: currentYear });
-    const paidInvoices = await Invoice.find({
-      userId: req.params.id,
-      status: "paid",
-    });
-    const totalPaidAmount = paidInvoices.reduce(
-      (total, invoice) => total + invoice.amount,
-      0
-    );
-    const {
-      yearlyTotalSoldUnits,
-      yearlySalesTotal,
-      monthlyData,
-      salesByCategory,
-    } = overallStat[0];
+    const paidInvoices = await Invoice.find({ userId: req.params.id, status: "paid", active : true});
+    const totalPaidAmount = paidInvoices.reduce((total, invoice) => total + invoice.amount, 0);
 
-    const thisMonthStats = overallStat[0].monthlyData.find(({ month }) => {
-      return month === currentMonth;
-    });
-
-    const todayStats = overallStat[0].dailyData.find(({ date }) => {
-      return date === currentDay;
-    });
-    /* console.log(  invoices,
-      totalPaidAmount,
-      totalCustomers,
-      totalProducts,
-      totalInvoices,
-      totalPaidInvoices,
-      totalUnpaidInvoices,
-      yearlyTotalSoldUnits,
-      yearlySalesTotal,
-      monthlyData,
-      salesByCategory,
-      thisMonthStats,
-      todayStats,);*/
     res.status(200).json({
       invoices,
       totalPaidAmount,
@@ -285,12 +281,6 @@ const getDashboardStats = async (req, res) => {
       totalInvoices,
       totalPaidInvoices,
       totalUnpaidInvoices,
-      yearlyTotalSoldUnits,
-      yearlySalesTotal,
-      monthlyData,
-      salesByCategory,
-      thisMonthStats,
-      todayStats,
     });
   } catch (error) {
     res.status(404).json({ message: error.message });

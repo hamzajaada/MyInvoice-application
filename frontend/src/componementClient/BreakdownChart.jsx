@@ -117,7 +117,7 @@ const BreakdownChart = () => {
       <Box
         width= "83px"
         position="absolute"
-        top="50%"
+        top="50.75%"
         left="50%"
         color={theme.palette.secondary[400]}
         textAlign="center"

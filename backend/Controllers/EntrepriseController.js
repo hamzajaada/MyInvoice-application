@@ -11,6 +11,7 @@ const nodemailer = require("nodemailer");
 const cloudinary = require("../Utils/cloudinary");
 const Client = require("../Models/ClientSchema")
 const Fournisseur = require("../Models/FournisseurSchema")
+
 const addEntreprise = async (req, res) => {
   try {
     const { name, email, password, phone, logo, address } = req.body;
@@ -143,7 +144,7 @@ const getEntrepriseDetail = async (req, res) => {
   } catch (error) {
     console.error("Error occurred: ", error);
     res.status(500).send("Erreur serveur lors de la recherche d'entreprise");
-  }
+  }
 };
 
 
@@ -371,7 +372,7 @@ const getEnterpriseCountByMonthAndYear = async (req, res) => {
 
 const ForgoutPass = async (req, res) => {
   try {
-    console.log(req.body);
+    //console.log(req.body);
     const { email } = req.body;
 
     // Chercher l'entreprise avec l'email fourni
