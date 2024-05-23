@@ -234,7 +234,7 @@ const AddDevi = () => {
                     }
                     fullWidth
                     required
-                    margin="normal"
+                    margin="20px"
                   />
                 </Grid>
               </React.Fragment>

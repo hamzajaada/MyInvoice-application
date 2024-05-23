@@ -144,7 +144,7 @@ const getEntrepriseDetail = async (req, res) => {
   } catch (error) {
     console.error("Error occurred: ", error);
     res.status(500).send("Erreur serveur lors de la recherche d'entreprise");
-  }
+  }
 };
 
 
