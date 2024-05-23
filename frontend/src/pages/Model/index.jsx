@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import FlexBetween from "componentsAdmin/FlexBetween";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios"; // Importer axios
+import axios from "axios"; 
 
 
 const Models = () => {
@@ -47,7 +47,7 @@ const Models = () => {
       width: isSmallScreen ? 250 : 300,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar src={`https://my-invoice-api.vercel.app/Images/${params.row.icon}`} alt={params.row.name} />
+          <Avatar src={`${params.row.icon.url}`} alt={params.row.name} />
           <Box ml={1}>
             <div>{params.row.name}</div>
           </Box>
@@ -57,7 +57,7 @@ const Models = () => {
     {
       field: "description",
       headerName: "Description",
-      width: isSmallScreen ? 600 : 800,
+      width: isSmallScreen ? 600 : 700,
     },
     {
       field: "actions",
@@ -123,8 +123,10 @@ const Models = () => {
 
       <Box
         mt="40px"
-        height="75vh"
+        // height="75vh"
         sx={{
+          overflowX: isSmallScreen ? "auto" : "hidden",
+          width: "100%",
           "& .MuiDataGrid-root": {
             border: "none",
           },
@@ -154,6 +156,10 @@ const Models = () => {
           getRowId={(row) => row._id}
           rows={model || []}
           columns={columns}
+          sx={{
+            overflowX: isSmallScreen ? "auto" : "hidden",
+            width: "100%",
+          }}
         />
       </Box>
     </Box>

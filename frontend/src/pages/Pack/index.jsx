@@ -56,7 +56,7 @@ const Pack = ({
           size="small"
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          See More
+          Voir plus
         </Button>
         <Button
           variant="primary"
@@ -64,14 +64,14 @@ const Pack = ({
           component={Link}
           to={`/Pack/edit/${_id}`}
         >
-          Update
+          Modifier
         </Button>
         <Button
           variant="primary"
           size="small"
-          onClick={() => handleDelete(_id)} // Utiliser la fonction de suppression
+          onClick={() => handleDelete(_id)} 
         >
-          Delete
+          Supprimer
         </Button>
       </CardActions>
       <Collapse
@@ -147,7 +147,7 @@ const Packs = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Add
+            Ajoute de pack
           </Button>
         </Link>
       </FlexBetween>

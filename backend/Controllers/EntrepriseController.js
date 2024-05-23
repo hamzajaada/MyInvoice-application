@@ -127,6 +127,7 @@ const getEntrepriseDetail = async (req, res) => {
       phone: entreprise.phone,
       address: entreprise.address,
       logo: entreprise.logo,
+      signature: entreprise.signature,
       subscriptionStatue: filteredSubscriptions.status,
       subscriptionStartDate: startDate,
       subscriptionEndDate: endDate,
@@ -367,6 +368,7 @@ const getEnterpriseCountByMonthAndYear = async (req, res) => {
     res.status(200).json(enterpriseCountByMonthAndYear);
   } catch (error) {}
 };
+
 const ForgoutPass = async (req, res) => {
   try {
     console.log(req.body);
