@@ -28,12 +28,13 @@ const Dashboard = () => {
   }
   const [dashboard, setDashboard] = useState({
     totalEntreprises: "",
-    totalInvoices: "",
+    totalDocuments: 0,
     paidInvoices: "",
     unpaidInvoices: "",
   })
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
+  const isSmallScreen = useMediaQuery("(max-width: 500px)");
   
   useEffect(()=>{
     const fetchDashboardData = async () => {
@@ -49,7 +50,7 @@ const Dashboard = () => {
   },[]) // Utilisez une dépendance vide pour exécuter cet effet une seule fois
 
   return (
-    <Box m="1.5rem 2.5rem" >
+    <Box m={isSmallScreen ? "1rem" : "1.5rem 2.5rem"} overflow="hidden">
       <FlexBetween>
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
 
@@ -72,7 +73,7 @@ const Dashboard = () => {
       <Box
         mt="20px"
         display="grid"
-        gridTemplateColumns="repeat(8, 1fr)"
+        gridTemplateColumns={isSmallScreen ? "1fr" : "repeat(8, 1fr)"}
         gridAutoRows="160px"
         gap="20px"
         sx={{
@@ -89,11 +90,10 @@ const Dashboard = () => {
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
             />
           }
-          
         />
         <StatBox
-          title="Total Invoice"
-          value={dashboard && dashboard.totalInvoices}
+          title="Total Documents"
+          value={dashboard && dashboard.totalDocuments}
           description="Le nombre total de facture dans le système"
           icon={
             <DescriptionIcon
@@ -101,7 +101,6 @@ const Dashboard = () => {
             />
           }
         />
-
         <StatBox
           title="Paid Invoice"
           value={dashboard && dashboard.paidInvoices}
@@ -129,6 +128,7 @@ const Dashboard = () => {
           backgroundColor={theme.palette.background.alt}
           p="1rem"
           borderRadius="0.55rem"
+          sx={{ maxWidth: isSmallScreen ? '100%' : 'auto' }}
         >
           <OverviewChart isDashboard={true} />
         </Box>
@@ -138,3 +138,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

@@ -4,13 +4,17 @@ const Fournisseur = require("../Models/FournisseurSchema");
 const Product = require("../Models/ProductSchema");
 const Enterprise = require("../Models/EntrepriseSchema");
 const nodemailer = require("nodemailer");
+const Taks = require('../Models/TaksShema')
 
 const addBonCommande = async (req, res) => {
   try {
     const bonCommandeData = req.body.bonCommande;
     const bonCommande = new BonCommande(bonCommandeData);
     await bonCommande.save();
-    res.status(201).json(bonCommande);
+    res.status(200).json({
+      success: true,
+      bonCommande,
+    });
   } catch (error) {
     res.status(500).send("Erreur serveur lors de l'ajout de bon de commande");
   }
@@ -40,12 +44,15 @@ const prepareBonCommandeDetails = async (req, res) => {
       .populate({
         path: "items.productId",
         select: "name price",
+      })
+      .populate({
+        path: "taxes.taxId",
+        select: "TaksValleur name", 
       });
 
     if (!bonCommande) {
       return res.status(404).json({ error: "BonCommande not found" });
     }
-
     const formattedDate = formatDate(bonCommande.date);
     const formattedDueDate = formatDate(bonCommande.dueDate);
     const itemsTable = bonCommande.items.map((item) => {
@@ -55,6 +62,12 @@ const prepareBonCommandeDetails = async (req, res) => {
         price: item.productId.price,
       };
     });
+    const taxesTable = bonCommande.taxes.map((elem) => {
+      return {
+        taxeName: elem.taxId.name,
+        value: elem.taxId.TaksValleur,
+      };
+    });
     const _id = bonCommande._id;
     const bonCommandeStatus = bonCommande.status;
     const userName = bonCommande.userId.name;
@@ -62,6 +75,7 @@ const prepareBonCommandeDetails = async (req, res) => {
     const userPhone = bonCommande.userId.phone;
     const userAddress = bonCommande.userId.address;
     const userLogo = bonCommande.userId.logo;
+    const userSignature = bonCommande.userId.signature;
     const fournisseurName = bonCommande.fournisseurId.name;
     const fournisseurEmail = bonCommande.fournisseurId.email;
     const fournisseurPhone = bonCommande.fournisseurId.phone;
@@ -75,6 +89,7 @@ const prepareBonCommandeDetails = async (req, res) => {
       userPhone,
       userAddress,
       userLogo,
+      userSignature,
       fournisseurName,
       fournisseurEmail,
       fournisseurPhone,
@@ -82,6 +97,7 @@ const prepareBonCommandeDetails = async (req, res) => {
       formattedDate,
       formattedDueDate,
       itemsTable,
+      taxesTable,
       amount,
     });
   } catch (error) {

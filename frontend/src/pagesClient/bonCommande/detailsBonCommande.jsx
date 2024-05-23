@@ -46,6 +46,7 @@ const DetailsBonCommande = () => {
     userPhone,
     userAddress,
     userLogo,
+    userSignature,
     fournisseurName,
     fournisseurEmail,
     fournisseurPhone,
@@ -53,8 +54,11 @@ const DetailsBonCommande = () => {
     formattedDate,
     formattedDueDate,
     itemsTable,
+    taxesTable,
     amount,
   } = data;
+
+  const sousTotale = itemsTable.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -105,7 +109,7 @@ const DetailsBonCommande = () => {
               <Box
                 component="img"
                 alt="profile"
-                src={`http://localhost:3001/Images/${userLogo}`}
+                src={`${userLogo.url}`}
                 height="40px"
                 width="40px"
                 borderRadius="50%"
@@ -198,14 +202,22 @@ const DetailsBonCommande = () => {
               </TableRow>
             ))}
             <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
-              <TableCell colSpan={2} align="right">
-                <Typography fontWeight="bold">Montant Totale:</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography fontWeight="bold">
-                  {amount.toFixed(2)} DH
-                </Typography>
-              </TableCell>
+              <TableCell colSpan={2} ><Typography fontWeight="bold" >Taxes </Typography></TableCell>
+              <TableCell colSpan={1} ><Typography fontWeight="bold" >Taux</Typography></TableCell>
+            </TableRow>
+            {taxesTable.map((tax, index) => (
+                  <TableRow key={index}>
+                    <TableCell colSpan={2} >{tax.taxeName}</TableCell>
+                    <TableCell>{tax.value}%</TableCell>
+                  </TableRow>
+                ))}
+            <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
+              <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Sous - Totale:</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">{sousTotale.toFixed(2)} DH</Typography></TableCell>
+            </TableRow>
+            <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
+              <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Montant Totale:</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">{amount.toFixed(2)} DH</Typography></TableCell>
             </TableRow>
           </TableBody>
         </Table>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, useTheme, Button, IconButton, Avatar } from "@mui/material";
+import { Box, useTheme, Button, IconButton, Avatar, useMediaQuery } from "@mui/material";
 import {  useUpdateModelMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
@@ -26,7 +26,7 @@ const Models = () => {
   })
   const [updateModel] = useUpdateModelMutation();
   const theme = useTheme();
-  // hadi
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   useEffect(() => {
     const fetchModels = async () => {
       try {
@@ -44,7 +44,7 @@ const Models = () => {
     {
       field: "Model",
       headerName: "Model",
-      flex: 0.6,
+      width: isSmallScreen ? 250 : 300,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Avatar src={`https://my-invoice-api.vercel.app/Images/${params.row.icon}`} alt={params.row.name} />
@@ -57,12 +57,12 @@ const Models = () => {
     {
       field: "description",
       headerName: "Description",
-      flex: 1,
+      width: isSmallScreen ? 600 : 800,
     },
     {
       field: "actions",
       headerName: "Actions",
-      flex: 0.2,
+      width: isSmallScreen ? 100 : 150,
       sortable: false,
       renderCell: (params) => (
         <Box>

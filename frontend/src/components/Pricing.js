@@ -74,13 +74,15 @@ const Pricing = () => {
         {/* title */}
        
         <h2
-          className=" dark:text-white h2 mb-10 lg:mb-20 text-center lg:font-Quicksand text-[30px] font-bold  lg:font-bold"
+          className=" dark:text-white h2 mb-5 lg:mb-0  text-center lg:font-Quicksand text-[30px] font-bold  lg:font-bold"
         >
           {Titre}
         </h2>
+        <div className="w-[150px] h-[5px] lg:ml-[290Px] mb-[20px] lg:mt-[20px] lg:mb-[50px] bg-accent"></div>
+
         
         {/* card */}
-        <div className="flex flex-col lg:flex-row lg:gap-x-[30px] gap-y-[30px] lg:gap-y-0 justify-center items-center">
+        <div className=" flex flex-col lg:flex-row lg:gap-x-[30px] gap-y-[30px] lg:gap-y-0 justify-center items-center">
           {translatedData && translatedData.map((pack, packIndex) => {
             const { name, services, price ,logo,desc} = pack;
             //card

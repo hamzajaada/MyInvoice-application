@@ -37,7 +37,7 @@ const Profil = () => {
   const [updateEntreprise] = useUpdateEntrepriseMutation();
   // const [Profil, setProfil] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  // hadi
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -338,7 +338,7 @@ const Profil = () => {
       >
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Avatar
-            src={`http://localhost:3001/Images/${enterpriseDetails.signature}`}
+            src={`${enterpriseDetails.signature.url}`}
             alt="Signature"
             sx={{ width: 70, height: 70 }}
           />
@@ -363,4 +363,4 @@ const Profil = () => {
   );
 };
 
-export default Profil;
+export default Profil;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   useTheme,
@@ -9,6 +9,7 @@ import {
   Select,
   MenuItem,
   Grid,
+  Typography,
 } from "@mui/material";
 import Header from "componentsAdmin/Header";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
@@ -43,6 +44,33 @@ const AddDevi = () => {
   const { data: taxData } = useGetAllTaxEntrepriseQuery(id);
 
   const Navigate = useNavigate();
+
+  const [totalAmount, setTotalAmount] = useState(0);
+
+  useEffect(() => {
+    if (productsData && taxData) {
+      calculateTotalAmount();
+    }
+  }, [devi.items, devi.taxes, productsData, taxData]);
+
+  const calculateTotalAmount = () => {
+    let totalAmount = 0;
+    totalAmount = devi.items.reduce(
+      (acc, item) =>
+        acc +
+        (productsData?.find((product) => product._id === item.productId)
+          ?.price || 0) *
+          item.quantity,
+      0
+    );
+
+    const taxValue = devi.taxes.reduce((acc, item) => {
+      const tax = taxData?.find((taxe) => taxe._id === item.taxId);
+      return acc + (tax ? tax.TaksValleur : 0);
+    }, 0);
+    totalAmount = totalAmount * (1 + taxValue / 100);
+    setTotalAmount(totalAmount);
+  };
 
   const handleChange = (e) => {
     setDevi({ ...devi, [e.target.name]: e.target.value });
@@ -247,6 +275,22 @@ const AddDevi = () => {
                 </Grid>
               </React.Fragment>
             ))}
+            <Grid item xs={12} display="flex" justifyContent="center">
+              <Box
+                p={2}
+                border={`2px solid ${theme.palette.primary.light}`}
+                borderRadius="0.5rem"
+                bgcolor={theme.palette.background.alt}
+              >
+                <Typography
+                  variant="h6"
+                  fontWeight="bold"
+                  color={theme.palette.secondary.main}
+                >
+                  Montant Total: {totalAmount.toFixed(2)} DH
+                </Typography>
+              </Box>
+            </Grid>
             <Grid item xs={12}>
               <Button type="submit" variant="contained" color="primary">
                 Ajouter la devi
