@@ -5,7 +5,8 @@ import { useGetSalesQuery } from "state/api";
 
 const OverviewChart = ({ isDashboard = false, view }) => {
   const theme = useTheme();
-  const { data, isLoading } = useGetSalesQuery();
+  const id = localStorage.getItem("userId");
+  const { data, isLoading } = useGetSalesQuery(id);
 
   const [totalSalesLine, totalUnitsLine] = useMemo(() => {
     if (!data) return [];
@@ -24,8 +25,8 @@ const OverviewChart = ({ isDashboard = false, view }) => {
 
     Object.values(monthlyData).reduce(
       (acc, { month, totalSales, totalUnits }) => {
-        const curSales = acc.sales + totalSales;
-        const curUnits = acc.units + totalUnits;
+        const curSales = totalSales.toFixed(2);
+        const curUnits = totalUnits;
 
         totalSalesLine.data = [
           ...totalSalesLine.data,
@@ -42,7 +43,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
     );
 
     return [[totalSalesLine], [totalUnitsLine]];
-  }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [data]);
 
   if (!data || isLoading) return "Chargement...";
 
@@ -86,19 +87,21 @@ const OverviewChart = ({ isDashboard = false, view }) => {
     xScale={{ type: "point" }}
     yScale={{
       type: "linear",
-      min: "auto",
+      min: "0",
       max: "auto",
       stacked: false,
       reverse: false,
     }}
     yFormat=" >-.2f"
     curve="catmullRom"
-    enableArea={isDashboard}
+    enableArea={true}
+    //areaBaselineValue={isDashboard? 23000 : null}
+    areaOpacity ={0.3}
     axisTop={null}
     axisRight={null}
     axisBottom={{
       format: (v) => {
-        if (isDashboard) return v.slice(0, 3);
+        if (isDashboard) return v.slice(0, 6);
         return v;
       },
       orient: "bottom",
@@ -106,7 +109,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
       tickPadding: 5,
       tickRotation: 0,
       legend: isDashboard ? "" : "Mois",
-      legendOffset: 36,
+      legendOffset: 37,
       legendPosition: "middle",
     }}
     axisLeft={{
@@ -117,8 +120,8 @@ const OverviewChart = ({ isDashboard = false, view }) => {
       tickRotation: 0,
       legend: isDashboard
         ? ""
-        : `Total Des ${view === "sales" ? "Revenus" : "Unités"} Par An`,
-      legendOffset: -60,
+        : `Total Des ${view === "sales" ? "Revenus Par An (DHs)" : "Unités Par An (Pièces)"}`,
+      legendOffset: -65,
       legendPosition: "middle",
     }}
     enableGridX={false}

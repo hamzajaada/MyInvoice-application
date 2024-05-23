@@ -4,7 +4,8 @@ import { ResponsiveLine } from "@nivo/line";
 import { useGetSalesQuery } from "state/api";
 
 const Monthly = () => {
-  const { data } = useGetSalesQuery();
+  const id = localStorage.getItem("userId");
+  const { data } = useGetSalesQuery(id);
   const theme = useTheme();
 
   const [formattedData] = useMemo(() => {
@@ -35,7 +36,7 @@ const Monthly = () => {
 
     const formattedData = [totalSalesLine, totalUnitsLine];
     return [formattedData];
-  }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [data]); 
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -55,6 +56,9 @@ const Monthly = () => {
       <Box height="75vh">
         {data ? (
           <ResponsiveLine
+            enableArea={true}
+            //areaBaselineValue={isDashboard? 23000 : null}
+            areaOpacity ={0.3}
             data={formattedData}
             theme={{
               axis: {
@@ -117,8 +121,8 @@ const Monthly = () => {
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 0,
-              legend: "Total",
-              legendOffset: -50,
+              legend: "Total (DHs)",
+              legendOffset: -56,
               legendPosition: "middle",
             }}
             enableGridX={false}

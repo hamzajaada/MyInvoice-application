@@ -286,6 +286,10 @@ const Dashboard = () => {
           p="1rem"
           borderRadius="0.55rem"
         >
+          <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }} pl={3}>
+          Ventes réussites réalisées cette année ( DHs )
+          </Typography>
+
           <OverviewChart view="sales" isDashboard={true} />
         </Box>
         <StatBox
@@ -361,7 +365,7 @@ const Dashboard = () => {
             sx={{ color: theme.palette.secondary[200] }}
           >
             Répartition des factures et des informations par status de revenus
-            réalisés pour cette année et ventes totales.
+            réalisés et ventes totales.
           </Typography>
         </Box>
       </Box>

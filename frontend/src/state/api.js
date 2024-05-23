@@ -395,7 +395,7 @@ export const api = createApi({
     }),
 
     getSales: build.query({
-      query: () => "Invoice/summary",
+      query: (id) => `Invoice/summary/${id}`,
       providesTags: ["Sales"],
     }),
     sendEmail: build.mutation({
