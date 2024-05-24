@@ -52,7 +52,7 @@ const EditBonCommande = () => {
   const userName = localStorage.getItem("userName");
   const { data: allFournisseursData } = useGetFournisseursQuery(userId);
   const { data: allProductsData } = useGetProductsQuery(userId);
-  const { data: allTaxData } = useGetAllTaxEntrepriseQuery(userId); 
+  const { data: allTaxData } = useGetAllTaxEntrepriseQuery(userId);
 
   useEffect(() => {
     if (bonCommandeData) {
@@ -113,7 +113,6 @@ const EditBonCommande = () => {
     });
   };
 
-  
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -124,7 +123,8 @@ const EditBonCommande = () => {
         totalAmount = bonCommande.items.reduce(
           (acc, item) =>
             acc +
-            (allProductsData.find((product) => product._id === item.productId)?.price || 0) *
+            (allProductsData.find((product) => product._id === item.productId)
+              ?.price || 0) *
               item.quantity,
           0
         );
@@ -140,9 +140,14 @@ const EditBonCommande = () => {
 
       updatedBonCommande = { ...updatedBonCommande, amount: totalAmount };
 
-      const {data} = await updateBonCommande({ id, bonCommandeData: updatedBonCommande });
-      if(data.success) {
-        toast.success("La modification de bon de commande se passe correctement");
+      const { data } = await updateBonCommande({
+        id,
+        bonCommandeData: updatedBonCommande,
+      });
+      if (data.success) {
+        toast.success(
+          "La modification de bon de commande se passe correctement"
+        );
         navigate(`/${userName}/bon-commandes`);
       } else {
         toast.error("La modification de bon de commande ne s'est pas réussie");
@@ -168,17 +173,21 @@ const EditBonCommande = () => {
 
   const handleDelete = async () => {
     try {
-      if(bonCommandeData) {
-        const newBon = {...bonCommandeData, active: false}
-        const {data} = await updateBonCommande({id, bonCommandeData: newBon});
-        if(data.success) {
-          toast.success("La suppresion de bon de commande se passe correctement");
+      if (bonCommandeData) {
+        const newBon = { ...bonCommandeData, active: false };
+        const { data } = await updateBonCommande({
+          id,
+          bonCommandeData: newBon,
+        });
+        if (data.success) {
+          toast.success(
+            "La suppresion de bon de commande se passe correctement"
+          );
           navigate(`/${userName}/bon-commandes`);
         } else {
           toast.error("La suppresion de bon de commande ne s'est pas réussie");
         }
       }
-      
     } catch (error) {
       console.log(error);
     }
@@ -204,10 +213,16 @@ const EditBonCommande = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="MODIFIER LE BON DE COMMANDE" subtitle="Modification du bon de commande que vous avez sélectionnez" />
+      <Header
+        title="MODIFIER LE BON DE COMMANDE"
+        subtitle="Modification du bon de commande que vous avez sélectionnez"
+      />
       <Box m={2} />
       <form onSubmit={handleSubmit}>
-        <Card elevation={3} style={{ borderRadius: 8, padding: "1.5rem", marginBottom: "1.5rem" }}>
+        <Card
+          elevation={3}
+          style={{ borderRadius: 8, padding: "1.5rem", marginBottom: "1.5rem" }}
+        >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={16}>
               <FormControl fullWidth margin="normal">
@@ -219,7 +234,11 @@ const EditBonCommande = () => {
                   onChange={handleChange}
                   name="status"
                 >
-                  {["attent de traitement", "au cour de traitement", "expédié"].map((status) => (
+                  {[
+                    "attent de traitement",
+                    "au cour de traitement",
+                    "expédié",
+                  ].map((status) => (
                     <MenuItem key={status} value={status}>
                       {status}
                     </MenuItem>
@@ -244,7 +263,9 @@ const EditBonCommande = () => {
                 label="Date d'échéance"
                 type="date"
                 name="dueDate"
-                value={bonCommande.dueDate ? formatDate(bonCommande.dueDate) : ""}
+                value={
+                  bonCommande.dueDate ? formatDate(bonCommande.dueDate) : ""
+                }
                 onChange={handleChange}
                 fullWidth
                 required
@@ -271,47 +292,76 @@ const EditBonCommande = () => {
             </Grid>
             <Grid item xs={12}>
               <Divider />
-              <Typography variant="h6" fontWeight="bold" color={theme.palette.primary[100]}>
-                <br />Produits :<br />
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                color={theme.palette.primary[100]}
+              >
+                <br />
+                Produits :<br />
               </Typography>
               {bonCommande.items &&
-                bonCommande.items.map((item, index) => (
-                  <Box key={index} display="flex" alignItems="center" marginBottom="8px" >
-                    <Box marginRight="16px" width={"90%"}>
-                      <Select
-                        labelId={`product-label-${index}`}
-                        id={`product-select-${index}`}
-                        value={item.productId}
-                        onChange={(e) => handleProductChange(index, "productId", e.target.value)}
-                        fullWidth
-                        name={`product-${index}`}
-                      >
-                        {products.map((product) => (
-                          <MenuItem key={product._id} value={product._id}>
-                            {product.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </Box>
-                    <TextField
-                      label="Quantité"
-                      type="number"
-                      value={item.quantity}
-                      onChange={(e) => handleProductChange(index, "quantity", e.target.value)}
-                      width={"20%"}
-                      required
-                      margin="normal"
-                    />
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => handleDeleteProduct(index)}
-                      style={{ marginLeft: "16px" }}
+                bonCommande.items.map((item, index) => {
+                  const selectedProduct = Array.isArray(allProductsData)
+                    ? allProductsData.find(
+                        (product) => product._id === item.productId
+                      )
+                    : undefined;
+                  return (
+                    <Box
+                      key={index}
+                      display="flex"
+                      alignItems="center"
+                      marginBottom="8px"
                     >
-                      Supprimer le produit
-                    </Button>
-                  </Box>
-                ))}
+                      <Box marginRight="16px" width={"90%"}>
+                        <Select
+                          labelId={`product-label-${index}`}
+                          id={`product-select-${index}`}
+                          value={item.productId}
+                          onChange={(e) =>
+                            handleProductChange(
+                              index,
+                              "productId",
+                              e.target.value
+                            )
+                          }
+                          fullWidth
+                          name={`product-${index}`}
+                        >
+                          {products.map((product) => (
+                            <MenuItem key={product._id} value={product._id}>
+                              {product.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </Box>
+                      <TextField
+                        label="Quantité"
+                        type="number"
+                        value={item.quantity}
+                        inputProps={{
+                          max: selectedProduct ? selectedProduct.quantity : 0,
+                          min: 1,
+                        }}
+                        onChange={(e) =>
+                          handleProductChange(index, "quantity", e.target.value)
+                        }
+                        width={"20%"}
+                        required
+                        margin="normal"
+                      />
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => handleDeleteProduct(index)}
+                        style={{ marginLeft: "16px" }}
+                      >
+                        Supprimer le produit
+                      </Button>
+                    </Box>
+                  );
+                })}
               <Button
                 width={"40%"}
                 variant="contained"
@@ -321,19 +371,31 @@ const EditBonCommande = () => {
               >
                 Ajouter un produit
               </Button>
-              <Divider sx={{marginTop:"20px"}} />
-              <Typography variant="h6" fontWeight="bold" color={theme.palette.primary[100]}>
-                <br />Taxes :<br />
+              <Divider sx={{ marginTop: "20px" }} />
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                color={theme.palette.primary[100]}
+              >
+                <br />
+                Taxes :<br />
               </Typography>
               {bonCommande.taxes &&
                 bonCommande.taxes.map((item, index) => (
-                  <Box key={index} display="flex" alignItems="center" marginBottom="8px">
+                  <Box
+                    key={index}
+                    display="flex"
+                    alignItems="center"
+                    marginBottom="8px"
+                  >
                     <Box marginRight="16px" width={"100%"}>
                       <Select
                         labelId={`tax-label-${index}`}
                         id={`tax-select-${index}`}
                         value={item.taxId}
-                        onChange={(e) => handleTaxesChange(index, "taxId", e.target.value)}
+                        onChange={(e) =>
+                          handleTaxesChange(index, "taxId", e.target.value)
+                        }
                         fullWidth
                         name={`tax-${index}`}
                       >

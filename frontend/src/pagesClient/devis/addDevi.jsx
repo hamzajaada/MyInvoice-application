@@ -47,12 +47,6 @@ const AddDevi = () => {
 
   const [totalAmount, setTotalAmount] = useState(0);
 
-  useEffect(() => {
-    if (productsData && taxData) {
-      calculateTotalAmount();
-    }
-  }, [devi.items, devi.taxes, productsData, taxData]);
-
   const calculateTotalAmount = () => {
     let totalAmount = 0;
     totalAmount = devi.items.reduce(
@@ -71,6 +65,14 @@ const AddDevi = () => {
     totalAmount = totalAmount * (1 + taxValue / 100);
     setTotalAmount(totalAmount);
   };
+
+  useEffect(() => {
+    if (productsData && taxData) {
+      calculateTotalAmount();
+    }
+  }, [devi.items, devi.taxes, productsData, taxData]);
+
+  
 
   const handleChange = (e) => {
     setDevi({ ...devi, [e.target.name]: e.target.value });
@@ -138,10 +140,9 @@ const AddDevi = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="AJOUTER DES DEVIS" subtitle="Ajout d'un nouvelle devi" />
+      <Header title="AJOUTER DES DEVIS" subtitle="Ajout d'un nouveau devis" />
       <Box
         m="1.5rem auto"
-        fullWidth
         border={`2px solid ${theme.palette.primary.main}`}
         borderRadius="0.5rem"
         p="1rem"
@@ -197,48 +198,59 @@ const AddDevi = () => {
                 Ajouter produit
               </Button>
             </Grid>
-            {devi.items.map((item, index) => (
-              <React.Fragment key={index}>
-                <Grid item xs={6}>
-                  <FormControl fullWidth>
-                    <InputLabel id={`product-label-${index}`}>
-                      Vos Produits
-                    </InputLabel>
-                    <Select
-                      labelId={`product-label-${index}`}
-                      id={`product-select-${index}`}
-                      value={item.productId}
+            {devi.items.map((item, index) => {
+              // Assurez-vous que productsData est défini et est un tableau
+              const selectedProduct = Array.isArray(productsData)
+                ? productsData.find((product) => product._id === item.productId)
+                : undefined;
+
+              return (
+                <React.Fragment key={index}>
+                  <Grid item xs={6}>
+                    <FormControl fullWidth>
+                      <InputLabel id={`product-label-${index}`}>
+                        Vos Produits
+                      </InputLabel>
+                      <Select
+                        labelId={`product-label-${index}`}
+                        id={`product-select-${index}`}
+                        value={item.productId}
+                        onChange={(e) =>
+                          handleProductChange(index, e.target.value)
+                        }
+                        fullWidth
+                        required
+                      >
+                        {productsData &&
+                          productsData.map((product) => (
+                            <MenuItem key={product._id} value={product._id}>
+                              {product.name}
+                            </MenuItem>
+                          ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      label="Quantité"
+                      name={`quantity-${index}`}
+                      type="number"
+                      value={item.quantity}
+                      inputProps={{
+                        max: selectedProduct ? selectedProduct.quantity : 0,
+                        min: 1,
+                      }}
                       onChange={(e) =>
-                        handleProductChange(index, e.target.value)
+                        handleQuantityChange(index, e.target.value)
                       }
                       fullWidth
                       required
-                    >
-                      {productsData &&
-                        productsData.map((product) => (
-                          <MenuItem key={product._id} value={product._id}>
-                            {product.name}
-                          </MenuItem>
-                        ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    label="Quantité"
-                    name={`quantity-${index}`}
-                    type="number"
-                    value={item.quantity}
-                    onChange={(e) =>
-                      handleQuantityChange(index, e.target.value)
-                    }
-                    fullWidth
-                    required
-                    margin="20px"
-                  />
-                </Grid>
-              </React.Fragment>
-            ))}
+                      margin="20px"
+                    />
+                  </Grid>
+                </React.Fragment>
+              );
+            })}
             <Grid item xs={12}>
               <Button
                 type="button"
@@ -248,7 +260,7 @@ const AddDevi = () => {
                 startIcon={<AddShoppingCartIcon />}
                 fullWidth
               >
-                Ajouter de tax
+                Ajouter une taxe
               </Button>
             </Grid>
             {devi.taxes.map((tax, index) => (
@@ -293,7 +305,7 @@ const AddDevi = () => {
             </Grid>
             <Grid item xs={12}>
               <Button type="submit" variant="contained" color="primary">
-                Ajouter la devi
+                Ajouter le devis
               </Button>
             </Grid>
           </Grid>

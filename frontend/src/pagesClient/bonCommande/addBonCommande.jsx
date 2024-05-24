@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   useTheme,
@@ -12,8 +12,13 @@ import {
   Typography,
 } from "@mui/material";
 import Header from "componentsAdmin/Header";
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import { useGetProductsQuery, useGetAllTaxEntrepriseQuery, useGetFournisseursQuery, useAddBonCommandeMutation } from "state/api";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import {
+  useGetProductsQuery,
+  useGetAllTaxEntrepriseQuery,
+  useGetFournisseursQuery,
+  useAddBonCommandeMutation,
+} from "state/api";
 import { useNavigate } from "react-router-dom";
 
 const AddBonCommande = () => {
@@ -28,7 +33,7 @@ const AddBonCommande = () => {
   const [bonCommande, setBonCommande] = useState({
     userId: localStorage.getItem("userId") || "",
     fournisseurId: "",
-    dueDate: new Date().toISOString().split('T')[0], // Formatted date for the date input
+    dueDate: new Date().toISOString().split("T")[0], // Formatted date for the date input
     items: [{ productId: "", quantity: 0 }],
     taxes: [{ taxId: "" }],
     amount: 0,
@@ -108,24 +113,20 @@ const AddBonCommande = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      let amount = bonCommande.items.reduce(
-        (acc, item) => {
-          const product = productsData.find((product) => product._id === item.productId);
-          return acc + (product ? product.price * item.quantity : 0);
-        },
-        0
-      );
+      let amount = bonCommande.items.reduce((acc, item) => {
+        const product = productsData.find(
+          (product) => product._id === item.productId
+        );
+        return acc + (product ? product.price * item.quantity : 0);
+      }, 0);
       console.log("amount : ", amount);
-      const taxes = bonCommande.taxes.reduce(
-        (acc, item) => {
-          const tax = taxData.find((taxe) => taxe._id === item.taxId);
-          return acc + (tax ? tax.TaksValleur : 0);
-        },
-        0
-      );
-      console.log('taxes : ', taxes);
+      const taxes = bonCommande.taxes.reduce((acc, item) => {
+        const tax = taxData.find((taxe) => taxe._id === item.taxId);
+        return acc + (tax ? tax.TaksValleur : 0);
+      }, 0);
+      console.log("taxes : ", taxes);
       amount = amount * (1 + taxes / 100);
-      console.log('final amount : ', amount);
+      console.log("final amount : ", amount);
       await addBonCommande({ bonCommande: { ...bonCommande, amount } });
       console.log(bonCommande);
       navigate(`/${userName}/bon-commandes`);
@@ -136,8 +137,17 @@ const AddBonCommande = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="AJOUTER DES BON DE COMMANDE" subtitle="Ajout d'une nouvelle bon de commande" />
-      <Box m="1.5rem auto" fullWidth border={`2px solid ${theme.palette.primary.main}`} borderRadius="0.5rem" p="1rem">
+      <Header
+        title="AJOUTER DES BON DE COMMANDE"
+        subtitle="Ajout d'une nouvelle bon de commande"
+      />
+      <Box
+        m="1.5rem auto"
+        fullWidth
+        border={`2px solid ${theme.palette.primary.main}`}
+        borderRadius="0.5rem"
+        p="1rem"
+      >
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -157,7 +167,9 @@ const AddBonCommande = () => {
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth>
-                <InputLabel id="fournisseur-label">Sélectionnez Un Fournisseur</InputLabel>
+                <InputLabel id="fournisseur-label">
+                  Sélectionnez Un Fournisseur
+                </InputLabel>
                 <Select
                   labelId="fournisseur-label"
                   id="fournisseur-select"
@@ -187,42 +199,57 @@ const AddBonCommande = () => {
                 Ajouter produit
               </Button>
             </Grid>
-            {bonCommande.items.map((item, index) => (
-              <React.Fragment key={index}>
-                <Grid item xs={6}>
-                  <FormControl fullWidth>
-                    <InputLabel id={`product-label-${index}`}>Vos Produits</InputLabel>
-                    <Select
-                      labelId={`product-label-${index}`}
-                      id={`product-select-${index}`}
-                      value={item.productId}
-                      onChange={(e) => handleProductChange(index, e.target.value)}
+            {bonCommande.items.map((item, index) => {
+              const selectedProduct = Array.isArray(productsData)
+                ? productsData.find((product) => product._id === item.productId)
+                : undefined;
+              return (
+                <React.Fragment key={index}>
+                  <Grid item xs={6}>
+                    <FormControl fullWidth>
+                      <InputLabel id={`product-label-${index}`}>
+                        Vos Produits
+                      </InputLabel>
+                      <Select
+                        labelId={`product-label-${index}`}
+                        id={`product-select-${index}`}
+                        value={item.productId}
+                        onChange={(e) =>
+                          handleProductChange(index, e.target.value)
+                        }
+                        fullWidth
+                        required
+                      >
+                        {productsData &&
+                          productsData.map((product) => (
+                            <MenuItem key={product._id} value={product._id}>
+                              {product.name}
+                            </MenuItem>
+                          ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      label="Quantité"
+                      name={`quantity-${index}`}
+                      type="number"
+                      value={item.quantity}
+                      inputProps={{
+                        max: selectedProduct ? selectedProduct.quantity : 0,
+                        min: 1,
+                      }}
+                      onChange={(e) =>
+                        handleQuantityChange(index, e.target.value)
+                      }
                       fullWidth
                       required
-                    >
-                      {productsData &&
-                        productsData.map((product) => (
-                          <MenuItem key={product._id} value={product._id}>
-                            {product.name}
-                          </MenuItem>
-                        ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    label="Quantité"
-                    name={`quantity-${index}`}
-                    type="number"
-                    value={item.quantity}
-                    onChange={(e) => handleQuantityChange(index, e.target.value)}
-                    fullWidth
-                    required
-                    margin="20px"
-                  />
-                </Grid>
-              </React.Fragment>
-            ))}
+                      margin="20px"
+                    />
+                  </Grid>
+                </React.Fragment>
+              );
+            })}
             <Grid item xs={12}>
               <Button
                 type="button"

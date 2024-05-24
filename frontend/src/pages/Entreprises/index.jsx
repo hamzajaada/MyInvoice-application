@@ -4,7 +4,6 @@ import {
   useTheme,
   IconButton,
   Avatar,
-  useMediaQuery,
 } from "@mui/material";
 import { useUpdateEntrepriseMutation } from "state/api";
 import Header from "componentsAdmin/Header";
@@ -20,7 +19,6 @@ const Entreprises = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [entreprises, setEntreprises] = useState([]);
   const [updateEntreprise] = useUpdateEntrepriseMutation();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     const fetchEntreprises = async () => {
@@ -70,33 +68,33 @@ const Entreprises = () => {
     {
       field: "name",
       headerName: "Entreprise",
-      width: isSmallScreen ? 150 : 200,
+      flex: 0.5,
       renderCell: renderAvatarCell,
     },
     {
       field: "email",
       headerName: "Email",
-      width: isSmallScreen ? 150 : 200,
+      flex: 0.5,
     },
     {
       field: "phone",
       headerName: "Phone Number",
-      width: isSmallScreen ? 150 : 200,
+      flex: 0.5,
     },
     {
       field: "address",
       headerName: "Address",
-      width: isSmallScreen ? 200 : 300,
+      flex: 0.8,
     },
     {
       field: "role",
       headerName: "Role",
-      width: isSmallScreen ? 100 : 150,
+      flex: 0.4,
     },
     {
       field: "actions",
       headerName: "Actions",
-      width: isSmallScreen ? 100 : 150,
+      flex: 0.3,
       sortable: false,
       renderCell: (params) => (
         <Box>
@@ -106,6 +104,7 @@ const Entreprises = () => {
           >
             <InfoOutlinedIcon />
           </IconButton>
+
           <IconButton
             onClick={() => handleDelete(params.row._id)}
             aria-label="delete"
@@ -122,9 +121,8 @@ const Entreprises = () => {
       <Header title="ENTREPRISES" subtitle="Liste d'entreprises" />
       <Box
         mt="40px"
+        height="75vh"
         sx={{
-          overflowX: isSmallScreen ? "auto" : "hidden",
-          width: "100%",
           "& .MuiDataGrid-root": {
             border: "none",
           },
@@ -156,10 +154,6 @@ const Entreprises = () => {
           getRowId={(row) => row._id}
           rows={entreprises}
           columns={columns}
-          sx={{
-            overflowX: isSmallScreen ? "auto" : "hidden",
-            width: "100%",
-          }}
         />
       </Box>
     </Box>

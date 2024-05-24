@@ -142,8 +142,8 @@ const EditInvoice = () => {
       }
       updatedDevi = { ...updatedDevi, amount: totalAmount };
 
-      const {data} = await updateDevi({ id, deviData: updatedDevi });
-      if(data.success) {
+      const { data } = await updateDevi({ id, deviData: updatedDevi });
+      if (data.success) {
         toast.success("La modification de devi se passe correctement");
         Navigate(`/${userName}/devis`);
       } else {
@@ -163,16 +163,18 @@ const EditInvoice = () => {
 
   const handleDelete = async () => {
     try {
-      if(deviData) {
-        const {data} = await updateDevi({ id, deviData: { ...deviData, active: false } });
-        if(data.success) {
+      if (deviData) {
+        const { data } = await updateDevi({
+          id,
+          deviData: { ...deviData, active: false },
+        });
+        if (data.success) {
           toast.success("La suppresion de devi se passe correctement");
           Navigate(`/${userName}/devis`);
         } else {
           toast.error("La suppresion de devi ne s'est pas réussi");
         }
       }
-      
     } catch (error) {
       console.log(error);
     }
@@ -277,60 +279,71 @@ const EditInvoice = () => {
                 Produits :<br />
               </Typography>
               {devi.items &&
-                devi.items.map((item, index) => (
-                  <Box
-                    key={index}
-                    display="flex"
-                    alignItems="center"
-                    marginBottom="8px"
-                  >
-                    <Box marginRight="16px" width={"90%"}>
-                      <Select
-                        labelId={`product-label-${index}`}
-                        id={`product-select-${index}`}
-                        value={item.productId}
+                devi.items.map((item, index) => {
+                  const selectedProduct = Array.isArray(allProductsData)
+                    ? allProductsData.find(
+                        (product) => product._id === item.productId
+                      )
+                    : undefined;
+                  return (
+                    <Box
+                      key={index}
+                      display="flex"
+                      alignItems="center"
+                      marginBottom="8px"
+                    >
+                      <Box marginRight="16px" width={"90%"}>
+                        <Select
+                          labelId={`product-label-${index}`}
+                          id={`product-select-${index}`}
+                          value={item.productId}
+                          onChange={(e) =>
+                            handleProductChange(
+                              item.productId,
+                              e.target.value,
+                              false
+                            )
+                          }
+                          fullWidth
+                          name={`product-${index}`}
+                        >
+                          {products.map((product) => (
+                            <MenuItem key={product._id} value={product._id}>
+                              {product.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </Box>
+                      <TextField
+                        label="Quantité"
+                        type="number"
+                        value={item.quantity}
+                        inputProps={{
+                          max: selectedProduct ? selectedProduct.quantity : 0,
+                          min: 1,
+                        }}
                         onChange={(e) =>
                           handleProductChange(
                             item.productId,
                             e.target.value,
-                            false
+                            true
                           )
                         }
-                        fullWidth
-                        name={`product-${index}`}
+                        width={"20%"}
+                        required
+                        margin="normal"
+                      />
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => handleDeleteProduct(item.productId)}
+                        style={{ marginLeft: "16px" }}
                       >
-                        {products.map((product) => (
-                          <MenuItem key={product._id} value={product._id}>
-                            {product.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
+                        Supprimer le produit
+                      </Button>
                     </Box>
-                    <TextField
-                      label="Quantité"
-                      type="number"
-                      value={item.quantity}
-                      onChange={(e) =>
-                        handleProductChange(
-                          item.productId,
-                          e.target.value,
-                          true
-                        )
-                      }
-                      width={"20%"}
-                      required
-                      margin="normal"
-                    />
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => handleDeleteProduct(item.productId)}
-                      style={{ marginLeft: "16px" }}
-                    >
-                      Supprimer le produit
-                    </Button>
-                  </Box>
-                ))}
+                  );
+                })}
               <Button
                 width={"40%"}
                 variant="contained"

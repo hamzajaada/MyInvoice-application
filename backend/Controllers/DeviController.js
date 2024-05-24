@@ -9,6 +9,16 @@ const addDevi = async (req, res) => {
   try {
     const devi = new Devi(req.body.devi);
     await devi.save();
+
+    for (const item of devi.items) {
+      const prod = await Product.findById(item.productId);
+      if (!prod) {
+        return res.status(404).json({ success: false, message: "Produit non trouvé" });
+      }
+      prod.quantity -= item.quantity;
+      await Product.findByIdAndUpdate(item.productId, { quantity: prod.quantity });
+    }
+
     res.status(200).json({
       success: true,
       devi,

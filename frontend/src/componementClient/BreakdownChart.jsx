@@ -4,8 +4,7 @@ import { Box, Typography, useTheme } from "@mui/material";
 import { useGetDashboardClientQuery } from "state/api";
 
 const BreakdownChart = () => {
-
-  const id = localStorage.getItem('userId');
+  const id = localStorage.getItem("userId");
   const { data, isLoading } = useGetDashboardClientQuery(id);
   const theme = useTheme();
 
@@ -13,25 +12,26 @@ const BreakdownChart = () => {
 
   const formattedData = [
     {
-        id: "Payée",
-        label: "Factures Payées",
-        value: data.totalPaidInvoices,
-        color: theme.palette.secondary[400],
-      },
-      {
-        id: "Impayée",
-        label: "Factures Impayées",
-        value: data.totalUnpaidInvoices,
-        color: theme.palette.secondary[200],
-      },
-];
+      id: "Payée",
+      label: "Factures Payées",
+      value: data.totalPaidInvoices,
+      color: theme.palette.secondary[400],
+    },
+    {
+      id: "Impayée",
+      label: "Factures Impayées",
+      value: data.totalUnpaidInvoices,
+      color: theme.palette.secondary[200],
+    },
+  ];
 
   return (
     <Box
-      height= "400px"
-      width={undefined}
-      minHeight= "325px"
-      minWidth= "325px"
+      height="400px"
+      width="100%"
+      // width="80%"
+      minHeight="325px"
+      minWidth="325px"
       position="relative"
     >
       <ResponsivePie
@@ -93,8 +93,8 @@ const BreakdownChart = () => {
             anchor: "bottom",
             direction: "row",
             justify: false,
-            translateX:  20,
-            translateY:  50, 
+            translateX: 20,
+            translateY: 50,
             itemsSpacing: 30,
             itemWidth: 85,
             itemHeight: 18,
@@ -115,7 +115,7 @@ const BreakdownChart = () => {
         ]}
       />
       <Box
-        width= "83px"
+        width="83px"
         position="absolute"
         top="50.75%"
         left="50%"
@@ -123,11 +123,11 @@ const BreakdownChart = () => {
         textAlign="center"
         pointerEvents="none"
         sx={{
-          transform:  "translate(-67%, -110%)",
+          transform: "translate(-67%, -110%)",
         }}
       >
         <Typography variant="h6" color="#f57628" fontWeight="bold">
-              {true && "Total:"} {data.totalPaidAmount.toFixed(2)} DHs
+          {true && "Total:"} {data.totalPaidAmount.toFixed(2)} DHs
         </Typography>
       </Box>
     </Box>

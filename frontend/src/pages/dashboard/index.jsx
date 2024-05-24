@@ -14,6 +14,7 @@ import {
   Button,
   useTheme,
   useMediaQuery,
+  Typography
 } from "@mui/material";
 
 import OverviewChart from "componentsAdmin/OverviewChart";
@@ -130,6 +131,9 @@ const Dashboard = () => {
           borderRadius="0.55rem"
           sx={{ maxWidth: isSmallScreen ? '100%' : 'auto' }}
         >
+          <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
+            Entreprises par mois
+          </Typography>
           <OverviewChart isDashboard={true} />
         </Box>
       </Box>
