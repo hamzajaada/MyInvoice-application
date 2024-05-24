@@ -2,7 +2,7 @@ const Client = require("../Models/ClientSchema");
 
 const addClient = async (req, res) => {
   try {
-    console.log(req.body)
+    //console.log(req.body)
     const ClientData = req.body.client;
     const client = new Client(ClientData);
     await client.save();

@@ -14,6 +14,7 @@ import {
   Button,
   useTheme,
   useMediaQuery,
+  Typography
 } from "@mui/material";
 
 import OverviewChart from "componentsAdmin/OverviewChart";
@@ -28,12 +29,13 @@ const Dashboard = () => {
   }
   const [dashboard, setDashboard] = useState({
     totalEntreprises: "",
-    totalInvoices: "",
+    totalDocuments: 0,
     paidInvoices: "",
     unpaidInvoices: "",
   })
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
+  const isSmallScreen = useMediaQuery("(max-width: 500px)");
   
   useEffect(()=>{
     const fetchDashboardData = async () => {
@@ -49,9 +51,9 @@ const Dashboard = () => {
   },[]) // Utilisez une dépendance vide pour exécuter cet effet une seule fois
 
   return (
-    <Box m="1.5rem 2.5rem" >
+    <Box m={isSmallScreen ? "1rem" : "1.5rem 2.5rem"} overflow="hidden">
       <FlexBetween>
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+        <Header title="TABLEAU DE BORD" subtitle="Bienvenue sur votre tableau de bord." />
 
         <Box>
           <Button
@@ -64,7 +66,7 @@ const Dashboard = () => {
             }}
           >
             <DownloadOutlined sx={{ mr: "10px" }} />
-            Download Reports
+            Télécharger le rapport
           </Button>
         </Box>
       </FlexBetween>
@@ -72,7 +74,7 @@ const Dashboard = () => {
       <Box
         mt="20px"
         display="grid"
-        gridTemplateColumns="repeat(8, 1fr)"
+        gridTemplateColumns={isSmallScreen ? "1fr" : "repeat(8, 1fr)"}
         gridAutoRows="160px"
         gap="20px"
         sx={{
@@ -89,23 +91,21 @@ const Dashboard = () => {
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
             />
           }
-          
         />
         <StatBox
-          title="Total Invoice"
-          value={dashboard && dashboard.totalInvoices}
-          description="Le nombre total de facture dans le système"
+          title="Total des documents"
+          value={dashboard && dashboard.totalDocuments}
+          description="Le nombre total de documents dans le système"
           icon={
             <DescriptionIcon
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
             />
           }
         />
-
         <StatBox
-          title="Paid Invoice"
+          title="Documents payé"
           value={dashboard && dashboard.paidInvoices}
-          description="Le nombre total de facture payée dans le système"
+          description="Le nombre total de documents payée dans le système"
           icon={
             <PaidIcon
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
@@ -113,9 +113,9 @@ const Dashboard = () => {
           }
         />
         <StatBox
-          title="Inpaid Invoice"
+          title="Documents impayée"
           value={dashboard && dashboard.unpaidInvoices}
-          description="Le nombre total de facture impayée dans le système"
+          description="Le nombre total de documents impayée dans le système"
           icon={
             <RemoveIcon
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
@@ -129,7 +129,11 @@ const Dashboard = () => {
           backgroundColor={theme.palette.background.alt}
           p="1rem"
           borderRadius="0.55rem"
+          sx={{ maxWidth: isSmallScreen ? '100%' : 'auto' }}
         >
+          <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
+            Entreprises par mois
+          </Typography>
           <OverviewChart isDashboard={true} />
         </Box>
       </Box>
@@ -138,3 +142,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

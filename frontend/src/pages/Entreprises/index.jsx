@@ -1,34 +1,36 @@
 import React, { useState, useEffect } from "react";
-import { Box, useTheme, IconButton, Avatar } from "@mui/material";
 import {
-  useUpdateEntrepriseMutation
-} from "state/api";
+  Box,
+  useTheme,
+  IconButton,
+  Avatar,
+} from "@mui/material";
+import { useUpdateEntrepriseMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Importer axios
+import axios from "axios";
 
 const Entreprises = () => {
   const navigate = useNavigate();
-  if (!localStorage.getItem("userId")) {
-    navigate("/");
-  }
-  const [entreprises, setEntreprises] = useState([]);
   const theme = useTheme();
-  // hadi
   const [isLoading, setIsLoading] = useState(true);
+  const [entreprises, setEntreprises] = useState([]);
   const [updateEntreprise] = useUpdateEntrepriseMutation();
+
   useEffect(() => {
     const fetchEntreprises = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/Api/Entreprise");
+        const response = await axios.get(
+          "http://localhost:3001/Api/Entreprise"
+        );
         setEntreprises(response.data);
-        setIsLoading(false); // Mettre à jour l'état de chargement une fois la requête terminée
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
-        setIsLoading(false); // Mettre à jour l'état de chargement en cas d'erreur
+        setIsLoading(false);
       }
     };
 
@@ -42,9 +44,9 @@ const Entreprises = () => {
   const handleDelete = async (id) => {
     try {
       const thisEntreprise = entreprises.find((d) => d._id === id);
-      const newEntreprise = {...thisEntreprise, status: "cancelled"}
-      await updateEntreprise({id, newEntreprise })
-      setEntreprises(entreprises.filter(entreprise => entreprise._id !== id));
+      const newEntreprise = { ...thisEntreprise, status: "cancelled" };
+      await updateEntreprise({ id, newEntreprise });
+      setEntreprises(entreprises.filter((entreprise) => entreprise._id !== id));
     } catch (error) {
       console.log(error);
     }
@@ -54,11 +56,7 @@ const Entreprises = () => {
     const { logo, name } = params.row;
     return (
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Avatar
-          src={`${logo.url}`}
-          alt={name}
-          sx={{ width: 35, height: 35 }} // Taille fixe pour l'avatar
-        />
+        <Avatar src={`${logo.url}`} alt={name} sx={{ width: 35, height: 35 }} />
         <Box ml={1}>
           <div>{name}</div>
         </Box>
@@ -123,7 +121,7 @@ const Entreprises = () => {
       <Header title="ENTREPRISES" subtitle="Liste d'entreprises" />
       <Box
         mt="40px"
-        height="100vh"
+        height="75vh"
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
@@ -163,4 +161,3 @@ const Entreprises = () => {
 };
 
 export default Entreprises;
-

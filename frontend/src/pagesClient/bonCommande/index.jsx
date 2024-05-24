@@ -100,7 +100,7 @@ const BonCommandes = () => {
     {
       field: "fournisseurId",
       headerName: "Fournisseur",
-      flex: 1,
+      flex: 0.7,
       renderCell: (params) => params.row.fournisseurId.name,
     },
     {

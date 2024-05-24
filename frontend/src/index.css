@@ -67,22 +67,36 @@
     @apply text-accent text-xl lg:text-lg font-bold;
   }
 }
+/* 
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track 
+::-webkit-scrollbar-track {
+  background: #7a7f9d;
+}
+
+/* Handle 
+::-webkit-scrollbar-thumb {
+  background: #21295c;
+}
+
+/* Handle on Hover 
+::-webkit-scrollbar-track:hover {
+  background: #21295c;
+} */
 
 ::-webkit-scrollbar {
   width: 10px;
 }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #7a7f9d;
-}
-
-/* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #21295c;
+  background-color: #c9c9c9;
+
 }
 
-/* Handle on Hover */
-::-webkit-scrollbar-track:hover {
-  background: #21295c;
+::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+
 }

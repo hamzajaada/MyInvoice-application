@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import FlexBetween from "componentsAdmin/FlexBetween";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios"; // Importer axios
+import axios from "axios"; 
 
 
 const Models = () => {
@@ -26,7 +26,6 @@ const Models = () => {
   })
   const [updateModel] = useUpdateModelMutation();
   const theme = useTheme();
-  // hadi
   useEffect(() => {
     const fetchModels = async () => {
       try {
@@ -116,7 +115,7 @@ const Models = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Add
+            Ajoute de model
           </Button>
         </Link>
       </FlexBetween>

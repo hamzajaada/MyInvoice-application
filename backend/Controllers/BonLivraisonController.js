@@ -2,6 +2,7 @@ const BonLivraison = require("../Models/BonLivraisonModel");
 const Fournisseur = require("../Models/FournisseurSchema");
 const Product = require("../Models/ProductSchema");
 const nodemailer = require("nodemailer");
+const BonCommande = require("../Models/BonCommandesModel");
 
 const addBonLivraison = async (req, res) => {
   try {
@@ -19,7 +20,7 @@ const addBonLivraison = async (req, res) => {
 const getAllBonLivraisons = async (req, res) => {
   try {
     console.log("start");
-    const AllbonLivraisons = await BonLivraison.find({active:true})
+    const AllbonLivraisons = await BonLivraison.find({ active: true })
       .populate("bonCommandeId")
       .limit(50)
       .sort({ createdOn: -1 });
@@ -35,56 +36,53 @@ const getAllBonLivraisons = async (req, res) => {
 
 const prepareBonLivraisonDetails = async (req, res) => {
   try {
-    const bonLivraison = await BonLivraison.findById(req.params.id)
-      .populate("userId", "name email phone address logo")
-      .populate("bonCommandeId");
+    const bonLivraison = await BonLivraison.findById(req.params.id);
+    const bonCommande = await BonCommande.findById(bonLivraison.bonCommandeId)
+      .populate("userId")
+      .populate("fournisseurId")
+      .populate({
+        path: "items.productId",
+        select: "name price",
+      })
+      .populate({
+        path: "taxes.taxId",
+        select: "TaksValleur name",
+      });
 
     const fournisseur = await Fournisseur.findById(
       bonLivraison.bonCommandeId.fournisseurId
     );
     const formattedDateLivraison = formatDate(bonLivraison.dateLivraison);
-    // Récupérer les détails des produits en parallèle
-    const itemsPromises = bonLivraison.bonCommandeId.items.map(async (item) => {
-      const produit = await Product.findById(item.productId);
+    const itemsTable = bonCommande.items.map((item) => {
       return {
-        productName: produit.name,
+        productName: item.productId.name,
         quantity: item.quantity,
-        price: produit.price,
+        price: item.productId.price,
       };
     });
 
-    // Attendre toutes les promesses pour récupérer les détails des produits
-    const itemsTable = await Promise.all(itemsPromises);
+    const taxesTable = bonCommande.taxes.map((elem) => {
+      return {
+        taxeName: elem.taxId.name,
+        value: elem.taxId.TaksValleur,
+      };
+    });
+
+
 
     const _id = bonLivraison._id;
     const bonLivraisonStatus = bonLivraison.status;
-    const userName = bonLivraison.userId.name;
-    const userEmail = bonLivraison.userId.email;
-    const userPhone = bonLivraison.userId.phone;
-    const userAddress = bonLivraison.userId.address;
-    const userLogo = bonLivraison.userId.logo;
-    const fournisseurName = fournisseur.name;
-    const fournisseurEmail = fournisseur.email;
-    const fournisseurPhone = fournisseur.phone;
-    const fournisseurAddress = fournisseur.address;
+    const userName = bonCommande.userId.name;
+    const userEmail = bonCommande.userId.email;
+    const userPhone = bonCommande.userId.phone;
+    const userAddress = bonCommande.userId.address;
+    const userLogo = bonCommande.userId.logo;
+    const userSignature = bonCommande.userId.signature;
+    const fournisseurName = bonCommande.fournisseurId.name;
+    const fournisseurEmail = bonCommande.fournisseurId.email;
+    const fournisseurPhone = bonCommande.fournisseurId.phone;
+    const fournisseurAddress = bonCommande.fournisseurId.address;
     const amount = bonLivraison.amount;
-
-    console.log(
-      _id,
-      bonLivraisonStatus,
-      userName,
-      userEmail,
-      userPhone,
-      userAddress,
-      userLogo,
-      fournisseurName,
-      fournisseurEmail,
-      fournisseurPhone,
-      fournisseurAddress,
-      formattedDateLivraison,
-      itemsTable,
-      amount
-    );
     res.status(200).json({
       _id,
       bonLivraisonStatus,
@@ -93,12 +91,14 @@ const prepareBonLivraisonDetails = async (req, res) => {
       userPhone,
       userAddress,
       userLogo,
+      userSignature,
       fournisseurName,
       fournisseurEmail,
       fournisseurPhone,
       fournisseurAddress,
       formattedDateLivraison,
       itemsTable,
+      taxesTable,
       amount,
     });
   } catch (error) {
@@ -163,8 +163,26 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendEmail = async (req, res) => {
-  const { fournisseurEmail, fournisseurName, userName, _id, itemsTable, amount, formattedDateLivraison, userPhone, userAddress, userEmail } = req.body;
-  const itemsTableHTML = itemsTable.map(item => `<tr><td>${item.productName}</td><td>${item.quantity}</td><td>${item.price.toFixed(2)} DHs</td></tr>`).join('');
+  const {
+    fournisseurEmail,
+    fournisseurName,
+    userName,
+    _id,
+    itemsTable,
+    amount,
+    formattedDateLivraison,
+    userPhone,
+    userAddress,
+    userEmail,
+  } = req.body;
+  const itemsTableHTML = itemsTable
+    .map(
+      (item) =>
+        `<tr><td>${item.productName}</td><td>${
+          item.quantity
+        }</td><td>${item.price.toFixed(2)} DHs</td></tr>`
+    )
+    .join("");
   const body = `
   <p>Cher Client(e) Mr/Mme.<strong> ${fournisseurName}</strong>,</br></p>
   <p>Vous avez reçu une bon de livraison de l'entreprise <strong><i>${userName}</i></strong>, vérifiez les détails ci-dessous:</br></p>
@@ -203,14 +221,14 @@ const sendEmail = async (req, res) => {
     to: fournisseurEmail,
     subject: `Facture envoyée depuis ${userName}`,
     html: body,
-  }
+  };
   try {
     await transporter.sendMail(mailOptions);
 
-    res.status(200).json({ message: 'Email sent successfully' }); 
+    res.status(200).json({ message: "Email sent successfully" });
   } catch (error) {
-    console.error('Error sending email:', error.message);
-    res.status(500).json({ error: 'Failed to send email' });
+    console.error("Error sending email:", error.message);
+    res.status(500).json({ error: "Failed to send email" });
   }
 };
 

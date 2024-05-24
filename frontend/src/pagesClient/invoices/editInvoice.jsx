@@ -142,12 +142,12 @@ const EditInvoice = () => {
         totalAmount = totalAmount * (1 + taxesAmount / 100);
       }
       updatedInvoice = { ...updatedInvoice, amount: totalAmount };
-      const {data} = await updateInvoice({ id, InvoiceData: updatedInvoice });
-      if(data.success) {
-        toast.success("La modification de facture se passe correctement");
+      const { data } = await updateInvoice({ id, InvoiceData: updatedInvoice });
+      if (data.success) {
+        toast.success("La Facture a été modifiée avec succés");
         Navigate(`/${userName}/factures`);
       } else {
-        toast.error("La modification de facture ne s'est pas défini");
+        toast.error("La modification de facture a échoué");
       }
     } catch (error) {
       console.log(error);
@@ -170,16 +170,18 @@ const EditInvoice = () => {
 
   const handleDelete = async () => {
     try {
-      if(invoiceData) {
-        const {data} = await updateInvoice({ id, InvoiceData: { ...invoiceData, active: false } })
-        if(data.success) {
-          toast.success("La suppresion de facture se passe correctement");
+      if (invoiceData) {
+        const { data } = await updateInvoice({
+          id,
+          InvoiceData: { ...invoiceData, active: false },
+        });
+        if (data.success) {
+          toast.success("La Facture a été supprimée avec succés");
           Navigate(`/${userName}/factures`);
         } else {
-          toast.error("La suppresion de facture ne s'est pas défini");
+          toast.error("La suppression de facture a échoué");
         }
       }
-      
     } catch (error) {
       console.log(error);
     }
@@ -287,60 +289,71 @@ const EditInvoice = () => {
                 Produits :<br />
               </Typography>
               {invoice.items &&
-                invoice.items.map((item, index) => (
-                  <Box
-                    key={index}
-                    display="flex"
-                    alignItems="center"
-                    marginBottom="8px"
-                  >
-                    <Box marginRight="16px" width={"90%"}>
-                      <Select
-                        labelId={`product-label-${index}`}
-                        id={`product-select-${index}`}
-                        value={item.productId}
+                invoice.items.map((item, index) => {
+                  const selectedProduct = Array.isArray(allProductsData)
+                    ? allProductsData.find(
+                        (product) => product._id === item.productId
+                      )
+                    : undefined;
+                  return (
+                    <Box
+                      key={index}
+                      display="flex"
+                      alignItems="center"
+                      marginBottom="8px"
+                    >
+                      <Box marginRight="16px" width={"90%"}>
+                        <Select
+                          labelId={`product-label-${index}`}
+                          id={`product-select-${index}`}
+                          value={item.productId}
+                          onChange={(e) =>
+                            handleProductChange(
+                              item.productId,
+                              e.target.value,
+                              false
+                            )
+                          }
+                          fullWidth
+                          name={`product-${index}`}
+                        >
+                          {products.map((product) => (
+                            <MenuItem key={product._id} value={product._id}>
+                              {product.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </Box>
+                      <TextField
+                        label="Quantité"
+                        type="number"
+                        value={item.quantity}
+                        inputProps={{
+                          max: selectedProduct ? selectedProduct.quantity : 0,
+                          min: 1,
+                        }}
                         onChange={(e) =>
                           handleProductChange(
                             item.productId,
                             e.target.value,
-                            false
+                            true
                           )
                         }
-                        fullWidth
-                        name={`product-${index}`}
+                        width={"20%"}
+                        required
+                        margin="normal"
+                      />
+                      <Button
+                        variant="contained"
+                        color="warning"
+                        onClick={() => handleDeleteProduct(item.productId)}
+                        style={{ marginLeft: "16px" }}
                       >
-                        {products.map((product) => (
-                          <MenuItem key={product._id} value={product._id}>
-                            {product.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
+                        Supprimer le produit
+                      </Button>
                     </Box>
-                    <TextField
-                      label="Quantité"
-                      type="number"
-                      value={item.quantity}
-                      onChange={(e) =>
-                        handleProductChange(
-                          item.productId,
-                          e.target.value,
-                          true
-                        )
-                      }
-                      width={"20%"}
-                      required
-                      margin="normal"
-                    />
-                    <Button
-                      variant="contained"
-                      color="warning"
-                      onClick={() => handleDeleteProduct(item.productId)}
-                      style={{ marginLeft: "16px" }}
-                    >
-                      Supprimer le produit
-                    </Button>
-                  </Box>
-                ))}
+                  );
+                })}
               <Button
                 variant="contained"
                 color="primary"
