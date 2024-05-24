@@ -272,8 +272,8 @@ const getDashboardInfo = async (req, res) => {
     console.error("Erreur : ", error);
     res
       .status(500)
-      .send(
-        "Erreur serveur lors de la recherche d'informations du tableau de bord"
+      .json(
+        {error:"Erreur serveur lors de la recherche d'informations du tableau de bord"}
       );
   }
 };
