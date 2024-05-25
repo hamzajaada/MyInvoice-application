@@ -82,7 +82,7 @@ const getAllPacksThreeService = async (req, res) => {
 
 const getOnePack = async (req, res) => {
   try {
-    const pack = await Pack.findById(req.params.id);
+    const pack = await Pack.findById(req.params.id).populate("services.serviceId");
     res.status(201).json(pack);
   } catch (error) {
     res.status(500).send("Erreur serveur lors de la recherche de pack");

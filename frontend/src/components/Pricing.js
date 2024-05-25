@@ -57,12 +57,10 @@ const Pricing = () => {
   const navigate = useNavigate();
   const id = localStorage.getItem("userId")
   const username = localStorage.getItem("userName")
-  function handelPack() {
-
-    const redirectPath = id ? `${username}/add-demande` : "/login";
+  const  handelPack=(x) =>{
+    const redirectPath = id ? `/Detail/${x}` : "/login";
     navigate(redirectPath);
-    
-  } 
+  }
   
 
 
@@ -84,7 +82,7 @@ const Pricing = () => {
         {/* card */}
         <div className=" flex flex-col lg:flex-row lg:gap-x-[30px] gap-y-[30px] lg:gap-y-0 justify-center items-center">
           {translatedData && translatedData.map((pack, packIndex) => {
-            const { name, services, price ,logo,desc} = pack;
+            const { name, services, price ,logo,desc ,_id} = pack;
             //card
             return (
               <div
@@ -145,7 +143,7 @@ const Pricing = () => {
                         : "border border-accent text-accent"
                     } btn btn-sm space-x-[14px]`}
 
-                    onClick={handelPack}
+                    onClick={()=>handelPack(_id)}
                   >
                     <span>{btnCom}</span>
                     <HiOutlineArrowNarrowRight />

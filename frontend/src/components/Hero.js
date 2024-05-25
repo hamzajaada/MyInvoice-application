@@ -65,7 +65,7 @@ const Hero = () => {
                 <div
                   className=" md:ml-[220px] lg:ml-[0px] m mx-auto ml-0 gap-x-2 lg:gap-x-6"
                 >
-                  <button className='btn btn-md lg:btn-lg btn-accent px-[40px] ] flex justify-center items-center lg:gap-x-4 md:ml-0'
+                  <button className='btn btn-md lg:btn-lg btn-accent px-[40px] ] mx-auto lg:gap-x-4 md:ml-0'
                   onClick={handleLoginClick}>
                     {btnText}
                     <HiOutlineChevronDown />
