@@ -64,11 +64,13 @@ const AddInvoice = () => {
       0
     );
 
-    const taxValue = invoice.taxes.reduce((acc, item) => {
-      const tax = taxData?.find((taxe) => taxe._id === item.taxId);
-      return acc + (tax ? tax.TaksValleur : 0);
-    }, 0);
-    totalAmount = totalAmount * (1 + taxValue / 100);
+    if(invoice.taxes.length > 0) {
+      const taxValue = invoice.taxes.reduce((acc, item) => {
+        const tax = taxData?.find((taxe) => taxe._id === item.taxId);
+        return acc + (tax ? tax.TaksValleur : 0);
+      }, 0);
+      totalAmount = totalAmount * (1 + taxValue / 100);
+    }
     setTotalAmount(totalAmount);
   };
 
