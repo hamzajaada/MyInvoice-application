@@ -39,7 +39,9 @@ import AddClient from "pagesClient/clients/addClient";
 import EditInvoice from "pagesClient/invoices/editInvoice";
 import DetailsInvoice from "pagesClient/invoices/detailsInvoice";
 import PrintInvoice from "pagesClient/invoices/printInvoice";
+import LetterHeadInvoice from "pagesClient/invoices/letterHeadInvoice"
 import SendEmailInvoice from "pagesClient/invoices/sendEmailInvoice";
+
 import Overview from "pagesClient/overview";
 import Daily from "pagesClient/daily";
 import Monthly from "pagesClient/monthly";
@@ -69,6 +71,7 @@ import AddBonCommande from "pagesClient/bonCommande/addBonCommande";
 import EditBonCommande from "pagesClient/bonCommande/editBonCommande";
 import DetailsBonCommande from "pagesClient/bonCommande/detailsBonCommande";
 import PrintBonCommande from "pagesClient/bonCommande/printBonCommande";
+import LetterHeadBonCommande from "pagesClient/bonCommande/letterHeadBonCommande"
 import SendEmailBonCommandes from "pagesClient/bonCommande/sendEmailBonCommande";
 
 import Devis from "pagesClient/devis";
@@ -76,6 +79,7 @@ import AddDevi from "pagesClient/devis/addDevi";
 import EditDevi from "pagesClient/devis/editDevi";
 import DetailsDevi from "pagesClient/devis/detailsDevi";
 import PrintDevi from "pagesClient/devis/printDevi";
+import LetterHeadDevi from "pagesClient/devis/letterHeadDevi"
 import SendEmailDevis from "pagesClient/devis/sendEmailDevis";
 
 import BonLivraison from "pagesClient/bonLivraison";
@@ -83,6 +87,7 @@ import AddBonLivraison from "pagesClient/bonLivraison/addBonLivraison";
 import EditBonLivraison from "pagesClient/bonLivraison/editBonLivraison";
 import DetailsBonLivraison from "pagesClient/bonLivraison/detailsBonLivraison";
 import PrintBonLivraison from "pagesClient/bonLivraison/printBonLivraison";
+import LetterBonLivraison from "pagesClient/bonLivraison/letterHeadBonLivraison"
 import SendEmailBonLivraison from "pagesClient/bonLivraison/sendEmailBonLivraison";
 
 import Demandes from 'pages/Demande'
@@ -117,9 +122,13 @@ const App = () => {
           <Route path="/DarkMode" element={<DarkMode />} />
           <Route path="/Apropos" element={<Apropos />} />
           <Route path="/:userName/factures/imprimer/:id" element={<PrintInvoice />} />
+          <Route path="/:userName/factures/imprimer/letter/:id" element={<LetterHeadInvoice />} />
           <Route path="/:userName/bon-commandes/imprimer/:id" element={<PrintBonCommande />} />
+          <Route path="/:userName/bon-commandes/imprimer/letter/:id" element={<LetterHeadBonCommande />} />
           <Route path="/:userName/bon-livraison/imprimer/:id" element={<PrintBonLivraison />} />
+          <Route path="/:userName/bon-livraison/imprimer/letter/:id" element={<LetterBonLivraison />} />
           <Route path="/:userName/devis/imprimer/:id" element={<PrintDevi />} />
+          <Route path="/:userName/devis/imprimer/letter/:id" element={<LetterHeadDevi />} />
 
           <Route element={<AddThemeProvider theme={theme} pages={Layout} />}>
             <Route path="/dashboard" element={<Dashboard />} />

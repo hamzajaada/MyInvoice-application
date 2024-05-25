@@ -6,6 +6,7 @@ import Header from "components/Header";
 import { useLoginEntrepriseMutation, useGetOneEntrepriseQuery } from "state/api";
 import tr from "Services/tr";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 const Login = () => {
   // UseState de Translate :
@@ -15,6 +16,7 @@ const Login = () => {
   const [Motpass, setMotpass] = useState("Mot de passe");
   const [MotpassO, setMotpassO] = useState("Mot de passe oublié");
   const [Connexion, setConnexion] = useState("Connexion");
+  const [connexionAdmin, setConnexionAdmin] = useState("Connexion autant qu'admin");
   const [Inscription, setInscription] = useState("Inscription");
   const [Ou, setOu] = useState("Ou");
   const [ConnexionGoogle, setConnexionGoogle] = useState("Connexion avec Google");
@@ -31,6 +33,7 @@ const Login = () => {
         setMotpass(await tr(Motpass, "fra", langto));
         setMotpassO(await tr(MotpassO, "fra", langto));
         setConnexion(await tr(Connexion, "fra", langto));
+        setConnexionAdmin(await tr(connexionAdmin, "fra", langto));
         setInscription(await tr(Inscription, "fra", langto));
         setOu(await tr(Ou, "fra", langto));
         setConnexionGoogle(await tr(ConnexionGoogle, "fra", langto));
@@ -45,7 +48,8 @@ const Login = () => {
   const [emailEnt, setEmailEnt] = useState("");
   const [passwordEnt, setPasswordEnt] = useState("");
   const [userId, setUserId] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(""); // État pour le message d'erreur
+  const [errorMessage, setErrorMessage] = useState(""); 
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const { data: userInfo } = useGetOneEntrepriseQuery(userId);
   if (userInfo && userId) {
@@ -74,26 +78,45 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const Info = await loginEntreprise({
-        email: emailEnt,
-        password: passwordEnt,
-      });
-      console.log("info user :" + Info.data.user);
-
-      const entrepriseInfo = Info.data.user;
-      if (entrepriseInfo.role === "admin" && entrepriseInfo.status === "active") {
-        localStorage.setItem("token", Info.data.jsenwebtkn);
-        localStorage.setItem("userId", Info.data.user._id);
-        localStorage.setItem("userName", Info.data.user.name);
-        navigate(`/dashboard`);
-      } else if (entrepriseInfo.status === "active") {
-        localStorage.setItem("token", Info.data.jsenwebtkn);
-        localStorage.setItem("userId", Info.data.user._id);
-        localStorage.setItem("packId", Info.data.pack._id);
-        localStorage.setItem("userName", Info.data.user.name);
-        const userName = localStorage.getItem('userName');
-        navigate(`/${userName}/dashboardClient`);
+      if(isAdmin) {
+        const Info = await loginEntreprise({
+          email: emailEnt,
+          password: passwordEnt,
+        });
+        const entrepriseInfo = Info.data.user;
+        if (entrepriseInfo.role === "admin" && entrepriseInfo.status === "active") {
+          localStorage.setItem("token", Info.data.jsenwebtkn);
+          localStorage.setItem("userId", Info.data.user._id);
+          localStorage.setItem("userName", Info.data.user.name);
+          navigate(`/dashboard`);
+        } else {
+          navigate(`/login`);
+          setEmailEnt('')
+          setPasswordEnt('')
+          toast.error("Erreur de connexion. Veuillez vérifier vos informations d'identification.");
+        }
+      } else {
+        const Info = await loginEntreprise({
+          email: emailEnt,
+          password: passwordEnt,
+        });
+  
+        const entrepriseInfo = Info.data.user;
+        if (entrepriseInfo.status === "active") {
+          localStorage.setItem("token", Info.data.jsenwebtkn);
+          localStorage.setItem("userId", Info.data.user._id);
+          localStorage.setItem("packId", Info.data.pack._id);
+          localStorage.setItem("userName", Info.data.user.name);
+          const userName = localStorage.getItem('userName');
+          navigate(`/${userName}/dashboardClient`);
+        } else {
+          navigate(`/login`);
+          setEmailEnt('')
+          setPasswordEnt('')
+          toast.error("Erreur de connexion. Veuillez vérifier vos informations d'identification.");
+        }
       }
+      
     } catch (error) {
       console.log(error);
       setErrorMessage("Erreur de connexion. Veuillez vérifier vos informations d'identification."); // Mise à jour du message d'erreur
@@ -151,14 +174,18 @@ const Login = () => {
             <button className="w-full bg-[#060606] hover:bg-accent text-white rounded-md py-3 mb-4 font-Quicksand font-semibold dark:border dark:border-accent">
               {Connexion}
             </button>
+            <button onClick={()=> setIsAdmin(true)} className="w-full bg-[#060606] hover:bg-accent text-white rounded-md py-3 mb-4 font-Quicksand font-semibold dark:border dark:border-accent">
+              {connexionAdmin} 
+            </button>
           </form>
-
+          
           <button
             className="w-full border border-black text-[#060606] bg-white hover:bg-gray-300 rounded-md py-3 mb-4"
             onClick={handleRegisterClick}
           >
             {Inscription}
           </button>
+          
           <div className="w-full text-center mb-4">
             <div className="w-full h-px bg-black"></div>
             <p className="relative inline-block px-2 bg-gray-200 text-sm dark:bg-black dark:text-accent">

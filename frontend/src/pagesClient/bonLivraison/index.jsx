@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Box, useTheme, IconButton, Button } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import {
-  useGetOnePackQuery,
-  useUpdateBonLivraisonMutation,
-} from "state/api";
+  Box,
+  useTheme,
+  IconButton,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import { useGetOnePackQuery, useUpdateBonLivraisonMutation } from "state/api";
 import Header from "componementClient/Header";
 import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
 import FlexBetween from "componentsAdmin/FlexBetween";
@@ -35,13 +42,14 @@ const BonLivraison = () => {
   const [bonLivraison, setbonLivraison] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [generatePdf, setGeneratePdf] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
 
   useEffect(() => {
     if (packData) {
       setGeneratePdf(
         packData.services.some((service) => service.serviceId === formPdf)
       );
-      
     }
   }, [packData]);
 
@@ -49,7 +57,9 @@ const BonLivraison = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/Api/BonLivraison/List/${id}`);
+        const response = await axios.get(
+          `http://localhost:3001/Api/BonLivraison/List/${id}`
+        );
         setbonLivraison(response.data);
         setIsLoading(false);
       } catch (error) {
@@ -65,8 +75,7 @@ const BonLivraison = () => {
     }
   }, [id, navigate]);
   const [updateBonLivraison] = useUpdateBonLivraisonMutation();
- 
-  
+
   if (!localStorage.getItem("userId")) {
     navigate("/");
   }
@@ -222,9 +231,12 @@ const BonLivraison = () => {
           >
             <EmailIcon />
           </IconButton>
-          { generatePdf === true ? (
+          {generatePdf === true ? (
             <IconButton
-              onClick={() => handlePrint(params.row._id)}
+              onClick={() => {
+                setSelectedInvoiceId(params.row._id);
+                setOpenDialog(true);
+              }}
               aria-label="print"
             >
               <PrintIcon />
@@ -251,6 +263,10 @@ const BonLivraison = () => {
     navigate(`/${userName}/bon-livraison/imprimer/${id}`);
   };
 
+  const handlePrintLetter = (id) => {
+    navigate(`/${userName}/bon-livraison/imprimer/letter/${id}`);
+  };
+
   const handleEmail = (id) => {
     navigate(`/bon-livraison/email/${id}`);
   };
@@ -261,20 +277,31 @@ const BonLivraison = () => {
 
   const handleDelete = async (id) => {
     try {
-      const thisBon = bonLivraison.find((b) => b._id === id) 
-      if(thisBon) {
-        thisBon.active = false
-        const {data} = await updateBonLivraison({id, BonLivraisonData: thisBon})
-        if(data.success) {
-          toast.success("La suppresion de bon de livraison se passe correctement");
+      const thisBon = bonLivraison.find((b) => b._id === id);
+      if (thisBon) {
+        thisBon.active = false;
+        const { data } = await updateBonLivraison({
+          id,
+          BonLivraisonData: thisBon,
+        });
+        if (data.success) {
+          toast.success(
+            "La suppresion de bon de livraison se passe correctement"
+          );
           setbonLivraison(bonLivraison.filter((b) => b._id !== id));
         } else {
-          toast.error("La suppresion de bon de livraison ne s'est pas passé correctement");
+          toast.error(
+            "La suppresion de bon de livraison ne s'est pas passé correctement"
+          );
         }
       }
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
   };
 
   return (
@@ -335,6 +362,50 @@ const BonLivraison = () => {
           components={{ Toolbar: DataGridCustomToolbar }}
         />
       </Box>
+      <Dialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        aria-labelledby="print-dialog-title"
+      >
+        <DialogTitle
+          id="print-dialog-title"
+          sx={{ color: theme.palette.secondary[100] }}
+        >
+          Choisissez le type d'impression
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Sélectionnez le type de document que vous souhaitez imprimer.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              handlePrint(selectedInvoiceId);
+              handleDialogClose();
+            }}
+            sx={{ color: theme.palette.secondary[200] }}
+          >
+            Modéle simple
+          </Button>
+          <Button
+            onClick={() => {
+              handlePrintLetter(selectedInvoiceId);
+              handleDialogClose();
+            }}
+            sx={{ color: theme.palette.secondary[200] }}
+          >
+            Modéle lettre head
+          </Button>
+          <Button
+            onClick={handleDialogClose}
+            sx={{ color: theme.palette.secondary[200] }}
+            autoFocus
+          >
+            Annuler
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

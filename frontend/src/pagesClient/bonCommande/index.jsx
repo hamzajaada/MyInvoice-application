@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Box, useTheme, IconButton, Button } from "@mui/material";
+import {
+  Box,
+  useTheme,
+  IconButton,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "componementClient/Header";
 import { useGetOnePackQuery, useUpdateBonCommandeMutation } from "state/api";
@@ -32,16 +42,17 @@ const BonCommandes = () => {
   const [bonCommandes, setBonCommandes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [generatePdf, setGeneratePdf] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
 
   useEffect(() => {
     if (packData) {
       setGeneratePdf(
         packData.services.some((service) => service.serviceId === formPdf)
       );
-      
     }
   }, [packData]);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -154,7 +165,6 @@ const BonCommandes = () => {
         let icon, backgroundColor;
 
         switch (status) {
-          
           case "attent de traitement":
             icon = (
               <HourglassEmpty style={{ color: "white", fontSize: "1rem" }} />
@@ -222,9 +232,12 @@ const BonCommandes = () => {
           >
             <EmailIcon />
           </IconButton>
-          { generatePdf === true ? (
+          {generatePdf === true ? (
             <IconButton
-              onClick={() => handlePrint(params.row._id)}
+              onClick={() => {
+                setSelectedInvoiceId(params.row._id);
+                setOpenDialog(true);
+              }}
               aria-label="print"
             >
               <PrintIcon />
@@ -251,6 +264,10 @@ const BonCommandes = () => {
     navigate(`/${userName}/bon-commandes/imprimer/${id}`);
   };
 
+  const handlePrintLetter = (id) => {
+    navigate(`/${userName}/bon-commandes/imprimer/letter/${id}`);
+  };
+
   const handleEmail = (id) => {
     navigate(`/bon-commandes/email/${id}`);
   };
@@ -261,21 +278,31 @@ const BonCommandes = () => {
 
   const handleDelete = async (id) => {
     try {
-      const thisBon = bonCommandes.find((b) => b._id === id)
-      if(thisBon) {
-        thisBon.active = false
-        const {data} = await updateBonCommandes({id, bonCommandeData: thisBon})
-        if(data.success) {
-          toast.success("La suppresion de bon de commande se passe correctement");
+      const thisBon = bonCommandes.find((b) => b._id === id);
+      if (thisBon) {
+        thisBon.active = false;
+        const { data } = await updateBonCommandes({
+          id,
+          bonCommandeData: thisBon,
+        });
+        if (data.success) {
+          toast.success(
+            "La suppresion de bon de commande se passe correctement"
+          );
           setBonCommandes(bonCommandes.filter((b) => b._id !== id));
         } else {
-          toast.error("La suppresion de bon de commande ne s'est pas passé correctement");
+          toast.error(
+            "La suppresion de bon de commande ne s'est pas passé correctement"
+          );
         }
       }
-      // window.location.reload();
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
   };
 
   return (
@@ -336,6 +363,50 @@ const BonCommandes = () => {
           components={{ Toolbar: DataGridCustomToolbar }}
         />
       </Box>
+      <Dialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        aria-labelledby="print-dialog-title"
+      >
+        <DialogTitle
+          id="print-dialog-title"
+          sx={{ color: theme.palette.secondary[100] }}
+        >
+          Choisissez le type d'impression
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Sélectionnez le type de document que vous souhaitez imprimer.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              handlePrint(selectedInvoiceId);
+              handleDialogClose();
+            }}
+            sx={{ color: theme.palette.secondary[200] }}
+          >
+            Modéle simple
+          </Button>
+          <Button
+            onClick={() => {
+              handlePrintLetter(selectedInvoiceId);
+              handleDialogClose();
+            }}
+            sx={{ color: theme.palette.secondary[200] }}
+          >
+            Modéle lettre head
+          </Button>
+          <Button
+            onClick={handleDialogClose}
+            sx={{ color: theme.palette.secondary[200] }}
+            autoFocus
+          >
+            Annuler
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
