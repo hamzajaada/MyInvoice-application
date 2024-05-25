@@ -7,6 +7,7 @@ import {
   Grid,
   Paper,
   Avatar,
+  useMediaQuery,
   Divider,
 } from "@mui/material";
 import { useGetEntrepriseDetailQuery } from "state/api";
@@ -23,6 +24,7 @@ const EnterpriseDetails = () => {
   const theme = useTheme();
   const { id } = useParams();
   const { data, isLoading } = useGetEntrepriseDetailQuery(id);
+  const isScreenSmall = useMediaQuery("(max-width:900px)");
 
   useEffect(() => {
     if (data) {
@@ -49,7 +51,7 @@ const EnterpriseDetails = () => {
     nombreClient,
     nombreDocument,
   } = enterpriseDetails;
-  
+
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -67,14 +69,15 @@ const EnterpriseDetails = () => {
               "&:hover": { transform: "scale(1.05)" },
             }}
           >
-            <Typography variant="h6" 
+            <Typography
+              variant="h6"
               color={theme.palette.secondary[100]}
               gutterBottom
             >
               Détails de l'entreprise
             </Typography>
             <Divider sx={{ mb: 2 }} />
-            <FlexBetween>
+            {/* <FlexBetween>
               <Grid md={6}>
                 {logo && (
                   <Avatar
@@ -97,9 +100,61 @@ const EnterpriseDetails = () => {
                 <Typography variant="body1" sx={{ mb: 1 }}>
                   <strong>Adresse: </strong> {address}
                 </Typography>
-                
               </Grid>
-            </FlexBetween>
+            </FlexBetween> */}
+            {isScreenSmall ? (
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={6}>
+                  {logo && (
+                    <Avatar
+                      alt="Logo de l'entreprise"
+                      src={logo.url}
+                      sx={{ width: 150, height: 150, mb: 2, mx: "auto" }}
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="body1" sx={{ mb: 1 }}>
+                    <strong>Nom: </strong> {name}
+                  </Typography>
+                  <Typography variant="body1" sx={{ mb: 1 }}>
+                    <strong>Email: </strong> {email}
+                  </Typography>
+                  <Typography variant="body1" sx={{ mb: 1 }}>
+                    <strong>Téléphone: </strong> {phone}
+                  </Typography>
+                  <Typography variant="body1" sx={{ mb: 1 }}>
+                    <strong>Adresse: </strong> {address}
+                  </Typography>
+                </Grid>
+              </Grid>
+            ) : (
+              <FlexBetween>
+                <Grid md={6}>
+                  {logo && (
+                    <Avatar
+                      alt="Logo de l'entreprise"
+                      src={logo.url}
+                      sx={{ width: 150, height: 150, mb: 2, mx: "auto" }}
+                    />
+                  )}
+                </Grid>
+                <Grid md={6}>
+                  <Typography variant="body1" sx={{ mb: 1 }}>
+                    <strong>Nom: </strong> {name}
+                  </Typography>
+                  <Typography variant="body1" sx={{ mb: 1 }}>
+                    <strong>Email: </strong> {email}
+                  </Typography>
+                  <Typography variant="body1" sx={{ mb: 1 }}>
+                    <strong>Téléphone: </strong> {phone}
+                  </Typography>
+                  <Typography variant="body1" sx={{ mb: 1 }}>
+                    <strong>Adresse: </strong> {address}
+                  </Typography>
+                </Grid>
+              </FlexBetween>
+            )}
           </Paper>
         </Grid>
         <Grid item xs={12} sm={6} md={6}>
@@ -112,7 +167,11 @@ const EnterpriseDetails = () => {
               "&:hover": { transform: "scale(1.05)" },
             }}
           >
-            <Typography variant="h6" gutterBottom color={theme.palette.secondary[100]}>
+            <Typography
+              variant="h6"
+              gutterBottom
+              color={theme.palette.secondary[100]}
+            >
               Détails de l'abonnement
             </Typography>
             <Divider sx={{ mb: 2 }} />
@@ -143,7 +202,11 @@ const EnterpriseDetails = () => {
               "&:hover": { transform: "scale(1.05)" },
             }}
           >
-            <Typography variant="h6" gutterBottom color={theme.palette.secondary[100]}>
+            <Typography
+              variant="h6"
+              gutterBottom
+              color={theme.palette.secondary[100]}
+            >
               Détails de compte
             </Typography>
             <Divider sx={{ mb: 2 }} />

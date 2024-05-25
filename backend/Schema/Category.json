@@ -1,0 +1,12 @@
+{
+  "userId": {
+    "ref": "Enterprise",
+    "required": true
+  },
+  "categoryName": {
+    "required": true
+  },
+  "active": {
+    "default": true
+  }
+}

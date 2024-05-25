@@ -1,0 +1,15 @@
+{
+  "userId": {
+    "ref": "Enterprise",
+    "required": true
+  },
+  "TaksValleur": {
+    "required": true
+  },
+  "name": {
+    "required": true
+  },
+  "active": {
+    "default": true
+  }
+}

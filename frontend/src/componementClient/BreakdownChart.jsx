@@ -3,7 +3,8 @@ import { ResponsivePie } from "@nivo/pie";
 import { Box, Typography, useTheme } from "@mui/material";
 import { useGetDashboardClientQuery } from "state/api";
 
-const BreakdownChart = () => {
+const BreakdownChart = ({ idBreakDownChart }) => {
+
   const id = localStorage.getItem("userId");
   const { data, isLoading } = useGetDashboardClientQuery(id);
   const theme = useTheme();
@@ -26,6 +27,7 @@ const BreakdownChart = () => {
   ];
 
   return (
+    <div id={idBreakDownChart}>
     <Box
       height="400px"
       width="100%"
@@ -131,6 +133,7 @@ const BreakdownChart = () => {
         </Typography>
       </Box>
     </Box>
+  </div>
   );
 };
 

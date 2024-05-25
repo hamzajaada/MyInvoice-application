@@ -1,0 +1,22 @@
+{
+  "userId": {
+    "ref": "Enterprise",
+    "required": true
+  },
+  "packId": {
+    "ref": "Pack",
+    "required": true
+  },
+  "startDate": {},
+  "endDate": {
+    "required": true
+  },
+  "status": {
+    "enum": [
+      "active",
+      "expired",
+      "cancelled"
+    ],
+    "default": "active"
+  }
+}

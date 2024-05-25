@@ -1,0 +1,424 @@
+{
+  "BonCommande": {
+    "userId": {
+      "ref": "Enterprise",
+      "required": true
+    },
+    "fournisseurId": {
+      "ref": "Fournisseur",
+      "required": true
+    },
+    "date": {},
+    "dueDate": {
+      "required": true
+    },
+    "items": [
+      {
+        "productId": {
+          "ref": "Product",
+          "required": true
+        },
+        "quantity": {
+          "required": true
+        },
+        "price": {}
+      }
+    ],
+    "taxes": [
+      {
+        "taxId": {
+          "ref": "Taks",
+          "required": true
+        }
+      }
+    ],
+    "status": {
+      "enum": [
+        "attent de traitement",
+        "au cour de traitement",
+        "expédié"
+      ],
+      "default": "attent de traitement"
+    },
+    "amount": {
+      "required": true
+    },
+    "active": {
+      "default": true
+    }
+  },
+  "BonLivraison": {
+    "userId": {
+      "ref": "Enterprise",
+      "required": true
+    },
+    "bonCommandeId": {
+      "ref": "BonCommande",
+      "required": true
+    },
+    "dateLivraison": {
+      "required": true
+    },
+    "status": {
+      "enum": [
+        "attent de confirmation",
+        "confirmé",
+        "attent de reception"
+      ],
+      "default": "attent de confirmation"
+    },
+    "amount": {
+      "required": true
+    },
+    "active": {
+      "default": true
+    }
+  },
+  "Category": {
+    "userId": {
+      "ref": "Enterprise",
+      "required": true
+    },
+    "categoryName": {
+      "required": true
+    },
+    "active": {
+      "default": true
+    }
+  },
+  "Client": {
+    "userId": {
+      "ref": "Enterprise",
+      "required": true
+    },
+    "name": {
+      "required": true
+    },
+    "email": {
+      "required": true,
+      "unique": true
+    },
+    "phone": {},
+    "address": {},
+    "active": {
+      "default": true
+    }
+  },
+  "Demande": {
+    "userId": {
+      "ref": "Enterprise",
+      "required": true
+    },
+    "packId": {
+      "ref": "Pack",
+      "required": true
+    },
+    "nombreAnnee": {},
+    "status": {
+      "enum": [
+        "en attent",
+        "accepter",
+        "rejeter"
+      ],
+      "default": "en attent"
+    },
+    "amount": {
+      "required": true
+    },
+    "active": {
+      "default": true
+    }
+  },
+  "Devi": {
+    "userId": {
+      "ref": "Enterprise",
+      "required": true
+    },
+    "clientId": {
+      "ref": "Client",
+      "required": true
+    },
+    "date": {
+      "required": true
+    },
+    "items": [
+      {
+        "productId": {
+          "ref": "Product",
+          "required": true
+        },
+        "quantity": {
+          "required": true
+        },
+        "price": {}
+      }
+    ],
+    "taxes": [
+      {
+        "taxId": {
+          "ref": "Taks",
+          "required": true
+        }
+      }
+    ],
+    "status": {
+      "enum": [
+        "attente d'approbation",
+        "approuvé",
+        "rejeté"
+      ],
+      "default": "attente d'approbation"
+    },
+    "amount": {
+      "required": true
+    },
+    "active": {
+      "default": true
+    }
+  },
+  "Enterprise": {
+    "name": {
+      "required": true
+    },
+    "email": {
+      "required": true,
+      "unique": true
+    },
+    "password": {},
+    "role": {
+      "default": "standart"
+    },
+    "subscription": {
+      "enum": [
+        "active",
+        "expired",
+        "cancelled"
+      ],
+      "default": "active"
+    },
+    "phone": {},
+    "address": {},
+    "logo": {
+      "public_id": {
+        "required": true
+      },
+      "url": {
+        "required": true
+      }
+    },
+    "status": {
+      "enum": [
+        "active",
+        "cancelled"
+      ],
+      "default": "active"
+    },
+    "signature": {
+      "public_id": {
+        "required": true
+      },
+      "url": {
+        "required": true
+      }
+    }
+  },
+  "Fournisseur": {
+    "userId": {
+      "ref": "Enterprise",
+      "required": true
+    },
+    "name": {
+      "required": true
+    },
+    "email": {
+      "required": true,
+      "unique": true
+    },
+    "phone": {},
+    "address": {},
+    "active": {
+      "default": true
+    }
+  },
+  "Invoice": {
+    "userId": {
+      "ref": "Enterprise",
+      "required": true
+    },
+    "clientId": {
+      "ref": "Client",
+      "required": true
+    },
+    "date": {},
+    "dueDate": {
+      "required": true
+    },
+    "items": [
+      {
+        "productId": {
+          "ref": "Product",
+          "required": true
+        },
+        "quantity": {
+          "required": true
+        },
+        "price": {}
+      }
+    ],
+    "taxes": [
+      {
+        "taxId": {
+          "ref": "Taks",
+          "required": true
+        }
+      }
+    ],
+    "status": {
+      "enum": [
+        "sent",
+        "paid",
+        "late"
+      ],
+      "default": "sent"
+    },
+    "amount": {
+      "required": true
+    },
+    "active": {
+      "default": true
+    }
+  },
+  "Message": {
+    "userId": {
+      "ref": "Enterprise",
+      "required": true
+    },
+    "message": {
+      "required": true
+    },
+    "status": {
+      "enum": [
+        "accepter",
+        "Désactiver"
+      ],
+      "default": "Désactiver"
+    }
+  },
+  "Model": {
+    "name": {
+      "required": true
+    },
+    "description": {
+      "required": true
+    },
+    "icon": {
+      "public_id": {
+        "required": true
+      },
+      "url": {
+        "required": true
+      }
+    },
+    "active": {
+      "default": true
+    }
+  },
+  "Pack": {
+    "name": {
+      "required": true
+    },
+    "description": {},
+    "services": [
+      {
+        "serviceId": {
+          "ref": "Service",
+          "required": true
+        }
+      }
+    ],
+    "price": {
+      "required": true
+    },
+    "logo": {
+      "public_id": {
+        "required": true
+      },
+      "url": {
+        "required": true
+      }
+    },
+    "active": {
+      "default": true
+    }
+  },
+  "Product": {
+    "userId": {
+      "ref": "Enterprise",
+      "required": true
+    },
+    "categoryId": {
+      "ref": "Category",
+      "required": true
+    },
+    "name": {
+      "required": true
+    },
+    "description": {
+      "required": true
+    },
+    "quantity": {
+      "required": true
+    },
+    "price": {
+      "required": true
+    },
+    "active": {
+      "default": true
+    }
+  },
+  "Service": {
+    "ServiceName": {
+      "required": true
+    },
+    "active": {
+      "default": true
+    }
+  },
+  "Subscription": {
+    "userId": {
+      "ref": "Enterprise",
+      "required": true
+    },
+    "packId": {
+      "ref": "Pack",
+      "required": true
+    },
+    "startDate": {},
+    "endDate": {
+      "required": true
+    },
+    "status": {
+      "enum": [
+        "active",
+        "expired",
+        "cancelled"
+      ],
+      "default": "active"
+    }
+  },
+  "Taks": {
+    "userId": {
+      "ref": "Enterprise",
+      "required": true
+    },
+    "TaksValleur": {
+      "required": true
+    },
+    "name": {
+      "required": true
+    },
+    "active": {
+      "default": true
+    }
+  }
+}

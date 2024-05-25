@@ -1,0 +1,46 @@
+{
+  "name": {
+    "required": true
+  },
+  "email": {
+    "required": true,
+    "unique": true
+  },
+  "password": {},
+  "role": {
+    "default": "standart"
+  },
+  "subscription": {
+    "enum": [
+      "active",
+      "expired",
+      "cancelled"
+    ],
+    "default": "active"
+  },
+  "phone": {},
+  "address": {},
+  "logo": {
+    "public_id": {
+      "required": true
+    },
+    "url": {
+      "required": true
+    }
+  },
+  "status": {
+    "enum": [
+      "active",
+      "cancelled"
+    ],
+    "default": "active"
+  },
+  "signature": {
+    "public_id": {
+      "required": true
+    },
+    "url": {
+      "required": true
+    }
+  }
+}

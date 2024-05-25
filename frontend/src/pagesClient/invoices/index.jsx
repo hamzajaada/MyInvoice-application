@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Box, useTheme, IconButton, Button } from "@mui/material";
+import {
+  Box,
+  useTheme,
+  IconButton,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetOnePackQuery, useUpdateInvoiceMutation } from "state/api";
 import Header from "componementClient/Header";
@@ -36,6 +46,8 @@ const Invoices = () => {
   const [Facture, setFacture] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [generatePdf, setGeneratePdf] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
 
   useEffect(() => {
     if (packData) {
@@ -223,16 +235,19 @@ const Invoices = () => {
           >
             <EmailIcon />
           </IconButton>
-          {/*{generatePdf === true ? (*/}
+          {generatePdf === true ? (
             <IconButton
-              onClick={() => handlePrint(params.row._id)}
+              onClick={() => {
+                setSelectedInvoiceId(params.row._id);
+                setOpenDialog(true);
+              }}
               aria-label="print"
             >
               <PrintIcon />
             </IconButton>
-         {/*  ) : (
+          ) : (
             ""
-          )}*/}
+          )}
           <IconButton
             onClick={() => handleDelete(params.row._id)}
             aria-label="delete"
@@ -252,6 +267,10 @@ const Invoices = () => {
     navigate(`/${userName}/factures/imprimer/${id}`);
   };
 
+  const handlePrintLetter = (id) => {
+    navigate(`/${userName}/factures/imprimer/letter/${id}`);
+  };
+
   const handleEmail = (id) => {
     navigate(`/${userName}/factures/email/${id}`);
   };
@@ -262,21 +281,26 @@ const Invoices = () => {
 
   const handleDelete = async (id) => {
     try {
-      const thisInvoice = Facture.find((f) => f._id === id)
-      if(thisInvoice) {
-        thisInvoice.active = false
-        const {data} = await updateInvoice({id, InvoiceData: thisInvoice})
-        if(data.success) {
+      const thisInvoice = Facture.find((f) => f._id === id);
+      if (thisInvoice) {
+        thisInvoice.active = false;
+        const { data } = await updateInvoice({ id, InvoiceData: thisInvoice });
+        if (data.success) {
           toast.success("La suppresion de facture se passe correctement");
           setFacture(Facture.filter((f) => f._id !== id));
         } else {
-          toast.error("La suppresion de facture ne s'est pas passé correctement");
+          toast.error(
+            "La suppresion de facture ne s'est pas passé correctement"
+          );
         }
       }
-      // window.location.reload();
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
   };
 
   return (
@@ -337,6 +361,50 @@ const Invoices = () => {
           components={{ Toolbar: DataGridCustomToolbar }}
         />
       </Box>
+      <Dialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        aria-labelledby="print-dialog-title"
+      >
+        <DialogTitle
+          id="print-dialog-title"
+          sx={{ color: theme.palette.secondary[100] }}
+        >
+          Choisissez le type d'impression
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Sélectionnez le type de document que vous souhaitez imprimer.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              handlePrint(selectedInvoiceId);
+              handleDialogClose();
+            }}
+            sx={{ color: theme.palette.secondary[200] }}
+          >
+            Modéle simple
+          </Button>
+          <Button
+            onClick={() => {
+              handlePrintLetter(selectedInvoiceId);
+              handleDialogClose();
+            }}
+            sx={{ color: theme.palette.secondary[200] }}
+          >
+            Modéle lettre head
+          </Button>
+          <Button
+            onClick={handleDialogClose}
+            sx={{ color: theme.palette.secondary[200] }}
+            autoFocus
+          >
+            Annuler
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

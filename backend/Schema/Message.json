@@ -1,0 +1,16 @@
+{
+  "userId": {
+    "ref": "Enterprise",
+    "required": true
+  },
+  "message": {
+    "required": true
+  },
+  "status": {
+    "enum": [
+      "accepter",
+      "Désactiver"
+    ],
+    "default": "Désactiver"
+  }
+}

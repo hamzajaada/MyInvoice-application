@@ -76,7 +76,7 @@ const PrintInvoice = () => {
           </Box>
           <Box display="flex" justifyContent="center" mt={3}>
           <Box width="50%" borderRadius={4} border={`1px solid ${theme.palette.grey[300]}`} p={2} mr={2}>
-            {userLogo &&<Box component="img" alt="profile" src={`http://localhost:3001/Images/${userLogo}`} height="50px" width="50px" borderRadius="50%" sx={{ objectFit: "cover" }} />}
+            {userLogo &&<Box component="img" alt="profile" src={`${userLogo.url}`} height="50px" width="50px" borderRadius="50%" sx={{ objectFit: "cover" }} />}
             <Box ml={2}><br /></Box>
             <Typography variant="body1" fontWeight= "bold">Nom:  {userName}</Typography>
             <Typography variant="body1" fontWeight= "bold">Email:  {userEmail}</Typography>

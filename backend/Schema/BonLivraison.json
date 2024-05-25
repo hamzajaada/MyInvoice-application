@@ -1,0 +1,554 @@
+{
+    "modelName": "New Model",
+    "collections": [
+        {
+            "collectionName": "BonCommande",
+            "type": "object",
+            "properties": [
+                {
+                    "code": "",
+                    "name": "userId",
+                    "isActivated": true,
+                    "type": "document",
+                    "properties": [
+                        {
+                            "code": "",
+                            "name": "ref",
+                            "isActivated": true,
+                            "type": "string",
+                            "properties": [],
+                            "primaryKey": false,
+                            "GUID": "5f051354-6445-4d4d-89ff-76fdd573fb20",
+                            "required": true,
+                            "examples": [
+                                "Enterprise"
+                            ],
+                            "error": {}
+                        },
+                        {
+                            "code": "",
+                            "name": "required",
+                            "isActivated": true,
+                            "type": "boolean",
+                            "primaryKey": false,
+                            "GUID": "69634526-8b8c-470d-99dc-9d9c15c67e77",
+                            "required": true,
+                            "examples": [
+                                true
+                            ],
+                            "error": {}
+                        }
+                    ],
+                    "additionalProperties": true,
+                    "primaryKey": false,
+                    "GUID": "9d9ab122-1c61-4aae-ac02-4d5134151d5c",
+                    "required": true,
+                    "error": {}
+                },
+                {
+                    "code": "",
+                    "name": "fournisseurId",
+                    "isActivated": true,
+                    "type": "document",
+                    "properties": [
+                        {
+                            "code": "",
+                            "name": "ref",
+                            "isActivated": true,
+                            "type": "string",
+                            "properties": [],
+                            "primaryKey": false,
+                            "GUID": "8ba775da-ed89-4118-a439-53fea5f19f32",
+                            "required": true,
+                            "examples": [
+                                "Fournisseur"
+                            ],
+                            "error": {}
+                        },
+                        {
+                            "code": "",
+                            "name": "required",
+                            "isActivated": true,
+                            "type": "boolean",
+                            "primaryKey": false,
+                            "GUID": "f8cb3e48-f8f5-4d46-bf63-b1b1032d1084",
+                            "required": true,
+                            "examples": [
+                                true
+                            ],
+                            "error": {}
+                        }
+                    ],
+                    "additionalProperties": true,
+                    "primaryKey": false,
+                    "GUID": "c066ca91-7ad6-41c4-87aa-c8f3685accb3",
+                    "required": true,
+                    "error": {}
+                },
+                {
+                    "code": "",
+                    "name": "date",
+                    "isActivated": true,
+                    "type": "document",
+                    "properties": [],
+                    "additionalProperties": true,
+                    "primaryKey": false,
+                    "GUID": "b7a13f0e-7a41-4e7a-b3b0-25146c25e6d7",
+                    "required": true,
+                    "error": {}
+                },
+                {
+                    "code": "",
+                    "name": "dueDate",
+                    "isActivated": true,
+                    "type": "document",
+                    "properties": [
+                        {
+                            "code": "",
+                            "name": "required",
+                            "isActivated": true,
+                            "type": "boolean",
+                            "primaryKey": false,
+                            "GUID": "ae78d26b-9ee0-4c6a-aae6-5ea6644bc309",
+                            "required": true,
+                            "examples": [
+                                true
+                            ],
+                            "error": {}
+                        }
+                    ],
+                    "additionalProperties": true,
+                    "primaryKey": false,
+                    "GUID": "1362c86e-8c9b-4af4-89de-0340720a0e4b",
+                    "required": true,
+                    "error": {}
+                },
+                {
+                    "code": "",
+                    "name": "items",
+                    "isActivated": true,
+                    "type": "array",
+                    "properties": [
+                        {
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "type": "document",
+                            "properties": [
+                                {
+                                    "code": "",
+                                    "name": "productId",
+                                    "isActivated": true,
+                                    "type": "document",
+                                    "properties": [
+                                        {
+                                            "code": "",
+                                            "name": "ref",
+                                            "isActivated": true,
+                                            "type": "string",
+                                            "properties": [],
+                                            "primaryKey": false,
+                                            "GUID": "8af29635-0b47-4d5e-b7d0-cc23fddbffcc",
+                                            "required": true,
+                                            "examples": [
+                                                "Product"
+                                            ],
+                                            "error": {}
+                                        },
+                                        {
+                                            "code": "",
+                                            "name": "required",
+                                            "isActivated": true,
+                                            "type": "boolean",
+                                            "primaryKey": false,
+                                            "GUID": "bdd6c796-aaa4-4549-92a0-86fd7fa287ae",
+                                            "required": true,
+                                            "examples": [
+                                                true
+                                            ],
+                                            "error": {}
+                                        }
+                                    ],
+                                    "additionalProperties": true,
+                                    "primaryKey": false,
+                                    "GUID": "b9409e19-be73-47b7-b209-60cd37beb5da",
+                                    "required": true,
+                                    "error": {}
+                                },
+                                {
+                                    "code": "",
+                                    "name": "quantity",
+                                    "isActivated": true,
+                                    "type": "document",
+                                    "properties": [
+                                        {
+                                            "code": "",
+                                            "name": "required",
+                                            "isActivated": true,
+                                            "type": "boolean",
+                                            "primaryKey": false,
+                                            "GUID": "ffd891c4-36d0-4b2f-a7ea-83ccb5085f1d",
+                                            "required": true,
+                                            "examples": [
+                                                true
+                                            ],
+                                            "error": {}
+                                        }
+                                    ],
+                                    "additionalProperties": true,
+                                    "primaryKey": false,
+                                    "GUID": "3d52db9f-ebdd-4cb5-b903-2a5b244da7ef",
+                                    "required": true,
+                                    "error": {}
+                                },
+                                {
+                                    "code": "",
+                                    "name": "price",
+                                    "isActivated": true,
+                                    "type": "document",
+                                    "properties": [],
+                                    "additionalProperties": true,
+                                    "primaryKey": false,
+                                    "GUID": "ab482724-0bc0-47b9-9932-4963c7e30417",
+                                    "required": true,
+                                    "error": {}
+                                }
+                            ],
+                            "additionalProperties": true,
+                            "GUID": "b3916dfa-80dd-4874-8b1c-5bffe6f87a4c",
+                            "arrayItem": true,
+                            "error": {}
+                        }
+                    ],
+                    "additionalItems": true,
+                    "primaryKey": false,
+                    "GUID": "d7723757-0181-44c0-afc0-3d89f6081a42",
+                    "required": true,
+                    "error": {}
+                },
+                {
+                    "code": "",
+                    "name": "taxes",
+                    "isActivated": true,
+                    "type": "array",
+                    "properties": [
+                        {
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "type": "document",
+                            "properties": [
+                                {
+                                    "code": "",
+                                    "name": "taxId",
+                                    "isActivated": true,
+                                    "type": "document",
+                                    "properties": [
+                                        {
+                                            "code": "",
+                                            "name": "ref",
+                                            "isActivated": true,
+                                            "type": "string",
+                                            "properties": [],
+                                            "primaryKey": false,
+                                            "GUID": "1c3a20a4-0596-4e9f-bb5e-b5caccacbb3b",
+                                            "required": true,
+                                            "examples": [
+                                                "Taks"
+                                            ],
+                                            "error": {}
+                                        },
+                                        {
+                                            "code": "",
+                                            "name": "required",
+                                            "isActivated": true,
+                                            "type": "boolean",
+                                            "primaryKey": false,
+                                            "GUID": "601a5a12-9114-4dde-ab9d-d135d6a522f3",
+                                            "required": true,
+                                            "examples": [
+                                                true
+                                            ],
+                                            "error": {}
+                                        }
+                                    ],
+                                    "additionalProperties": true,
+                                    "primaryKey": false,
+                                    "GUID": "5c6143d2-5edc-4edb-b8c3-e462ef30055e",
+                                    "required": true,
+                                    "error": {}
+                                }
+                            ],
+                            "additionalProperties": true,
+                            "GUID": "0bba0e3c-ae0a-42e6-9460-36ad8528a471",
+                            "arrayItem": true,
+                            "error": {}
+                        }
+                    ],
+                    "additionalItems": true,
+                    "primaryKey": false,
+                    "GUID": "108fd8ea-d881-461f-b1d3-ae9ddccde9b5",
+                    "required": true,
+                    "error": {}
+                },
+                {
+                    "code": "",
+                    "name": "status",
+                    "isActivated": true,
+                    "type": "document",
+                    "properties": [
+                        {
+                            "code": "",
+                            "name": "enum",
+                            "isActivated": true,
+                            "type": "array",
+                            "properties": [
+                                {
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "string",
+                                    "properties": [],
+                                    "GUID": "8e0505f2-f0e7-4cb6-9584-5f64f5033502",
+                                    "arrayItem": true,
+                                    "error": {}
+                                }
+                            ],
+                            "additionalItems": true,
+                            "primaryKey": false,
+                            "GUID": "d9acdcac-4902-4e28-8417-fc24374d20f5",
+                            "required": true,
+                            "error": {}
+                        },
+                        {
+                            "code": "",
+                            "name": "default",
+                            "isActivated": true,
+                            "type": "string",
+                            "properties": [],
+                            "primaryKey": false,
+                            "GUID": "0490c7d2-650b-4417-b621-3f22c1fbcad0",
+                            "required": true,
+                            "examples": [
+                                "attent de traitement"
+                            ],
+                            "error": {}
+                        }
+                    ],
+                    "additionalProperties": true,
+                    "primaryKey": false,
+                    "GUID": "c74b3f7c-1a35-4bdc-8af3-3fae0b05c4e8",
+                    "required": true,
+                    "error": {}
+                },
+                {
+                    "code": "",
+                    "name": "amount",
+                    "isActivated": true,
+                    "type": "document",
+                    "properties": [
+                        {
+                            "code": "",
+                            "name": "required",
+                            "isActivated": true,
+                            "type": "boolean",
+                            "primaryKey": false,
+                            "GUID": "53ab1a0e-fa54-4afa-8ea1-c2ab831ba969",
+                            "required": true,
+                            "examples": [
+                                true
+                            ],
+                            "error": {}
+                        }
+                    ],
+                    "additionalProperties": true,
+                    "primaryKey": false,
+                    "GUID": "49b9e77c-4d99-4d35-b3f0-5ecd7854e7ad",
+                    "required": true,
+                    "error": {}
+                },
+                {
+                    "code": "",
+                    "name": "active",
+                    "isActivated": true,
+                    "type": "document",
+                    "properties": [
+                        {
+                            "code": "",
+                            "name": "default",
+                            "isActivated": true,
+                            "type": "boolean",
+                            "primaryKey": false,
+                            "GUID": "55fec4f2-0e29-4647-af68-3d0ff6bc72ce",
+                            "required": true,
+                            "examples": [
+                                true
+                            ],
+                            "error": {}
+                        }
+                    ],
+                    "additionalProperties": true,
+                    "primaryKey": false,
+                    "GUID": "0669eeaf-22d6-4482-8b68-683217c6048d",
+                    "required": true,
+                    "error": {}
+                }
+            ],
+            "definitions": {
+                "type": "definitions",
+                "GUID": "b91f72d3-732f-441c-816d-8a62a46ee5da",
+                "properties": []
+            },
+            "isActivated": true,
+            "additionalProperties": true,
+            "GUID": "dce69d12-4717-48f7-8dec-01c75dbb3c9a",
+            "code": "",
+            "hackoladeMeta": {
+                "validationErrors": {}
+            },
+            "bucketId": "e326e608-5c7f-4b2c-bb26-a017821a6b54"
+        }
+    ],
+    "buckets": [
+        {
+            "name": "BonCommande",
+            "type": "bucket",
+            "collectionIds": [
+                "dce69d12-4717-48f7-8dec-01c75dbb3c9a"
+            ],
+            "backgroundColor": {
+                "r": 216,
+                "g": 0,
+                "b": 115,
+                "a": 1
+            },
+            "show": true,
+            "isActivated": true,
+            "GUID": "e326e608-5c7f-4b2c-bb26-a017821a6b54",
+            "code": "",
+            "hackoladeMeta": {
+                "validationErrors": {}
+            }
+        }
+    ],
+    "views": [],
+    "relationships": [],
+    "users": [],
+    "diagramViews": [],
+    "idToNameHashTable": {
+        "e326e608-5c7f-4b2c-bb26-a017821a6b54": "BonCommande",
+        "9d9ab122-1c61-4aae-ac02-4d5134151d5c": "userId",
+        "5f051354-6445-4d4d-89ff-76fdd573fb20": "ref",
+        "69634526-8b8c-470d-99dc-9d9c15c67e77": "required",
+        "c066ca91-7ad6-41c4-87aa-c8f3685accb3": "fournisseurId",
+        "8ba775da-ed89-4118-a439-53fea5f19f32": "ref",
+        "f8cb3e48-f8f5-4d46-bf63-b1b1032d1084": "required",
+        "b7a13f0e-7a41-4e7a-b3b0-25146c25e6d7": "date",
+        "1362c86e-8c9b-4af4-89de-0340720a0e4b": "dueDate",
+        "ae78d26b-9ee0-4c6a-aae6-5ea6644bc309": "required",
+        "d7723757-0181-44c0-afc0-3d89f6081a42": "items",
+        "b9409e19-be73-47b7-b209-60cd37beb5da": "productId",
+        "8af29635-0b47-4d5e-b7d0-cc23fddbffcc": "ref",
+        "bdd6c796-aaa4-4549-92a0-86fd7fa287ae": "required",
+        "3d52db9f-ebdd-4cb5-b903-2a5b244da7ef": "quantity",
+        "ffd891c4-36d0-4b2f-a7ea-83ccb5085f1d": "required",
+        "ab482724-0bc0-47b9-9932-4963c7e30417": "price",
+        "108fd8ea-d881-461f-b1d3-ae9ddccde9b5": "taxes",
+        "5c6143d2-5edc-4edb-b8c3-e462ef30055e": "taxId",
+        "1c3a20a4-0596-4e9f-bb5e-b5caccacbb3b": "ref",
+        "601a5a12-9114-4dde-ab9d-d135d6a522f3": "required",
+        "c74b3f7c-1a35-4bdc-8af3-3fae0b05c4e8": "status",
+        "d9acdcac-4902-4e28-8417-fc24374d20f5": "enum",
+        "0490c7d2-650b-4417-b621-3f22c1fbcad0": "default",
+        "49b9e77c-4d99-4d35-b3f0-5ecd7854e7ad": "amount",
+        "53ab1a0e-fa54-4afa-8ea1-c2ab831ba969": "required",
+        "0669eeaf-22d6-4482-8b68-683217c6048d": "active",
+        "55fec4f2-0e29-4647-af68-3d0ff6bc72ce": "default",
+        "dce69d12-4717-48f7-8dec-01c75dbb3c9a": "BonCommande"
+    },
+    "definitions": {
+        "type": "definitions",
+        "properties": [],
+        "GUID": "0fb87f76-9a3c-403d-b0d1-5fa3a9a884f8"
+    },
+    "polyglotDefinitions": {
+        "type": "polyglotDefinitions",
+        "properties": [],
+        "GUID": "a31ccc24-52e8-43e1-8291-326a2c3fd6aa"
+    },
+    "externalDefinitions": {
+        "type": "externalDefinitions",
+        "properties": [],
+        "GUID": "608ba9c7-ca62-4960-b115-51fca4f0d565"
+    },
+    "sources": [],
+    "decorativeSymbols": [],
+    "dbVendor": "JSON",
+    "dbVersion": "2019-09",
+    "appTarget": "JSON",
+    "creationTS": "2024-05-25T12:51:43.911Z",
+    "GUID": "4977d02d-c256-4866-8af7-59eb7ca2fa5e",
+    "isLineageEnabled": false,
+    "lastModifTS": "2024-05-25T12:52:57.536Z",
+    "persistenceSchemaVersion": "7",
+    "isCreatedByPlugin": true,
+    "pluginInformation": {
+        "pluginEngineVersion": "1.0.0"
+    },
+    "applicationInformation": {
+        "version": "7.4.4"
+    },
+    "hackoladeMeta": {},
+    "settings": {
+        "centralPane": {
+            "dbLevel": {
+                "erd": [
+                    {
+                        "GUID": "dce69d12-4717-48f7-8dec-01c75dbb3c9a",
+                        "x": 1050,
+                        "y": 1050,
+                        "width": 252,
+                        "height": 569,
+                        "color": {}
+                    }
+                ],
+                "erdDefinitions": {
+                    "erd": [],
+                    "rootPath": [],
+                    "entities": [],
+                    "decorativeSymbols": []
+                },
+                "buckets": [
+                    {
+                        "x": 1010,
+                        "y": 1010,
+                        "GUID": "e326e608-5c7f-4b2c-bb26-a017821a6b54"
+                    }
+                ],
+                "collapsedNodes": [],
+                "activeRelationship": "",
+                "activeRelationshipFields": {
+                    "childField": [],
+                    "parentField": []
+                },
+                "selectedCollections": [],
+                "displayColorPicker": false,
+                "graphView": {
+                    "erd": [],
+                    "buckets": [],
+                    "decorativeSymbols": [],
+                    "forceLayout": true,
+                    "defaultLinkLength": 300
+                },
+                "diagramViews": [],
+                "decorativeSymbols": [],
+                "nestedCollectionsLayout": "horizontal",
+                "options": [],
+                "relationshipUpdateDisabled": false
+            },
+            "collectionLevel": {},
+            "changed": false
+        },
+        "dtDiagram": {
+            "collapsedNodes": [],
+            "shouldDistributeCollections": false
+        }
+    }
+}

@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Box, useTheme, IconButton, Button } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import {
-  useGetOnePackQuery,
-  useUpdateDeviMutation,
-} from "state/api";
+  Box,
+  useTheme,
+  IconButton,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import { useGetOnePackQuery, useUpdateDeviMutation } from "state/api";
 import Header from "componementClient/Header";
 import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
 import FlexBetween from "componentsAdmin/FlexBetween";
@@ -38,13 +45,14 @@ const Devis = () => {
   const [Devis, setDevis] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [generatePdf, setGeneratePdf] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
 
   useEffect(() => {
     if (packData) {
       setGeneratePdf(
         packData.services.some((service) => service.serviceId === formPdf)
       );
-      
     }
   }, [packData]);
 
@@ -52,7 +60,9 @@ const Devis = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/Api/Devi/List/${id}`);
+        const response = await axios.get(
+          `http://localhost:3001/Api/Devi/List/${id}`
+        );
         setDevis(response.data);
         setIsLoading(false);
       } catch (error) {
@@ -66,7 +76,7 @@ const Devis = () => {
     } else {
       navigate("/");
     }
-  }, [id, navigate]); 
+  }, [id, navigate]);
   const [updateDevi] = useUpdateDeviMutation();
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -219,9 +229,12 @@ const Devis = () => {
           >
             <EmailIcon />
           </IconButton>
-          { generatePdf === true ? (
+          {generatePdf === true ? (
             <IconButton
-              onClick={() => handlePrint(params.row._id)}
+              onClick={() => {
+                setSelectedInvoiceId(params.row._id);
+                setOpenDialog(true);
+              }}
               aria-label="print"
             >
               <PrintIcon />
@@ -240,13 +253,16 @@ const Devis = () => {
     },
   ];
 
-
   const handleDetails = (id) => {
     window.location.href = `/${userName}/devis/details/${id}`;
   };
 
   const handlePrint = (id) => {
     navigate(`/${userName}/devis/imprimer/${id}`);
+  };
+
+  const handlePrintLetter = (id) => {
+    navigate(`/${userName}/devis/imprimer/letter/${id}`);
   };
 
   const handleEmail = (id) => {
@@ -259,11 +275,11 @@ const Devis = () => {
 
   const handleDelete = async (id) => {
     try {
-      const thisDevi = Devis.find((d) => d._id === id)
-      if(thisDevi) {
-        thisDevi.active = false
-        const {data} = await updateDevi({id, deviData: thisDevi})
-        if(data.success) {
+      const thisDevi = Devis.find((d) => d._id === id);
+      if (thisDevi) {
+        thisDevi.active = false;
+        const { data } = await updateDevi({ id, deviData: thisDevi });
+        if (data.success) {
           toast.success("La suppresion de devi se passe correctement");
           setDevis(Devis.filter((d) => d._id !== id));
         } else {
@@ -274,6 +290,10 @@ const Devis = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
   };
 
   return (
@@ -334,6 +354,50 @@ const Devis = () => {
           components={{ Toolbar: DataGridCustomToolbar }}
         />
       </Box>
+      <Dialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        aria-labelledby="print-dialog-title"
+      >
+        <DialogTitle
+          id="print-dialog-title"
+          sx={{ color: theme.palette.secondary[100] }}
+        >
+          Choisissez le type d'impression
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Sélectionnez le type de document que vous souhaitez imprimer.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              handlePrint(selectedInvoiceId);
+              handleDialogClose();
+            }}
+            sx={{ color: theme.palette.secondary[200] }}
+          >
+            Modéle simple
+          </Button>
+          <Button
+            onClick={() => {
+              handlePrintLetter(selectedInvoiceId);
+              handleDialogClose();
+            }}
+            sx={{ color: theme.palette.secondary[200] }}
+          >
+            Modéle lettre head
+          </Button>
+          <Button
+            onClick={handleDialogClose}
+            sx={{ color: theme.palette.secondary[200] }}
+            autoFocus
+          >
+            Annuler
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
