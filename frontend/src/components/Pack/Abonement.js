@@ -7,7 +7,7 @@ import { useGetAllPacksThreeServiceQuery } from "state/api";
 import { HiCheck, HiOutlineArrowNarrowRight } from "react-icons/hi";
 import tr from "Services/tr";
 import Cookies from "js-cookie";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 // les donnes n'affiche pas dans le cas de fr
 const Abonement = () => {
   const [index, setIndex] = useState(1);
@@ -16,7 +16,7 @@ const Abonement = () => {
   const [Nos, setNos] = useState(pack.Nos);
   const [abonnements, setabonnements] = useState(pack.abonnements);
   const { data } = useGetAllPacksThreeServiceQuery();
-  const [btnCom, setBtnCom] = useState("Commencer Maintenant");
+  const [btnCom, setBtnCom] = useState("Voir les detail de Pack");
   const [year, setYear] = useState("Année");
   const [desc, setDesc] = useState("Jusqu'à 3 factures par mois");
   const [translatedData, setTranslatedData] = useState([]);
@@ -27,17 +27,17 @@ const Abonement = () => {
       translateData();
     }
   }, [data]);
-  
+
   const translateData = async () => {
     const langto = Cookies.get("to");
     if (langto !== "fra" && langto) {
-      setTitle(await tr(title, "fra", langto))
-      setSubtitle(await tr(subtitle, "fra", langto))
-      setBtnCom(await tr(btnCom, "fra", langto))
-      setYear(await tr(year, "fra", langto))
-      setDesc(await tr(desc, "fra", langto))
-      setNos(await tr(Nos, "fra", langto))
-      setabonnements(await tr(abonnements, "fra", langto))
+      setTitle(await tr(title, "fra", langto));
+      setSubtitle(await tr(subtitle, "fra", langto));
+      setBtnCom(await tr(btnCom, "fra", langto));
+      setYear(await tr(year, "fra", langto));
+      setDesc(await tr(desc, "fra", langto));
+      setNos(await tr(Nos, "fra", langto));
+      setabonnements(await tr(abonnements, "fra", langto));
     }
     const translatedItems = await Promise.all(
       data.map(async (item) => {
@@ -45,13 +45,19 @@ const Abonement = () => {
         if (langto !== "fra" && langto) {
           it.name = await tr(item.name, "fra", langto);
           // Map over services to translate each service name
-          it.services = await Promise.all(item.services.map(async (service) => {
-            // Create a deep copy of the service
-            let itSer = JSON.parse(JSON.stringify(service));
-            // Translate the service name
-            itSer.serviceId.ServiceName = await tr(service.serviceId.ServiceName, "fra", langto);
-            return itSer;
-          }));
+          it.services = await Promise.all(
+            item.services.map(async (service) => {
+              // Create a deep copy of the service
+              let itSer = JSON.parse(JSON.stringify(service));
+              // Translate the service name
+              itSer.serviceId.ServiceName = await tr(
+                service.serviceId.ServiceName,
+                "fra",
+                langto
+              );
+              return itSer;
+            })
+          );
           it.description = await tr(item.description, "fra", langto);
         }
         return it;
@@ -60,25 +66,20 @@ const Abonement = () => {
     console.log(translatedItems);
     setTranslatedData(translatedItems);
   };
-   // Navigation :
-   const navigate = useNavigate();
-   const id = localStorage.getItem("userId")
-   const username = localStorage.getItem("userName")
-   function handelPack() {
- 
-     const redirectPath = id ? `${username}/add-demande` : "/login";
-     navigate(redirectPath);
-     
-   } 
+  // Navigation :
+  const navigate = useNavigate();
+  const id = localStorage.getItem("userId");
+  const username = localStorage.getItem("userName");
+  const  handelPack=(x) =>{
+    const redirectPath = id ? `/Detail/${x}` : "/login";
+    navigate(redirectPath);
+  }
 
   return (
     <>
       <Header />
-      <div className="dark:bg-black lg:flex justify-between lg:mt-[90px]">
-        <div
-          className="lg:w-[50%] w-[100%] pt-[100px]"
-         
-        >
+      <div className="dark:bg-black lg:flex justify-between  mt-20 lg:mt-[90px]">
+        <div className="lg:w-[50%] w-[100%] pt-[100px]">
           <h1 className="dark:text-white text-3xl font-Quicksand font-bold text-center">
             {title}
           </h1>
@@ -86,10 +87,7 @@ const Abonement = () => {
             {subtitle}
           </p>
         </div>
-        <div
-          className="lg:w-[50%] w-[100%] flex justify-center items-center"
-          
-        >
+        <div className="lg:w-[50%] w-[100%] flex justify-center items-center">
           <img
             src={imgPay}
             className="lg:w-[50%] w-[100%] rounded-xl mt-[10px]"
@@ -98,21 +96,15 @@ const Abonement = () => {
         </div>
       </div>
       <div className="dark:bg-black pt-[20px]">
-        <h1
-          className="mb-[20px] text-3xl font-Quicksand font-bold text-center dark:text-white"
-         
-        >
+        <h1 className="mb-[20px] text-3xl font-Quicksand font-bold text-center dark:text-white">
           {Nos} <span className="text-accent">{abonnements}</span>
         </h1>
         <div className="dark:bg-black flex flex-wrap justify-center lg:justify-evenly gap-y-[30px] lg:gap-y-[30px] lg:gap-x-[40px] lg:w-full items-center">
           {translatedData.length > 0 &&
             translatedData.map((pack, packIndex) => {
-              const { name, services, price, logo } = pack;
+              const { name, services, price, logo , _id } = pack;
               return (
-                <div
-                  key={packIndex}
-                  
-                >
+                <div key={packIndex}>
                   <div
                     onClick={() => setIndex(packIndex)}
                     className={`${
@@ -122,7 +114,11 @@ const Abonement = () => {
                     } w-[350px] h-[550px] rounded-[12px] p-[40px] cursor-pointer transition-all`}
                   >
                     <div className="mb-8">
-                      <img className="w-[30px]" src={`${logo.url}`} alt={name} />
+                      <img
+                        className="w-[30px]"
+                        src={`${logo.url}`}
+                        alt={name}
+                      />
                     </div>
                     <div className="dark:text-white text-[32px] font-Quicksand font-semibold mb-8">
                       {name}
@@ -163,7 +159,7 @@ const Abonement = () => {
                           ? "bg-accent hover:bg-accentHover text-white"
                           : "border border-accent text-accent"
                       } btn btn-sm space-x-[14px]`}
-                      onClick={handelPack}
+                      onClick={()=>handelPack(_id)}
                     >
                       <span>{btnCom}</span>
                       <HiOutlineArrowNarrowRight />

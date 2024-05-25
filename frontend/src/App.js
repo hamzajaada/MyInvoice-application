@@ -93,6 +93,7 @@ import Profil from "pagesClient/profil";
 import AddTaks from "pagesClient/Taks/addTaks";
 import Taks from "pagesClient/Taks/index";
 import EditTaks from "pagesClient/Taks/EditTaks";
+import DetailPack from "components/Pack/DetailPAck";
 
 const App = () => {
   const mode = useSelector((state) => state.global.mode);
@@ -116,6 +117,7 @@ const App = () => {
           <Route path="/pack" element={<Abonement />} />
           <Route path="/DarkMode" element={<DarkMode />} />
           <Route path="/Apropos" element={<Apropos />} />
+          <Route path="/Detail/:id" element={<DetailPack />} />
           <Route path="/:userName/factures/imprimer/:id" element={<PrintInvoice />} />
           <Route path="/:userName/bon-commandes/imprimer/:id" element={<PrintBonCommande />} />
           <Route path="/:userName/bon-livraison/imprimer/:id" element={<PrintBonLivraison />} />
