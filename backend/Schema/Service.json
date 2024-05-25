@@ -1,0 +1,8 @@
+{
+  "ServiceName": {
+    "required": true
+  },
+  "active": {
+    "default": true
+  }
+}

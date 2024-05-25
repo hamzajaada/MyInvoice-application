@@ -1,0 +1,48 @@
+{
+  "userId": {
+    "ref": "Enterprise",
+    "required": true
+  },
+  "fournisseurId": {
+    "ref": "Fournisseur",
+    "required": true
+  },
+  "date": {},
+  "dueDate": {
+    "required": true
+  },
+  "items": [
+    {
+      "productId": {
+        "ref": "Product",
+        "required": true
+      },
+      "quantity": {
+        "required": true
+      },
+      "price": {}
+    }
+  ],
+  "taxes": [
+    {
+      "taxId": {
+        "ref": "Taks",
+        "required": true
+      }
+    }
+  ],
+  "status": {
+    "enum": [
+      "attent de traitement",
+      "au cour de traitement",
+      "expédié"
+    ],
+    "default": "attent de traitement"
+  },
+  "amount": {
+    "required": true
+  },
+  "active": {
+    "default": true
+  }
+}
