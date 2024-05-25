@@ -143,7 +143,7 @@ const getEntrepriseDetail = async (req, res) => {
   } catch (error) {
     console.error("Error occurred: ", error);
     res.status(500).send("Erreur serveur lors de la recherche d'entreprise");
-  }
+  }
 };
 
 
@@ -340,8 +340,8 @@ const getDashboardInfo = async (req, res) => {
     console.error("Erreur : ", error);
     res
       .status(500)
-      .send(
-        "Erreur serveur lors de la recherche d'informations du tableau de bord"
+      .json(
+        {error:"Erreur serveur lors de la recherche d'informations du tableau de bord"}
       );
   }
 };
@@ -368,6 +368,7 @@ const getEnterpriseCountByMonthAndYear = async (req, res) => {
     res.status(200).json(enterpriseCountByMonthAndYear);
   } catch (error) {}
 };
+
 const ForgoutPass = async (req, res) => {
   try {
     //console.log(req.body);

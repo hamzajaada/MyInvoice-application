@@ -7,7 +7,6 @@ const SubscriptionSchema = new Schema({
   startDate: { type: Date, default: Date.now },
   endDate: { type: Date, required: true },
   status: { type: String, enum: ['active', 'expired', 'cancelled'], default: 'active' },
-  
 });
 
 const Subscription = mongoose.model('Subscription', SubscriptionSchema);

@@ -1,0 +1,28 @@
+{
+  "name": {
+    "required": true
+  },
+  "description": {},
+  "services": [
+    {
+      "serviceId": {
+        "ref": "Service",
+        "required": true
+      }
+    }
+  ],
+  "price": {
+    "required": true
+  },
+  "logo": {
+    "public_id": {
+      "required": true
+    },
+    "url": {
+      "required": true
+    }
+  },
+  "active": {
+    "default": true
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "userId": {
+    "ref": "Enterprise",
+    "required": true
+  },
+  "packId": {
+    "ref": "Pack",
+    "required": true
+  },
+  "nombreAnnee": {},
+  "status": {
+    "enum": [
+      "en attent",
+      "accepter",
+      "rejeter"
+    ],
+    "default": "en attent"
+  },
+  "amount": {
+    "required": true
+  },
+  "active": {
+    "default": true
+  }
+}

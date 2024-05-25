@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, useTheme, Button, IconButton, Avatar, useMediaQuery } from "@mui/material";
+import { Box, useTheme, Button, IconButton, Avatar } from "@mui/material";
 import {  useUpdateModelMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import FlexBetween from "componentsAdmin/FlexBetween";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios"; // Importer axios
+import axios from "axios"; 
 
 
 const Models = () => {
@@ -26,7 +26,6 @@ const Models = () => {
   })
   const [updateModel] = useUpdateModelMutation();
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   useEffect(() => {
     const fetchModels = async () => {
       try {
@@ -44,7 +43,7 @@ const Models = () => {
     {
       field: "Model",
       headerName: "Model",
-      width: isSmallScreen ? 250 : 300,
+      flex: 0.6,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Avatar src={`https://my-invoice-api.vercel.app/Images/${params.row.icon}`} alt={params.row.name} />
@@ -57,12 +56,12 @@ const Models = () => {
     {
       field: "description",
       headerName: "Description",
-      width: isSmallScreen ? 600 : 800,
+      flex: 1,
     },
     {
       field: "actions",
       headerName: "Actions",
-      width: isSmallScreen ? 100 : 150,
+      flex: 0.2,
       sortable: false,
       renderCell: (params) => (
         <Box>
@@ -116,7 +115,7 @@ const Models = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Add
+            Ajoute de model
           </Button>
         </Link>
       </FlexBetween>

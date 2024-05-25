@@ -1,0 +1,25 @@
+{
+  "userId": {
+    "ref": "Enterprise",
+    "required": true
+  },
+  "categoryId": {
+    "ref": "Category",
+    "required": true
+  },
+  "name": {
+    "required": true
+  },
+  "description": {
+    "required": true
+  },
+  "quantity": {
+    "required": true
+  },
+  "price": {
+    "required": true
+  },
+  "active": {
+    "default": true
+  }
+}

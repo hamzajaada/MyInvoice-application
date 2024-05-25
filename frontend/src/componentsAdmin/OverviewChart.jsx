@@ -20,7 +20,7 @@ const OverviewChart = ({ isDashboard = false }) => {
 
   return (
     <ResponsiveLine
-      data={[{ id: "Enterprise Count", color: theme.palette.secondary.main, data: enterpriseData }]}
+      data={[{ id: "Compte d'entreprise", color: theme.palette.secondary.main, data: enterpriseData }]}
       theme={{
         axis: {
           domain: {
@@ -77,7 +77,7 @@ const OverviewChart = ({ isDashboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? "Month" : "",
+        legend: isDashboard ? "Mois" : "",
         legendOffset: 36,
         legendPosition: "middle",
       }}
@@ -87,7 +87,7 @@ const OverviewChart = ({ isDashboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? "Enterprise Count" : "",
+        legend: isDashboard ? "Compte d'entreprise" : "",
         legendOffset: -60,
         legendPosition: "middle",
       }}

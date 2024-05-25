@@ -122,7 +122,7 @@ const Abonement = () => {
                     } w-[350px] h-[550px] rounded-[12px] p-[40px] cursor-pointer transition-all`}
                   >
                     <div className="mb-8">
-                      <img src={`${logo.url}`} alt={name} />
+                      <img className="w-[30px]" src={`${logo.url}`} alt={name} />
                     </div>
                     <div className="dark:text-white text-[32px] font-Quicksand font-semibold mb-8">
                       {name}

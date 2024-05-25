@@ -565,6 +565,7 @@ const Dashboard = () => {
           backgroundColor={theme.palette.background.alt}
           p="1.5rem"
           borderRadius="0.55rem"
+          
         >
           <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
             Factures Par Status

@@ -11,14 +11,26 @@ const addBonCommande = async (req, res) => {
     const bonCommandeData = req.body.bonCommande;
     const bonCommande = new BonCommande(bonCommandeData);
     await bonCommande.save();
+
+    for (const item of bonCommande.items) {
+      const prod = await Product.findById(item.productId);
+      if (!prod) {
+        return res.status(404).json({ success: false, message: "Produit non trouvé" });
+      }
+      prod.quantity += item.quantity;
+      await Product.findByIdAndUpdate(item.productId, { quantity: prod.quantity });
+    }
+
     res.status(200).json({
       success: true,
       bonCommande,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).send("Erreur serveur lors de l'ajout de bon de commande");
   }
 };
+
 
 const getAllBonCommandes = async (req, res) => {
   try {

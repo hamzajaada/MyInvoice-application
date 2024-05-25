@@ -63,7 +63,7 @@ const Hero = () => {
               {subtitle}
             </p>
                 <div
-                  className=' max-w-sm lg:max-w-full mx-auto ml-[-35px]    lg:ml-[0px]  gap-x-2 lg:gap-x-6'
+                  className=" md:ml-[220px] lg:ml-[0px] m mx-auto ml-0 gap-x-2 lg:gap-x-6"
                 >
                   <button className='btn btn-md lg:btn-lg btn-accent px-[40px] ] flex justify-center items-center lg:gap-x-4 md:ml-0'
                   onClick={handleLoginClick}>
@@ -73,7 +73,7 @@ const Hero = () => {
                 </div>
           </div>  
 
-            <img  className='  mt-[-192px] lg:mt-[0px] ml-[12px] lg:ml-[0px] h-[800px]  ' src={image} alt="hero" /> 
+            <img  className='  md:ml-[160Px] mt-[-192px]  lg:mt-[0px] ml-[12px] lg:ml-[0px] h-[800px]  ' src={image} alt="hero" /> 
         
              
      

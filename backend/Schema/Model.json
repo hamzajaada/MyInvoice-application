@@ -1,0 +1,19 @@
+{
+  "name": {
+    "required": true
+  },
+  "description": {
+    "required": true
+  },
+  "icon": {
+    "public_id": {
+      "required": true
+    },
+    "url": {
+      "required": true
+    }
+  },
+  "active": {
+    "default": true
+  }
+}

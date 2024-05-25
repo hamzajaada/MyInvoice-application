@@ -14,6 +14,7 @@ import {
   Button,
   useTheme,
   useMediaQuery,
+  Typography
 } from "@mui/material";
 
 import OverviewChart from "componentsAdmin/OverviewChart";
@@ -52,7 +53,7 @@ const Dashboard = () => {
   return (
     <Box m={isSmallScreen ? "1rem" : "1.5rem 2.5rem"} overflow="hidden">
       <FlexBetween>
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+        <Header title="TABLEAU DE BORD" subtitle="Bienvenue sur votre tableau de bord." />
 
         <Box>
           <Button
@@ -65,7 +66,7 @@ const Dashboard = () => {
             }}
           >
             <DownloadOutlined sx={{ mr: "10px" }} />
-            Download Reports
+            Télécharger le rapport
           </Button>
         </Box>
       </FlexBetween>
@@ -92,9 +93,9 @@ const Dashboard = () => {
           }
         />
         <StatBox
-          title="Total Documents"
+          title="Total des documents"
           value={dashboard && dashboard.totalDocuments}
-          description="Le nombre total de facture dans le système"
+          description="Le nombre total de documents dans le système"
           icon={
             <DescriptionIcon
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
@@ -102,9 +103,9 @@ const Dashboard = () => {
           }
         />
         <StatBox
-          title="Paid Invoice"
+          title="Documents payé"
           value={dashboard && dashboard.paidInvoices}
-          description="Le nombre total de facture payée dans le système"
+          description="Le nombre total de documents payée dans le système"
           icon={
             <PaidIcon
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
@@ -112,9 +113,9 @@ const Dashboard = () => {
           }
         />
         <StatBox
-          title="Inpaid Invoice"
+          title="Documents impayée"
           value={dashboard && dashboard.unpaidInvoices}
-          description="Le nombre total de facture impayée dans le système"
+          description="Le nombre total de documents impayée dans le système"
           icon={
             <RemoveIcon
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
@@ -130,6 +131,9 @@ const Dashboard = () => {
           borderRadius="0.55rem"
           sx={{ maxWidth: isSmallScreen ? '100%' : 'auto' }}
         >
+          <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
+            Entreprises par mois
+          </Typography>
           <OverviewChart isDashboard={true} />
         </Box>
       </Box>
