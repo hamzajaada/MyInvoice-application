@@ -80,7 +80,7 @@ const BreakdownChart = ({ idBreakDownChart }) => {
           from: "color",
           modifiers: [["darker", 0.2]],
         }}
-        enableArcLinkLabels={true}
+        enableArcLinkLabels={false}
         arcLinkLabelsTextColor={theme.palette.secondary[200]}
         arcLinkLabelsThickness={2}
         arcLinkLabelsColor={{ from: "color" }}
@@ -94,9 +94,9 @@ const BreakdownChart = ({ idBreakDownChart }) => {
             anchor: "bottom",
             direction: "row",
             justify: false,
-            translateX: 20,
+            translateX: 8,
             translateY: 50,
-            itemsSpacing: 30,
+            itemsSpacing: 40,
             itemWidth: 85,
             itemHeight: 18,
             itemTextColor: "#999",
@@ -108,7 +108,7 @@ const BreakdownChart = ({ idBreakDownChart }) => {
               {
                 on: "hover",
                 style: {
-                  itemTextColor: theme.palette.primary[500],
+                  itemTextColor: theme.palette.primary[100],
                 },
               },
             ],
