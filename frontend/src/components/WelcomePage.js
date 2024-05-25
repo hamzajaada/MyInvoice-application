@@ -40,8 +40,8 @@ const WelcomePage = () => {
         <Testimonials />
         <Cta />
         <Footer />
-      </ThemeProvider>
-      <div className='h-5'></div>
+       </ThemeProvider>
+      
     </div>
   );
 };

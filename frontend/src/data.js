@@ -377,6 +377,7 @@ export const modelData = [
   {
     imageDark: backgroundImage,
     title: "Modèles de factures à usage spécifique",
+    subtitle : " Vous cherchez le bon modèle de facture ? Téléchargez l'un de nos modèles de facture gratuits et faciles à utiliser pour commencer. Si vous avez besoin d'une facture plus personnalisée pour votre entreprise, consultez notre générateur de factures en ligne pour créer facilement des factures professionnelles personnalisées.",
    
   },
 ];

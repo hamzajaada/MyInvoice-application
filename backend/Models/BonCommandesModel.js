@@ -27,7 +27,6 @@ const BonCommandeSchema = new Schema(
         taxId: {
           type: Schema.Types.ObjectId,
           ref: "Taks",
-          required: true,
         }
       }
     ],

@@ -24,7 +24,7 @@ const Apropos = () => {
 
     translateData();
   }, []);
-  return <section className=' dark:bg-black mt-[91PX] lg:mt-[-80PX] section'>
+  return <section className=' dark:bg-black  mt-52 lg:mt-[-20PX] section'>
     <Header/>
     <div className='container mx-auto  '>
       {/* title subtitle */}

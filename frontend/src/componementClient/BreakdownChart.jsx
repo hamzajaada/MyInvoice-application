@@ -4,7 +4,8 @@ import { Box, Typography, useTheme } from "@mui/material";
 import { useGetDashboardClientQuery } from "state/api";
 
 const BreakdownChart = ({ idBreakDownChart }) => {
-  const id = localStorage.getItem('userId');
+
+  const id = localStorage.getItem("userId");
   const { data, isLoading } = useGetDashboardClientQuery(id);
   const theme = useTheme();
 
