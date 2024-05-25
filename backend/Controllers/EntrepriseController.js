@@ -139,7 +139,6 @@ const getEntrepriseDetail = async (req, res) => {
       nombreClient: nombreClient,
       nombreDocument: totalDocuments,
     };
-    console.log(entrepriseDetail)
     res.status(200).json(entrepriseDetail);
   } catch (error) {
     console.error("Error occurred: ", error);

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { ResponsiveLine } from "@nivo/line";
-import { useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { useGetSalesQuery } from "state/api";
 
 const OverviewChart = ({ isDashboard = false, view }) => {
