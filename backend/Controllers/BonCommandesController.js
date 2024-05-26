@@ -1,8 +1,5 @@
 const BonCommande = require("../Models/BonCommandesModel");
-<<<<<<< HEAD
-=======
 const Fournisseur = require("../Models/FournisseurSchema");
->>>>>>> d6a4c168b5c0caf2a0613ff25292472d880e68b1
 const Product = require("../Models/ProductSchema");
 const nodemailer = require("nodemailer");
 
