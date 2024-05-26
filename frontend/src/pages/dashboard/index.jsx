@@ -55,7 +55,7 @@ const Dashboard = () => {
       <FlexBetween>
         <Header title="TABLEAU DE BORD" subtitle="Bienvenue sur votre tableau de bord." />
 
-        <Box>
+        {/* <Box>
           <Button
             sx={{
               backgroundColor: theme.palette.secondary.light,
@@ -68,7 +68,7 @@ const Dashboard = () => {
             <DownloadOutlined sx={{ mr: "10px" }} />
             Télécharger le rapport
           </Button>
-        </Box>
+        </Box> */}
       </FlexBetween>
 
       <Box

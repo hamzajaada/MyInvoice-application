@@ -48,7 +48,7 @@ const BonLivraison = () => {
   useEffect(() => {
     if (packData) {
       setGeneratePdf(
-        packData.services.some((service) => service.serviceId === formPdf)
+        packData.services.some((service) => service.serviceId._id === formPdf)
       );
     }
   }, [packData]);
