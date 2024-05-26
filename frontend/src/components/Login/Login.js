@@ -122,7 +122,7 @@ const Login = () => {
       setErrorMessage("Erreur de connexion. Veuillez vérifier vos informations d'identification."); // Mise à jour du message d'erreur
     }
   };
-
+ 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const userId = params.get("userId");
