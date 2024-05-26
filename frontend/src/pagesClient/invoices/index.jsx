@@ -235,7 +235,7 @@ const Invoices = () => {
           >
             <EmailIcon />
           </IconButton>
-          {generatePdf === true ? (
+          {/*{generatePdf === true ? (*/}
             <IconButton
               onClick={() => {
                 setSelectedInvoiceId(params.row._id);
@@ -245,9 +245,9 @@ const Invoices = () => {
             >
               <PrintIcon />
             </IconButton>
-          ) : (
-            ""
-          )}
+          {/*) : (
+            ""  
+          )}*/}
           <IconButton
             onClick={() => handleDelete(params.row._id)}
             aria-label="delete"
@@ -271,6 +271,10 @@ const Invoices = () => {
     navigate(`/${userName}/factures/imprimer/letter/${id}`);
   };
 
+  const handlePrintClassic = (id) => {
+    navigate(`/${userName}/factures/imprimer/classic/${id}`);
+  };
+
   const handleEmail = (id) => {
     navigate(`/${userName}/factures/email/${id}`);
   };
@@ -286,11 +290,11 @@ const Invoices = () => {
         thisInvoice.active = false;
         const { data } = await updateInvoice({ id, InvoiceData: thisInvoice });
         if (data.success) {
-          toast.success("La suppresion de facture se passe correctement");
+          toast.success("La Facture a été supprimée ");
           setFacture(Facture.filter((f) => f._id !== id));
         } else {
           toast.error(
-            "La suppresion de facture ne s'est pas passé correctement"
+            "La suppresion de facture a échoué "
           );
         }
       }
@@ -374,7 +378,7 @@ const Invoices = () => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Sélectionnez le type de document que vous souhaitez imprimer.
+            Sélectionnez le modèle que vous souhaitez imprimer.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -385,7 +389,7 @@ const Invoices = () => {
             }}
             sx={{ color: theme.palette.secondary[200] }}
           >
-            Modéle simple
+            Modèle simple
           </Button>
           <Button
             onClick={() => {
@@ -394,7 +398,16 @@ const Invoices = () => {
             }}
             sx={{ color: theme.palette.secondary[200] }}
           >
-            Modéle lettre head
+            Modèle letter-head
+          </Button>
+          <Button
+            onClick={() => {
+              handlePrintClassic(selectedInvoiceId);
+              handleDialogClose();
+            }}
+            sx={{ color: theme.palette.secondary[200] }}
+          >
+            Modèle Classique
           </Button>
           <Button
             onClick={handleDialogClose}

@@ -1,10 +1,6 @@
 const BonCommande = require("../Models/BonCommandesModel");
-const OverallStat = require("../Models/OverallStateSchema");
-const Fournisseur = require("../Models/FournisseurSchema");
 const Product = require("../Models/ProductSchema");
-const Enterprise = require("../Models/EntrepriseSchema");
 const nodemailer = require("nodemailer");
-const Taks = require('../Models/TaksShema')
 
 const addBonCommande = async (req, res) => {
   try {
