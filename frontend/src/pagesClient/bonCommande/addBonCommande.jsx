@@ -119,14 +119,13 @@ const AddBonCommande = () => {
         );
         return acc + (product ? product.price * item.quantity : 0);
       }, 0);
-      console.log("amount : ", amount);
-      const taxes = bonCommande.taxes.reduce((acc, item) => {
-        const tax = taxData.find((taxe) => taxe._id === item.taxId);
-        return acc + (tax ? tax.TaksValleur : 0);
-      }, 0);
-      console.log("taxes : ", taxes);
-      amount = amount * (1 + taxes / 100);
-      console.log("final amount : ", amount);
+      if(bonCommande.taxes.length > 0) {
+        const taxes = bonCommande.taxes.reduce((acc, item) => {
+          const tax = taxData.find((taxe) => taxe._id === item.taxId);
+          return acc + (tax ? tax.TaksValleur : 0);
+        }, 0);
+        amount = amount * (1 + taxes / 100);
+      }
       await addBonCommande({ bonCommande: { ...bonCommande, amount } });
       console.log(bonCommande);
       navigate(`/${userName}/bon-commandes`);
@@ -273,7 +272,6 @@ const AddBonCommande = () => {
                       value={tax.taxId}
                       onChange={(e) => handleTaxChange(index, e.target.value)}
                       fullWidth
-                      required
                     >
                       {taxData &&
                         taxData.map((taxe) => (
