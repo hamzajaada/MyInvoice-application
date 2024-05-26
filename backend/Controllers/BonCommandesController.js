@@ -1,5 +1,4 @@
 const BonCommande = require("../Models/BonCommandesModel");
-const OverallStat = require("../Models/OverallStateSchema");
 const Fournisseur = require("../Models/FournisseurSchema");
 const Product = require("../Models/ProductSchema");
 const Enterprise = require("../Models/EntrepriseSchema");
