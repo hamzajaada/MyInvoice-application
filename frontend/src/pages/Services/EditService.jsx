@@ -63,7 +63,7 @@ const EditService = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="EDIT SERVICES" subtitle="Modification d'une service" />
+      <Header title="MODIFIER SERVICE" subtitle="Modification d'une service" />
       <form onSubmit={handleSubmit} sx={{
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,
@@ -80,10 +80,10 @@ const EditService = () => {
         />
         <Box mt={2}>
           <Button type="submit" variant="contained" color="primary">
-            Edit Service
+          Modification de service
           </Button>
           <Button type="submit" onClick={handleDelete} aria-label="delete" sx={{ ml: 2 }} variant="contained" color="primary">
-            Delete Service
+            Suppression de service
           </Button>
         </Box>
       </form>

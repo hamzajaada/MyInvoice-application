@@ -79,7 +79,7 @@ const EditSubscription = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="Edit Subscription" subtitle="Edit subscription details" />
+      <Header title="Modification d'abonnement" subtitle="Modifications de détail d'abonnement" />
       <form onSubmit={handleSubmit}>
         <TextField
           
@@ -106,7 +106,7 @@ const EditSubscription = () => {
                 {selected && (
                   <Typography key={selected}
                   >
-                    {packs.find((pack) => pack._id === selected)?.name || ""}
+                    {packs && (packs.find((pack) => pack._id === selected)?.name || "")}
                   </Typography>
                     
                 )}
@@ -161,7 +161,7 @@ const EditSubscription = () => {
           color="primary"
           disabled={isUpdating}
         >
-          {isUpdating ? <CircularProgress size={24} /> : "Update of subscription"}
+          {isUpdating ? <CircularProgress size={24} /> : "Modification d'abonnement"}
         </Button>
       </form>
     </Box>

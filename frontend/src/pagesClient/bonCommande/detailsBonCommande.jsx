@@ -46,7 +46,6 @@ const DetailsBonCommande = () => {
     userPhone,
     userAddress,
     userLogo,
-    userSignature,
     fournisseurName,
     fournisseurEmail,
     fournisseurPhone,
@@ -202,6 +201,10 @@ const DetailsBonCommande = () => {
               </TableRow>
             ))}
             <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
+              <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Sous - Totale:</Typography></TableCell>
+              <TableCell><Typography fontWeight="bold">{sousTotale.toFixed(2)} DH</Typography></TableCell>
+            </TableRow>
+            <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
               <TableCell colSpan={2} ><Typography fontWeight="bold" >Taxes </Typography></TableCell>
               <TableCell colSpan={1} ><Typography fontWeight="bold" >Taux</Typography></TableCell>
             </TableRow>
@@ -211,10 +214,7 @@ const DetailsBonCommande = () => {
                     <TableCell>{tax.value}%</TableCell>
                   </TableRow>
                 ))}
-            <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
-              <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Sous - Totale:</Typography></TableCell>
-              <TableCell><Typography fontWeight="bold">{sousTotale.toFixed(2)} DH</Typography></TableCell>
-            </TableRow>
+            
             <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
               <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Montant Totale:</Typography></TableCell>
               <TableCell><Typography fontWeight="bold">{amount.toFixed(2)} DH</Typography></TableCell>

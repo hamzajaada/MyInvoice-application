@@ -269,7 +269,7 @@ const BonCommandes = () => {
   };
 
   const handleEmail = (id) => {
-    navigate(`/bon-commandes/email/${id}`);
+    navigate(`/${userName}/bon-commandes/email/${id}`);
   };
 
   const handleEdit = (id) => {

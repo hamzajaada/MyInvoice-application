@@ -268,7 +268,7 @@ const BonLivraison = () => {
   };
 
   const handleEmail = (id) => {
-    navigate(`/bon-livraison/email/${id}`);
+    navigate(`/${userName}/bon-livraison/email/${id}`);
   };
 
   const handleEdit = (id) => {

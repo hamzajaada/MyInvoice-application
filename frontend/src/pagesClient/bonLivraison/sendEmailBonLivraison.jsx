@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useGetBonLivraisonDetailsQuery } from "state/api";
 import { useParams, useNavigate } from "react-router-dom";
-import { useTheme, CircularProgress, Typography, Button, Box } from '@mui/material';
+import { CircularProgress, Typography, Button, Box } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import axios from 'axios';
@@ -13,7 +13,6 @@ const SendEmailBonLivraison = () => {
   }
   const { id } = useParams();
   const { data, isLoading } = useGetBonLivraisonDetailsQuery(id);
-  const theme = useTheme();
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [error, setError] = useState(null);
@@ -23,6 +22,7 @@ const SendEmailBonLivraison = () => {
     if (data) {
       const sendEmail = async () => {
         setIsSendingEmail(true);
+        const sousTotale = data.itemsTable.reduce((total, item) => total + item.price * item.quantity, 0);
         try {
           await axios.post('http://localhost:3001/Api/BonLivraison/email', {
             _id: data._id,
@@ -32,8 +32,10 @@ const SendEmailBonLivraison = () => {
             userAddress: data.userAddress,
             fournisseurName: data.fournisseurName,
             fournisseurEmail: data.fournisseurEmail,
-            formattedDateLivraison: data.dateLivraison,
+            formattedDateLivraison: data.formattedDateLivraison,
             itemsTable: data.itemsTable,
+            taxesTable: data.taxesTable,
+            sousTotale: sousTotale,
             amount: data.amount,
           });
           setEmailSent(true);
