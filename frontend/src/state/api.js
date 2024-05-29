@@ -74,10 +74,10 @@ export const api = createApi({
       }),
     }),
     registerEntreprise: build.mutation({
-      query: (data) => ({
+      query: (entreprise) => ({
         url: `Entreprise/register/`,
         method: "POST",
-        body: data,
+        body: entreprise,
       }),
     }),
     ForgoutPassword: build.mutation({
