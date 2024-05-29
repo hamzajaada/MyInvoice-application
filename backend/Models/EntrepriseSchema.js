@@ -24,11 +24,11 @@ const EnterpriseSchema = new Schema({
     signature: {
       public_id: {
         type: String,
-        required: true,
+
       },
       url: {
         type: String,
-        required: true,
+
       },
     },
   },
