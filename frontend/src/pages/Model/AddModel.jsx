@@ -34,6 +34,7 @@ const AddModel = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const model = {
+      userId: localStorage.getItem("userId"),
       name,
       description,
       icon,

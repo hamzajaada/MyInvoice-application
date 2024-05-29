@@ -41,10 +41,10 @@ const EditModel = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
+    formData.append("userId", localStorage.getItem("userId"));
     formData.append("name", name);
     formData.append("description", description);
     formData.append("icon", icon);
-
     try {
       const { data } = await updateModel({ id, model: formData });
       if (data.success) {
