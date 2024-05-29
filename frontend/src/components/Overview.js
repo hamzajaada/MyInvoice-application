@@ -16,11 +16,11 @@ const Overview = () => {
   const imageSrc =  productImgDark ;
 
   return (
-    <section className='lg:min-h-[512px] bg-overview bg-cover bg-left-top pt-[30px] lg:pt-[87px]'>
+    <section className='h-auto bg-overview bg-cover bg-left-top pt-[30px] lg:pt-[87px]'>
       <div className='container mx-auto flex justify-end overflow-hidden mb-[-1px]'>
         {/* Afficher l'image en fonction de currentMode */}
         <img
-          className='lg:h-[100%] w-[100%]  rounded-t-2xl'
+          className='lg:h-[90%] w-[90%]  rounded-t-2xl'
           src={imageSrc}
           alt=''
           data-aos="fade-up"
