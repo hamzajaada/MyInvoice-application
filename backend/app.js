@@ -79,7 +79,7 @@ mongoose
   });
 
 cron.schedule(
-  "15 17 * * *",
+  "34 00 * * *",
   () => {
     updateSubscriptionStatus();
     EmailSubscriptionStatus();

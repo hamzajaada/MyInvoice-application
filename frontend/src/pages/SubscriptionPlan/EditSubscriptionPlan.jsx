@@ -25,8 +25,8 @@ const EditSubscription = () => {
   const [formData, setFormData] = useState({
     userId: "",
     packId: "",
-    startDate: "",
-    endDate: "",
+    startDate: new Date(),
+    endDate:  Date.now() + 1000 * 60 * 60 * 24 * 30,
     status: "",
     price: 0,
   });
@@ -49,7 +49,6 @@ const EditSubscription = () => {
 
   const { data: packs } = useGetPacksQuery();
   const { data: entreprise } = useGetOneEntrepriseQuery(formData.userId);
-  console.log("entreprise : ", entreprise);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -63,7 +62,7 @@ const EditSubscription = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateSubscription({ id, SubscriptionData: formData });
+      await updateSubscription({ id, subscriptionData: formData });
       navigate("/subscriptionsplans");
     } catch (error) {
       console.log(error);
@@ -85,7 +84,16 @@ const EditSubscription = () => {
           
           variant="outlined"
           type="text"
-          value={entreprise.name}
+          value={entreprise && entreprise.name}
+          disabled
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          
+          variant="outlined"
+          type="text"
+          value={entreprise && entreprise.email}
           disabled
           fullWidth
           margin="normal"
