@@ -31,7 +31,7 @@ const AddService = () => {
 
   return (
     <Box m="1.5rem 2.5rem" >
-      <Header title="ADD SERVICES" subtitle="Ajoute d'une nouvelle service" />
+      <Header title="AJOUTE DE SERVICES" subtitle="Ajoute d'une nouvelle service" />
       <form onSubmit={handleSubmit} sx={{
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,

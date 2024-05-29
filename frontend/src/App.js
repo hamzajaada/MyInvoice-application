@@ -40,6 +40,7 @@ import EditInvoice from "pagesClient/invoices/editInvoice";
 import DetailsInvoice from "pagesClient/invoices/detailsInvoice";
 import PrintInvoice from "pagesClient/invoices/printInvoice";
 import LetterHeadInvoice from "pagesClient/invoices/letterHeadInvoice"
+import PrintClassicInvoice from "pagesClient/invoices/printClassicInvoice"
 import SendEmailInvoice from "pagesClient/invoices/sendEmailInvoice";
 
 import Overview from "pagesClient/overview";
@@ -125,6 +126,7 @@ const App = () => {
           <Route path="/Detail/:id" element={<DetailPack />} />
           <Route path="/:userName/factures/imprimer/:id" element={<PrintInvoice />} />
           <Route path="/:userName/factures/imprimer/letter/:id" element={<LetterHeadInvoice />} />
+          <Route path="/:userName/factures/imprimer/classic/:id" element={<PrintClassicInvoice />} />
           <Route path="/:userName/bon-commandes/imprimer/:id" element={<PrintBonCommande />} />
           <Route path="/:userName/bon-commandes/imprimer/letter/:id" element={<LetterHeadBonCommande />} />
           <Route path="/:userName/bon-livraison/imprimer/:id" element={<PrintBonLivraison />} />

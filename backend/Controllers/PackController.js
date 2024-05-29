@@ -52,7 +52,7 @@ const getThreePacks = async (req, res) => {
       })
       .limit(3);
     packs.forEach((pack) => {
-      pack.services = pack.services.slice(0, 3);
+      pack.services = pack.services.slice(pack.services.length-3, pack.services.length);
     });
     res.status(200).json(packs);
   } catch (error) {
@@ -71,7 +71,7 @@ const getAllPacksThreeService = async (req, res) => {
 
     // Limiter le nombre de services pour chaque pack à 3
     packs.forEach((pack) => {
-      pack.services = pack.services.slice(0, 3);
+      pack.services = pack.services.slice(pack.services.length-3, pack.services.length);
     });
     res.status(200).json(packs);
   } catch (error) {

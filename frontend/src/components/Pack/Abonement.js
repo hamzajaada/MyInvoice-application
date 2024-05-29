@@ -111,7 +111,7 @@ const Abonement = () => {
                       packIndex === index
                         ? "dark:bg-slate-800 bg-white shadow-2xl"
                         : "border border-gray"
-                    } w-[350px] h-[550px] rounded-[12px] p-[40px] cursor-pointer transition-all`}
+                    } w-[350px] h-auto rounded-[12px] p-[40px] cursor-pointer transition-all`}
                   >
                     <div className="mb-8">
                       <img

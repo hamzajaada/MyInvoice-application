@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, useTheme, IconButton, Avatar } from "@mui/material";
+import { Box, useTheme, IconButton } from "@mui/material";
 import { useGetSubscriptionEntQuery, useUpdateSubscriptionMutation, useGetDemandesQuery, useUpdateDemandeMutation, useRemoveDemandeMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
@@ -29,28 +29,11 @@ const SubscriptionPalns = () => {
     }
   }, [data]);
 
-  const renderAvatarCell = (params) => {
-    const { logo, enterpriseName } = params.row;
-    return (
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Avatar
-          src={`http://localhost:3001/Images/${logo}`}
-          alt={enterpriseName}
-          sx={{ width: 35, height: 35 }} 
-        />
-        <Box ml={1}>
-          <div>{enterpriseName}</div>
-        </Box>
-      </Box>
-    );
-  };
-
   const columns = [
     {
       field: "enterpriseName",
       headerName: "Entreprise",
       flex: 0.5,
-      renderCell: renderAvatarCell,
     },
     {
       field: "packName",
@@ -196,7 +179,7 @@ const SubscriptionPalns = () => {
         }}
       >
         <DataGrid
-          loading={isLoading || !demande}
+          loading={isLoading || demande.length === 0}
           getRowId={(row) => row._id}
           rows={demande || []}
           columns={columns}

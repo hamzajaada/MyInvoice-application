@@ -90,7 +90,7 @@ const EditPack = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="EDIT PACK" subtitle="Modification de pack" />
+      <Header title="MODIFIER PACK" subtitle="Modification de pack" />
       <form
         onSubmit={handleSubmit}
         enctype="multipart/form-data"

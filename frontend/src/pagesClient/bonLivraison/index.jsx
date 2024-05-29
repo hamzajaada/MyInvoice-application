@@ -48,7 +48,7 @@ const BonLivraison = () => {
   useEffect(() => {
     if (packData) {
       setGeneratePdf(
-        packData.services.some((service) => service.serviceId === formPdf)
+        packData.services.some((service) => service.serviceId._id === formPdf)
       );
     }
   }, [packData]);
@@ -268,7 +268,7 @@ const BonLivraison = () => {
   };
 
   const handleEmail = (id) => {
-    navigate(`/bon-livraison/email/${id}`);
+    navigate(`/${userName}/bon-livraison/email/${id}`);
   };
 
   const handleEdit = (id) => {

@@ -79,7 +79,7 @@ const AddPack = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="ADD PACK" subtitle="Ajout d'un nouveau pack" />
+      <Header title="AJOUTE DE PACK" subtitle="Ajout d'un nouveau pack" />
       <form
         onSubmit={handleSubmit}
         sx={{
@@ -169,7 +169,7 @@ const AddPack = () => {
         </FormControl>
         <Box mt={2}>
           <Button type="submit" variant="contained" color="primary">
-            Add pack
+          Ajout de pack
           </Button>
         </Box>
       </form>
