@@ -197,10 +197,10 @@ export const api = createApi({
       providesTags: ["Subscription"],
     }),
     updateSubscription: build.mutation({
-      query: ({ id, subscription }) => ({
+      query: ({ id, subscriptionData }) => ({
         url: `Subscription/edit/${id}`,
         method: "PUT",
-        body: subscription,
+        body: subscriptionData,
       }),
     }),
     removeSubscription: build.mutation({
