@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, useTheme, Button, IconButton, Avatar } from "@mui/material";
-import {  useUpdateModelMutation } from "state/api";
+import {  useUpdateModelActiveMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -24,7 +24,7 @@ const Models = () => {
     icon: "",
     description: "",
   })
-  const [updateModel] = useUpdateModelMutation();
+  const [updateModel] = useUpdateModelActiveMutation();
   const theme = useTheme();
   useEffect(() => {
     const fetchModels = async () => {
@@ -91,8 +91,11 @@ const Models = () => {
     try {
       const thisModel = model.find((m) => m._id === id);
       if(thisModel) {
-        thisModel.active = false;
-        const {data} = await updateModel({ id: thisModel._id, model: thisModel });
+        // thisModel.active = false;
+        // console.log(thisModel)
+        // const {data} = await updateModel({ id: thisModel._id, model: thisModel });
+
+        const {data} = await updateModel({ id: thisModel._id , model: { ...thisModel, active: false } });
         if(data.success) {
           toast.success("La suppresion de model se passe correctement");
           setModel(model.filter((m) => m._id !== id));
