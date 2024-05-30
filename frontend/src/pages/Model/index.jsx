@@ -46,7 +46,8 @@ const Models = () => {
       flex: 0.6,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar src={`https://my-invoice-api.vercel.app/Images/${params.row.icon}`} alt={params.row.name} />
+          {/* <Avatar src={`https://my-invoice-api.vercel.app/Images/${params.row.icon}`} alt={params.row.name} /> */}
+          <Avatar src={`${params.row.icon.url}`} alt={params.row.name} />
           <Box ml={1}>
             <div>{params.row.name}</div>
           </Box>

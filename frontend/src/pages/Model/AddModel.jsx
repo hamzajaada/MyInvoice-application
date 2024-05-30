@@ -20,6 +20,10 @@ const AddModel = () => {
 
   const handleImage = (e) => {
     const file = e.target.files[0];
+    if (file.size > 5 * 1024 * 1024) { // Limite de 5MB
+      toast.error("Le fichier est trop volumineux. La taille maximale autorisée est de 5MB.");
+      return;
+    }
     setFileToBase(file);
   };
 
@@ -33,8 +37,9 @@ const AddModel = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const id = localStorage.getItem("userId");
     const model = {
-      userId: localStorage.getItem("userId"),
+      userId: id,
       name,
       description,
       icon,
@@ -58,7 +63,7 @@ const AddModel = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="ADD MODELS" subtitle="Ajout d'un nouveau model" />
+      <Header title="AJOUTE DE MODELS" subtitle="Ajout d'un nouveau model" />
       <form onSubmit={handleSubmit} sx={{
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,
@@ -94,7 +99,7 @@ const AddModel = () => {
         </FormControl>
         <Box mt={2}>
           <Button type="submit" variant="contained" color="primary">
-            Add model
+            Ajoute de model
           </Button>
         </Box>
       </form>

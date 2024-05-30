@@ -257,10 +257,10 @@ export const api = createApi({
       providesTags: ["Model"],
     }),
     updateModel: build.mutation({
-      query: ({ id, ModelData }) => ({
+      query: ({ id, model }) => ({
         url: `Model/edit/${id}`,
         method: "PUT",
-        body: ModelData,
+        body: model,
       }),
     }),
     updateModelActive: build.mutation({

@@ -34,6 +34,11 @@ const EditModel = () => {
 
   const handleImage = (e) => {
     const file = e.target.files[0];
+    if (file.size > 5 * 1024 * 1024) { 
+      toast.error("Le fichier est trop volumineux. La taille maximale autorisée est de 5MB.");
+      console.log("Le fichier est trop volumineux. La taille maximale autorisée est de 5MB.")
+      return;
+    }
     setIcon(file);
   };
 
@@ -44,7 +49,11 @@ const EditModel = () => {
     formData.append("userId", localStorage.getItem("userId"));
     formData.append("name", name);
     formData.append("description", description);
-    formData.append("icon", icon);
+    if (icon instanceof File) {
+      formData.append("icon", icon);
+    } else {
+      formData.append("icon", JSON.stringify(icon));
+    }
     try {
       const { data } = await updateModel({ id, model: formData });
       if (data.success) {
@@ -89,7 +98,7 @@ const EditModel = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="ADD MODELS" subtitle="Ajout d'un nouveau model" />
+      <Header title="MODIFICATIONS DE MODELS" subtitle="Modification de model selectionné" />
       <form onSubmit={handleSubmit} sx={{
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,
@@ -125,7 +134,7 @@ const EditModel = () => {
         </FormControl>
         <Box mt={2}>
           <Button type="submit" variant="contained" color="primary">
-            Edit model
+            Modifier le model
           </Button>
           <Button type="button" onClick={handleDelete} aria-label="delete" sx={{ ml: 2 }} variant="contained" color="primary">
             Supprimer le model

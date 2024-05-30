@@ -55,7 +55,7 @@ const updateModel = async (req, res) => {
       description: req.body.description,
     };
     if (req.file) {
-      const ImgId = currentModel.logo.public_id;
+      const ImgId = currentModel.icon.public_id;
       if (ImgId) {
         await cloudinary.uploader.destroy(ImgId);
       }
