@@ -8,6 +8,7 @@ const addModel = async (req, res) => {
       folder: "Model",
     });
     const model = new Model({
+      userId: ModelData.userId,
       name: ModelData.name,
       description: ModelData.description,
       icon: {
@@ -49,11 +50,12 @@ const updateModel = async (req, res) => {
   try {
     const currentModel = await Model.findById(req.params.id);
     const data = {
+      userId: req.body.userId,
       name: req.body.name,
       description: req.body.description,
     };
     if (req.file) {
-      const ImgId = currentPack.logo.public_id;
+      const ImgId = currentModel.icon.public_id;
       if (ImgId) {
         await cloudinary.uploader.destroy(ImgId);
       }
@@ -112,7 +114,6 @@ const updateModel = async (req, res) => {
 
 const updateModelActive = async (req, res) => {
   try {
-    console.log(req.body)
     const model = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });

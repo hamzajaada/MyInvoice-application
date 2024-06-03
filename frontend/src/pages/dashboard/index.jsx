@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import FlexBetween from "componentsAdmin/FlexBetween";
 import Header from "componentsAdmin/Header";
 import {
-  DownloadOutlined,
+  // DownloadOutlined,
   PersonAdd,
 } from "@mui/icons-material";
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -11,7 +11,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 
 import {
   Box,
-  Button,
+  // Button,
   useTheme,
   useMediaQuery,
   Typography
@@ -103,9 +103,9 @@ const Dashboard = () => {
           }
         />
         <StatBox
-          title="Documents payé"
+          title="Facture payé"
           value={dashboard && dashboard.paidInvoices}
-          description="Le nombre total de documents payée dans le système"
+          description="Le nombre total de factures payée dans le système"
           icon={
             <PaidIcon
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
@@ -113,9 +113,9 @@ const Dashboard = () => {
           }
         />
         <StatBox
-          title="Documents impayée"
+          title="Facture impayée"
           value={dashboard && dashboard.unpaidInvoices}
-          description="Le nombre total de documents impayée dans le système"
+          description="Le nombre total de factures impayée dans le système"
           icon={
             <RemoveIcon
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}

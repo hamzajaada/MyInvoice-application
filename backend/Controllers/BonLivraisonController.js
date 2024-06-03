@@ -19,7 +19,6 @@ const addBonLivraison = async (req, res) => {
 
 const getAllBonLivraisons = async (req, res) => {
   try {
-    console.log("start");
     const AllbonLivraisons = await BonLivraison.find({ active: true })
       .populate("bonCommandeId")
       .limit(50)
@@ -27,7 +26,6 @@ const getAllBonLivraisons = async (req, res) => {
     const bonLivraisons = AllbonLivraisons.filter(
       (bonLivraison) => bonLivraison.userId.toString() === req.params.id
     );
-    console.log(bonLivraisons);
     res.status(200).json(bonLivraisons);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -174,6 +172,8 @@ const sendEmail = async (req, res) => {
     userPhone,
     userAddress,
     userEmail,
+    taxesTable,
+    sousTotale,
   } = req.body;
   const itemsTableHTML = itemsTable
     .map(
@@ -183,43 +183,67 @@ const sendEmail = async (req, res) => {
         }</td><td>${item.price.toFixed(2)} DHs</td></tr>`
     )
     .join("");
+    const taxesTableHTML = taxesTable
+    .map(
+      (tax) => `
+  <tr>
+    <td  colspan="2" style=" border: 1px solid #ddd; padding: 8px; text-align: center;">${tax.taxeName}</td>
+    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${tax.value}%</td>
+  </tr>`
+    )
+    .join("");
   const body = `
-  <p>Cher Client(e) Mr/Mme.<strong> ${fournisseurName}</strong>,</br></p>
-  <p>Vous avez reçu une bon de livraison de l'entreprise <strong><i>${userName}</i></strong>, vérifiez les détails ci-dessous:</br></p>
-  <p> - Numéro de bon de livraison :<strong> #${_id}</strong></p></br>
-  <table border="1" cellspacing="0" cellpadding="5">
-    <thead>
-      <tr>
-        <th><strong>Nom du Produit</strong></th>
-        <th><strong>Quantité</strong></th>
-        <th><strong>Prix</strong></th>
-      </tr>
-    </thead>
-    <tbody>
-      ${itemsTableHTML}
-    </tbody>
-    <tfoot>
-      <tr>
-        <th><strong>Montant : </strong></th>
-        <td colspan="2"> <strong>${amount.toFixed(2)} DHs</strong> </td>
-      </tr>
-    </tfoot>
-  </table>
-  </br>
-  <p>Considérez s'il vous plaît que la date de livraison de votre bon de livraison est le <strong>"<font color="red">${formattedDateLivraison}</font>"</strong>.</p></br>
-  <p>Si vous avez des questions, vous trouverez ci-dessus les coordonnées de l'entreprise :</p></br>
-  <ul>
-    <li> Téléphone :<strong> ${userPhone}</strong></li>
-    <li> Adresse :<strong> ${userAddress}</strong></li>
-    <li> Email :<strong> ${userEmail}</strong></li>
-  </ul></br>
-  <p>Cordialement,</p></br>
-  <p><strong>MY INVOICE TEAM</strong></p>
-`;
+    <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+      <p style="font-size: 16px;">Cher fournisseu(e) Mr/Mme. <strong>${fournisseurName}</strong>,</p>
+      <p style="font-size: 16px;">Vous avez reçu une bon de livraison de l'entreprise <strong><i>${userName}</i></strong>, vérifiez les détails ci-dessous:</p>
+      <p style="font-size: 16px;">- Numéro de bon de livraison : <strong>#${_id}</strong></p>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+        <thead>
+          <tr>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Nom du Produit</th>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2; text-align: center;">Quantité</th>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2; text-align: right;">Prix</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${itemsTableHTML}
+          <tr>
+          <th colspan="2" style="border: 1px solid #ddd; padding: 8px; text-align: right;">Sous-Total :</th>
+          <td style="border: 1px solid #ddd; padding: 8px; text-align: center;"><strong>${sousTotale.toFixed(
+            2
+          )} DHs</strong></td>
+        </tr>
+          <tr>
+          <th colspan="2" style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2; text-align: center;">Taxes</th>
+          <th colspan="1" style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2; text-align: center;">Taux</th>
+          </tr>
+          ${taxesTableHTML}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="2" style="border: 1px solid #ddd; padding: 8px; text-align: right;">Montant :</th>
+            <td style="border: 1px solid #ddd; padding: 8px; text-align: center;"><strong>${amount.toFixed(
+              2
+            )} DHs</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+      <p style="font-size: 16px; margin-top: 20px;">Considérez s'il vous plaît que la date de livraison de votre bon de livraison est le <strong style="color: red;">${formattedDateLivraison}</strong>.</p>
+      <p style="font-size: 16px;">Si vous avez des questions, vous trouverez ci-dessus les coordonnées de l'entreprise :</p>
+      <ul style="font-size: 16px;">
+        <li>Téléphone : <strong>${userPhone}</strong></li>
+        <li>Adresse : <strong>${userAddress}</strong></li>
+        <li>Email : <strong>${userEmail}</strong></li>
+      </ul>
+      <p style="font-size: 16px;">Cordialement,</p>
+      <p style="font-size: 16px;"><strong>MY INVOICE TEAM</strong></p>
+    </div>
+  `;
+
   var mailOptions = {
     from: "myinvoice06@gmail.com",
     to: fournisseurEmail,
-    subject: `Facture envoyée depuis ${userName}`,
+    subject: `Bon de livraison envoyée depuis ${userName}`,
     html: body,
   };
   try {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useGetBonCommandeDetailsQuery } from "state/api";
 import { useParams, useNavigate } from "react-router-dom";
-import { useTheme, CircularProgress, Typography, Button, Box } from '@mui/material';
+import { CircularProgress, Typography, Button, Box } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import axios from 'axios';
@@ -16,7 +16,6 @@ const SendEmailBonCommande = () => {
   if(data) {
     console.log(data)  
   }
-  const theme = useTheme();
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [error, setError] = useState(null);
@@ -24,8 +23,10 @@ const SendEmailBonCommande = () => {
 
   useEffect(() => {
     if (data) {
+      console.log(data)
       const sendEmail = async () => {
         setIsSendingEmail(true);
+        const sousTotale = data.itemsTable.reduce((total, item) => total + item.price * item.quantity, 0);
         try {
           await axios.post('http://localhost:3001/Api/BonCommandes/email', {
             _id: data._id,
@@ -37,6 +38,8 @@ const SendEmailBonCommande = () => {
             fournisseurEmail: data.fournisseurEmail,
             formattedDueDate: data.formattedDueDate,
             itemsTable: data.itemsTable,
+            taxesTable: data.taxesTable,
+            sousTotale: sousTotale,
             amount: data.amount,
           });
           setEmailSent(true);

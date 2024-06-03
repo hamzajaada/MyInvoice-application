@@ -74,10 +74,10 @@ export const api = createApi({
       }),
     }),
     registerEntreprise: build.mutation({
-      query: (data) => ({
+      query: (entreprise) => ({
         url: `Entreprise/register/`,
         method: "POST",
-        body: data,
+        body: entreprise,
       }),
     }),
     ForgoutPassword: build.mutation({
@@ -197,10 +197,10 @@ export const api = createApi({
       providesTags: ["Subscription"],
     }),
     updateSubscription: build.mutation({
-      query: ({ id, subscription }) => ({
+      query: ({ id, subscriptionData }) => ({
         url: `Subscription/edit/${id}`,
         method: "PUT",
-        body: subscription,
+        body: subscriptionData,
       }),
     }),
     removeSubscription: build.mutation({
@@ -257,10 +257,10 @@ export const api = createApi({
       providesTags: ["Model"],
     }),
     updateModel: build.mutation({
-      query: ({ id, ModelData }) => ({
+      query: ({ id, model }) => ({
         url: `Model/edit/${id}`,
         method: "PUT",
-        body: ModelData,
+        body: model,
       }),
     }),
     updateModelActive: build.mutation({

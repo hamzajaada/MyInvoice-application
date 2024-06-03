@@ -13,7 +13,7 @@ const Pricing = () => {
   const { title } = pricing;
   const { data } = useGetThreePacksQuery();
   const [translatedData, setTranslatedData] = useState([]);
-  const [btnCom, seTbtnComa] = useState("Commencer Maintenant");
+  const [btnCom, seTbtnComa] = useState("Voir les detail du PAck");
   const [year, seTyear] = useState("Année");
   const [voirplus, seTvoirplus] = useState("Voir plus");
   const [Titre, seTtitre] = useState(title);

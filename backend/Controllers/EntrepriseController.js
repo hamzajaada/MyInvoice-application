@@ -14,7 +14,9 @@ const Fournisseur = require("../Models/FournisseurSchema")
 
 const addEntreprise = async (req, res) => {
   try {
+    console.log(req.body)
     const { name, email, password, phone, logo, address } = req.body;
+    
     const existeEntreprise = await Entreprise.findOne({ email: email });
     if (!existeEntreprise) {
       const hashedPassword = await bcrypt.hash(password, 10);
