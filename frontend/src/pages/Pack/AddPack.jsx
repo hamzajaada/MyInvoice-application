@@ -65,9 +65,7 @@ const AddPack = () => {
         toast.success("Pack ajouté avec success");
         navigate("/packadmin");
       } else {
-        toast.error(
-          "Le pack ne s'ajoute pas avec success"
-        );
+        toast.error("Le pack ne s'ajoute pas avec success");
         console.log(data.error);
       }
     } catch (error) {
@@ -168,7 +166,7 @@ const AddPack = () => {
         </FormControl>
         <Box mt={2}>
           <Button type="submit" variant="contained" color="primary">
-          Ajout de pack
+            Ajout de pack
           </Button>
         </Box>
       </form>

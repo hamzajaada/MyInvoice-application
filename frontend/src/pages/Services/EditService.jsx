@@ -55,7 +55,6 @@ const EditService = () => {
           toast.error("Le service ne pas supprimé avec succès");
         }
       }
-      
     } catch (error) {
       console.log(error);
     }

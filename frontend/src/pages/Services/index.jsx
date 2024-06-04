@@ -86,7 +86,6 @@ const Services = () => {
           toast.error("Le service ne pas supprimé avec succès");
         }
       }
-      window.location.reload();
     } catch (error) {
       console.log(error);
     }
