@@ -43,8 +43,7 @@ const Navbar = ({
   } 
   
   const handleProfile = ()=>{
-    const userName = localStorage.getItem('userName');
-    navigate(`/${userName}/profil`)
+    navigate(`/profile`)
   }
 
   return (

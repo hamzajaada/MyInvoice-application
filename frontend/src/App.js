@@ -95,6 +95,7 @@ import Demandes from 'pages/Demande'
 import AddDemande from 'pagesClient/Demande/AddDemande'
 
 import Profil from "pagesClient/profil";
+import Profile from "pages/profil";
 
 import AddTaks from "pagesClient/Taks/addTaks";
 import Taks from "pagesClient/Taks/index";
@@ -151,6 +152,7 @@ const App = () => {
             <Route path="/SubscriptionsPlans/edit/:id" element={<AddThemeProvider theme={theme} pages={EditSubscription} />}/>
             <Route path="/Messages" element={<AddThemeProvider theme={theme} pages={Messages} />}/>
             <Route path="/Demandes" element={<AddThemeProvider theme={theme} pages={Demandes} />}/>
+            <Route path="/profile" element={<AddThemeProvider theme={theme} pages={Profile} />}/>
           </Route>
 
           <Route element={<AddThemeProvider theme={theme} pages={LayoutClient} />}>

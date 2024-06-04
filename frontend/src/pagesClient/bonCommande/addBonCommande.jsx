@@ -20,6 +20,7 @@ import {
   useAddBonCommandeMutation,
 } from "state/api";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AddBonCommande = () => {
   const navigate = useNavigate();
@@ -126,9 +127,14 @@ const AddBonCommande = () => {
         }, 0);
         amount = amount * (1 + taxes / 100);
       }
-      await addBonCommande({ bonCommande: { ...bonCommande, amount } });
-      console.log(bonCommande);
-      navigate(`/${userName}/bon-commandes`);
+      const {data} = await addBonCommande({ bonCommande: { ...bonCommande, amount } });
+      if (data.success) {
+        toast.success("Bon de commande ajouté avec succès");
+        navigate(`/${userName}/bon-commandes`);
+      } else {
+        toast.error("Le bon de commande ne pas ajouté avec succès");
+      }
+      
     } catch (error) {
       console.log(error);
     }

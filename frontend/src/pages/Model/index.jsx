@@ -97,10 +97,10 @@ const Models = () => {
 
         const {data} = await updateModel({ id: thisModel._id , model: { ...thisModel, active: false } });
         if(data.success) {
-          toast.success("La suppresion de model se passe correctement");
+          toast.success("Demande supprimé avec succès");
           setModel(model.filter((m) => m._id !== id));
         } else {
-          toast.error("La suppresion de model ne s'est pas passé correctement");
+          toast.error("La demande ne pas supprimé avec succès");
         }
       }
     } catch (error) {

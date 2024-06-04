@@ -33,10 +33,10 @@ const EditService = () => {
     try {
       const { data } = await updateService({ id, ServiceData: { ServiceName: serviceName, active: active } });
       if(data.success) {
-        toast.success("La modification de service se passe correctement");
+        toast.success("Service modifié avec succès");
         navigate("/Services");
       } else {
-        toast.error("La modification de service ne s'est pas dés correctement");
+        toast.error("Le service ne pas modifié avec succès");
       }
     } catch (error) {
       console.log(error);
@@ -49,10 +49,10 @@ const EditService = () => {
         setActive(false)
         const {data} = await updateService({ id, ServiceData: { ServiceName: serviceName, active: active } });
         if(data.success) {
-          toast.success("La suppresion de service se passe correctement");
+          toast.success("Service supprimé avec succès");
           navigate("/Services");
         } else {
-          toast.error("La suppresion de service ne s'est pas dés correctement");
+          toast.error("Le service ne pas supprimé avec succès");
         }
       }
       

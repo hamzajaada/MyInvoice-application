@@ -3,6 +3,7 @@ import { TextField, useTheme, Button, Box } from "@mui/material";
 import Header from "componentsAdmin/Header";
 import { useAddFournisseurMutation } from "state/api";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AddFournisseur = () => {
   const navigate = useNavigate()
@@ -30,8 +31,14 @@ const AddFournisseur = () => {
     event.preventDefault();
     try {
       console.log(fournisseur);
-      await addFournisseurs({ fournisseur });
-      Navigate(`/${userName}/fournisseurs`);
+      const {data} = await addFournisseurs({ fournisseur });
+      if (data.success) {
+        toast.success("Fournisseur ajouté avec succès");
+        Navigate(`/${userName}/fournisseurs`);
+      } else {
+        toast.error("Le fournisseur ne pas ajouté avec succès");
+      }
+      
     } catch (error) {
       console.log(error);
     }

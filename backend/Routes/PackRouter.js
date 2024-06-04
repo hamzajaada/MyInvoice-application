@@ -11,6 +11,7 @@ PackRouter.get( "/ThreePacks", PackController.getThreePacks);
 PackRouter.get( "/AllPacksThreeService", PackController.getAllPacksThreeService);
 PackRouter.get( "/", PackController.getAllPacks); 
 PackRouter.get( "/:id", PackController.getOnePack);
+PackRouter.get( "/detail/:id", PackController.getPack);
 PackRouter.post('/add', PackController.addPack);
 PackRouter.put('/edit/:id', upload.single('logo'), PackController.updatePack);
 PackRouter.put('/edit/active/:id', PackController.updatePackActive);

@@ -116,13 +116,12 @@ const Fournisseurs = () => {
         thisFournisseur.active = false
         const {data} = await updateFournisseur({id, fournisseur: thisFournisseur})
         if(data.success) {
-          toast.success("La suppresion de fournisseur se passe correctement");
+          toast.success("Fournisseur supprimé avec succès");
           setFourinsseur(Fourinsseur.filter((f) => f._id !== id));
         } else {
-          toast.error("La suppresion de fournisseur ne s'est pas passé correctement");
+          toast.error("Le fournisseur ne pas supprimé avec succès");
         }
       }
-      // window.location.reload();
     } catch (error) {
       console.log(error);
     }

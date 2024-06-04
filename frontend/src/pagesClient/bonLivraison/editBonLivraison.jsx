@@ -82,10 +82,10 @@ const EditInvoice = () => {
       console.log(updatedBonLivraison);
       const {data} = await updateBonLivraison({ id, BonLivraisonData: updatedBonLivraison });
       if(data.success) {
-        toast.success("La modification de bon de livraison se passe correctement");
+        toast.success("Bon de livraison modifié avec succès");
         Navigate(`/${userName}/bon-livraison`);
       } else {
-        toast.error("La modification de bon de livraison ne s'est pas réussie");
+        toast.error("Le bon de livraison ne pas modifié avec succès");
       }
     } catch (error) {
       console.log(error);
@@ -99,10 +99,10 @@ const EditInvoice = () => {
         const newBon = {...bonLivraisonData, active: false} 
         const {data} = await updateBonLivraison({ id, BonLivraisonData: newBon });
         if(data.success) {
-          toast.success("La suppresion de bon de livraison se passe correctement");
+          toast.success("Bon de livraison supprimé avec succès");
           Navigate(`/${userName}/bon-livraison`);
         } else {
-          toast.error("La suppresion de bon de livraison ne s'est pas réussie");
+          toast.error("Le bon de livraison ne pas supprimé avec succès");
         }
       }
     } catch (error) {

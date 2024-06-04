@@ -80,10 +80,10 @@ const Services = () => {
         thisService.active = false
         const {data} = await updateService({ id, ServiceData : thisService });
         if(data.success) {
-          toast.success("La suppresion de service se passe correctement");
+          toast.success("Service supprimé avec succès");
           setService(service.filter((s) => s._id !== id));
         } else {
-          toast.error("La suppresion de service ne s'est pas dés correctement");
+          toast.error("Le service ne pas supprimé avec succès");
         }
       }
       window.location.reload();

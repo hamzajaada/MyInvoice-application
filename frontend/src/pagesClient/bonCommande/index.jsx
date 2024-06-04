@@ -286,14 +286,10 @@ const BonCommandes = () => {
           bonCommandeData: thisBon,
         });
         if (data.success) {
-          toast.success(
-            "La suppresion de bon de commande se passe correctement"
-          );
+          toast.success("Bon de commande supprimé avec succès");
           setBonCommandes(bonCommandes.filter((b) => b._id !== id));
         } else {
-          toast.error(
-            "La suppresion de bon de commande ne s'est pas passé correctement"
-          );
+          toast.error("Le bon de commande né supprimé pas avec succès");
         }
       }
     } catch (error) {

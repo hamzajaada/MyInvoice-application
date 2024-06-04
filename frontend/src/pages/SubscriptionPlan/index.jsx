@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Box, useTheme, IconButton } from "@mui/material";
-// import {  useRemoveSubscriptionMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
-// import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 
 const SubscriptionPalns = () => {
@@ -67,7 +65,7 @@ const SubscriptionPalns = () => {
     },
     {
       field: "status",
-      headerName: "Statue",
+      headerName: "Statue d'abonnement",
       flex: 0.5,
     },
     {

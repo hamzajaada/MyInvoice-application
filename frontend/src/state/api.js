@@ -60,6 +60,12 @@ export const api = createApi({
         body: entreprise,
       }),
     }),
+    updateEntrepriseStatus: build.mutation({
+      query: ({ id }) => ({
+        url: `Entreprise/editStatus/${id}`,
+        method: "PUT",
+      }),
+    }),
     removeEntreprise: build.mutation({
       query: (id) => ({
         url: `Entreprise/remove/${id}`,
@@ -153,6 +159,10 @@ export const api = createApi({
     }),
     getOnePack: build.query({
       query: (id) => `Pack/${id}`,
+      providesTags: ["Pack"],
+    }),
+    getPack: build.query({
+      query: (id) => `Pack/detail/${id}`,
       providesTags: ["Pack"],
     }),
     updatePack: build.mutation({
@@ -623,6 +633,7 @@ export const {
   useGetEntrepriseDetailQuery,
   useGetDashboardQuery,
   useUpdateEntrepriseMutation,
+  useUpdateEntrepriseStatusMutation,
   useRemoveEntrepriseMutation,
   useLoginEntrepriseMutation,
   useRegisterEntrepriseMutation,
@@ -632,6 +643,7 @@ export const {
   useChangePasswordEntrepriseMutation,
 
   useGetPacksQuery,
+  useGetPackQuery,
   useGetOnePackQuery,
   useAddPackMutation,
   useUpdatePackMutation,

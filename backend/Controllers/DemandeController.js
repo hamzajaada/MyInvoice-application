@@ -46,8 +46,9 @@ const  getOneDemande = async (req, res) => {
 
 const  updateDemande = async (req,res)=>{
   try {
+    console.log(req.body)
     const  demande = await Demande.findByIdAndUpdate(req.params.id, req.body, {new: true});
-    res.status(201).json(demande);
+    res.status(201).json({success: true, demande});
   } catch (error) {
     res.status(500).send("Erreur serveur lors de la mise à jour de demande");
   }

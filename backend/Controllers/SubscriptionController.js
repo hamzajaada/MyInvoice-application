@@ -14,38 +14,31 @@ const addSubscription = async (req, res) => {
 
 const getAllSubscriptions = async (req, res) => {
   try {
-    // console.log('start')
-    const subscription = await Subscription.find()
-      .populate("userId", "name")
-      .populate("packId", "name price");
-    // console.log("subscription avant : ", subscription);
-    const organizedSubscriptions = subscription.map((subscription) => {
-      const startDate = new Date(subscription.startDate).toLocaleDateString(
-        "fr-FR"
-      );
-      const endDate = new Date(subscription.endDate).toLocaleDateString(
-        "fr-FR"
-      );
+    const subscriptions = await Subscription.find()
+      .populate("userId")
+      .populate("packId");    
+    const organizedSubscriptions = subscriptions.map((sub) => {
+      const startDate = new Date(sub.startDate).toLocaleDateString("fr-FR");
+      const endDate = new Date(sub.endDate).toLocaleDateString("fr-FR");
       return {
-        _id: subscription._id,
-        enterpriseId: subscription.userId._id,
-        enterpriseName: subscription.userId.name,
-        packId: subscription.packId._id,
-        packName: subscription.packId.name,
-        packPrice: subscription.packId.price,
+        _id: sub._id,
+        enterpriseName: sub.userId ? sub.userId.name : "Utilisateur inconnu",
+        enterpriseStatus: sub.userId ? sub.userId.status : "Status inconnu",
+        packName: sub.packId ? sub.packId.name : "Pack inconnu",
+        packPrice: sub.packId ? sub.packId.price : 0,
         startDate: startDate,
         endDate: endDate,
-        price: subscription.price,
-        status: subscription.status,
+        price: sub.price,
+        status: sub.status,
       };
     });
-    res.status(201).json(organizedSubscriptions);
+    res.status(200).json(organizedSubscriptions);
   } catch (error) {
-    res
-      .status(500)
-      .send("Erreur serveur lors de la recherche des subscription");
+    console.log(error);
+    res.status(500).send("Erreur serveur lors de la recherche des abonnements");
   }
 };
+
 
 const getOneSubscription = async (req, res) => {
   try {
@@ -58,13 +51,17 @@ const getOneSubscription = async (req, res) => {
 
 const updateSubscription = async (req, res) => {
   try {
+    console.log(req.body)
+    console.log(req.params)
     const subscription = await Subscription.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     );
-    res.status(201).json(subscription);
+    console.log(subscription)
+    res.status(201).json({success: true,subscription});
   } catch (error) {
+    console.log(error)
     res
       .status(500)
       .send("Erreur serveur lors de la mise à jour de subscription");

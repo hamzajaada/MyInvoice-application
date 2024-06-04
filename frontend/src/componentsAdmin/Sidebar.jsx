@@ -53,7 +53,7 @@ const navItems = [
   },
   {
     text: "SubscriptionsPlans",
-    title: "Subscriptions plans",
+    title: "Plan d'abonnements",
     icon: <SubscriptionsIcon />,
   },
   {

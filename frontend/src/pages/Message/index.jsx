@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 import AddTaskOutlinedIcon from '@mui/icons-material/AddTaskOutlined';
 import { useUpdateMessageMutation } from "state/api";
+import { toast } from "react-toastify";
 
 const Messages = () => {
   const navigate = useNavigate();
@@ -31,7 +32,12 @@ const Messages = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/Api/Message/remove/${id}`);
+      const {data} = await axios.delete(`http://localhost:3001/Api/Message/remove/${id}`);
+      if(data.success) {
+        toast.success("Message supprimé avec succès");
+      } else {
+        toast.error("Le message ne pas supprimé avec succès");
+      }
       setMessages(messages.filter((message) => message._id !== id));
     } catch (error) {
       console.log(error);
@@ -42,7 +48,12 @@ const Messages = () => {
     const thisMessage = messages.find((message) => message._id === id);
     if(thisMessage) {
       thisMessage.status = "accepter";
-      await updateMessage({ id, MessageData : thisMessage });
+      const {data} = await updateMessage({ id, MessageData : thisMessage });
+      if(data.success) {
+        toast.success("Message accepté avec succès");
+      } else {
+        toast.error("Le message né accpeté pas avec succès");
+      }
     }
   };
 

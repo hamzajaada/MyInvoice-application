@@ -5,20 +5,21 @@ import {
   IconButton,
   Avatar,
 } from "@mui/material";
-import { useUpdateEntrepriseMutation } from "state/api";
+import { useUpdateEntrepriseStatusMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Entreprises = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const [entreprises, setEntreprises] = useState([]);
-  const [updateEntreprise] = useUpdateEntrepriseMutation();
+  const [updateEntreprise] = useUpdateEntrepriseStatusMutation();
 
   useEffect(() => {
     const fetchEntreprises = async () => {
@@ -43,9 +44,12 @@ const Entreprises = () => {
 
   const handleDelete = async (id) => {
     try {
-      const thisEntreprise = entreprises.find((d) => d._id === id);
-      const newEntreprise = { ...thisEntreprise, status: "cancelled" };
-      await updateEntreprise({ id, newEntreprise });
+      const {data} = await updateEntreprise({ id });
+      if(data.success) {
+        toast.success("Entreprise supprimé avec succès");
+      } else {
+        toast.error("L'entreprise ne pas supprimé avec succès");
+      }
       setEntreprises(entreprises.filter((entreprise) => entreprise._id !== id));
     } catch (error) {
       console.log(error);
@@ -85,11 +89,6 @@ const Entreprises = () => {
       field: "address",
       headerName: "Address",
       flex: 0.8,
-    },
-    {
-      field: "role",
-      headerName: "Role",
-      flex: 0.4,
     },
     {
       field: "actions",

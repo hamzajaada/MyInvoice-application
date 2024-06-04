@@ -77,31 +77,6 @@ const EnterpriseDetails = () => {
               Détails de l'entreprise
             </Typography>
             <Divider sx={{ mb: 2 }} />
-            {/* <FlexBetween>
-              <Grid md={6}>
-                {logo && (
-                  <Avatar
-                    alt="Logo de l'entreprise"
-                    src={logo.url}
-                    sx={{ width: 150, height: 150, mb: 2, mx: "auto" }}
-                  />
-                )}
-              </Grid>
-              <Grid md={6}>
-                <Typography variant="body1" sx={{ mb: 1 }}>
-                  <strong>Nom: </strong> {name}
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 1 }}>
-                  <strong>Email: </strong> {email}
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 1 }}>
-                  <strong>Téléphone: </strong> {phone}
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 1 }}>
-                  <strong>Adresse: </strong> {address}
-                </Typography>
-              </Grid>
-            </FlexBetween> */}
             {isScreenSmall ? (
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>

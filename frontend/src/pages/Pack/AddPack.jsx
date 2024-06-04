@@ -62,17 +62,16 @@ const AddPack = () => {
     try {
       const { data } = await addPack(pack);
       if (data.success) {
-        toast.success("L'enregistrement de pack s'est bien passé");
+        toast.success("Pack ajouté avec success");
         navigate("/packadmin");
       } else {
         toast.error(
-          "L'enregistrement de pack ne s'est pas passé correctement : " +
-            data.message
+          "Le pack ne s'ajoute pas avec success"
         );
         console.log(data.error);
       }
     } catch (error) {
-      toast.error("Erreur lors de l'ajoute de pack : " + error.message);
+      toast.error("Erreur lors de l'ajoute de pack");
       console.log(error);
     }
   };

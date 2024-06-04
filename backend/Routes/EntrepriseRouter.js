@@ -16,6 +16,7 @@ EntrepriseRouter.get( "/:id", EntrepriseController.getOneEntreprise);
 EntrepriseRouter.put('/changePassword/:id', EntrepriseController.changePassword);
 EntrepriseRouter.post('/register', EntrepriseController.addEntreprise);
 EntrepriseRouter.put('/edit/:id', upload.single('logo'), EntrepriseController.updateEntreprise);
+EntrepriseRouter.put('/editStatus/:id', EntrepriseController.updateStausEntreprise);
 EntrepriseRouter.delete("/remove/:id", EntrepriseController.removeEntreprise);
 EntrepriseRouter.post('/login',Auth, EntrepriseController.login);
 EntrepriseRouter.post('/ForgoutPass', EntrepriseController.ForgoutPass);

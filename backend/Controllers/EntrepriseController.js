@@ -10,7 +10,8 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const cloudinary = require("../Utils/cloudinary");
 const Client = require("../Models/ClientSchema")
-const Fournisseur = require("../Models/FournisseurSchema")
+const Fournisseur = require("../Models/FournisseurSchema");
+const Enterprise = require("../Models/EntrepriseSchema");
 
 const addEntreprise = async (req, res) => {
   try {
@@ -69,7 +70,7 @@ const addEntreprise = async (req, res) => {
 
 const getAllEntreprises = async (req, res) => {
   try {
-    const entreprises = await Entreprise.find();
+    const entreprises = await Entreprise.find({status: "active"});
     res.status(201).json(entreprises);
   } catch (error) {
     res.status(500).send("Erreur serveur lors de la recherche d'entreprise");
@@ -282,6 +283,22 @@ const updateEntreprise = async (req, res) => {
   }
 };
 
+const updateStausEntreprise = async (req, res) => {
+  try {
+    const enterprise = await Enterprise.findByIdAndUpdate(
+      req.params.id,
+      { status: "cancelled" },
+      { new: true }
+    );
+    res.status(200).json({
+      success: true,
+      enterprise, 
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: "Erreur lors de la mise à jour du statut de l'entreprise" });
+  }
+};
+
 const removeEntreprise = async (req, res) => {
   try {
     const entreprise = await Entreprise.findByIdAndDelete(req.params.id);
@@ -327,7 +344,9 @@ const getDashboardInfo = async (req, res) => {
     const subscriptionCounts = await Subscription.aggregate([
       { $group: { _id: "$status", count: { $sum: 1 } } },
     ]);
-    const enterpriseCountByMonthAndYear = getEnterpriseCountByMonthAndYear();
+    const enterpriseCountByMonthAndYear = await getEnterpriseCountByMonthAndYear(); 
+    console.log(enterpriseCountByMonthAndYear)
+
     const dashboardData = {
       totalEntreprises,
       revenueBySubscription,
@@ -340,16 +359,14 @@ const getDashboardInfo = async (req, res) => {
     res.status(200).json(dashboardData);
   } catch (error) {
     console.error("Erreur : ", error);
-    res
-      .status(500)
-      .json(
-        {error:"Erreur serveur lors de la recherche d'informations du tableau de bord"}
-      );
+    res.status(500).json({ error: "Erreur serveur lors de la recherche d'informations du tableau de bord" });
   }
 };
 
-const getEnterpriseCountByMonthAndYear = async (req, res) => {
+
+const getEnterpriseCountByMonthAndYear = async () => {
   try {
+    const months = ["Jan", "Fév", "Mar", "Avr", "Mai", "Jun", "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"];
     const enterpriseCountByMonthAndYear = await Entreprise.aggregate([
       {
         $project: {
@@ -366,10 +383,21 @@ const getEnterpriseCountByMonthAndYear = async (req, res) => {
       {
         $sort: { "_id.year": 1, "_id.month": 1 },
       },
+      {
+        $project: {
+          year: "$_id.year",
+          month: { $arrayElemAt: [months, { $subtract: ["$_id.month", 1] }] },
+          count: "$count",
+        },
+      },
     ]);
-    res.status(200).json(enterpriseCountByMonthAndYear);
-  } catch (error) {}
+    return enterpriseCountByMonthAndYear;
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
+
+
 
 const ForgoutPass = async (req, res) => {
   try {
@@ -440,39 +468,7 @@ const ForgoutPass = async (req, res) => {
     res.status(500).json({ message: "Erreur du serveur" });
   }
 };
-// const ForgoutPass = async (req, res)=>{
-//     console.log(req.body)
-//     const {email} = req.body;
-//     Entreprise.findOne({email : email}).then (entreprise=>{
-//       if(!entreprise){
-//         return res.json({message : "User not existed"})
-//       }
-//       const token = jwt.sign({id : entreprise._id} , "AbdelilahElgallati1230",{expiresIn:"1d"})
-//       var transporter = nodemailer.createTransport({
-//         service: 'gmail',
-//         auth: {
-//           user: "myinvoice06@gmail.com",
-//           pass: "ekiv afoc wbnb mrep",
-//         },
-//       });
 
-//       var mailOptions = {
-//         from: 'myinvoice06@gmail.com',
-//         to: email,
-//         subject: 'Reset password',
-//         text: `http://localhost:3000/reset-password/${entreprise._id}/${token}`
-//       };
-
-//       transporter.sendMail(mailOptions, function(error, info){
-//         if (error) {
-//           console.error('Error sending email:', error.message);
-//            res.status(500).json({ message: 'Failed to send email' })
-//         } else {
-//           res.status(200).json({ message: 'Email envoyez avec succes!!!!! Verifiez votre email  ' });
-//         }
-//       });
-//     })
-// }
 const ResetPass = async (req, res) => {
   console.log(req.body);
   const id = req.body.id;
@@ -532,4 +528,5 @@ module.exports = {
   ResetPass,
   changePassword,
   uploadSignature,
+  updateStausEntreprise,
 };

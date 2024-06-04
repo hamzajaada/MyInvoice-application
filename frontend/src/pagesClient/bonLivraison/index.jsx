@@ -285,14 +285,10 @@ const BonLivraison = () => {
           BonLivraisonData: thisBon,
         });
         if (data.success) {
-          toast.success(
-            "La suppresion de bon de livraison se passe correctement"
-          );
+          toast.success("Bon de livraison supprimé avec succès");
           setbonLivraison(bonLivraison.filter((b) => b._id !== id));
         } else {
-          toast.error(
-            "La suppresion de bon de livraison ne s'est pas passé correctement"
-          );
+          toast.error("Le bon de livraison né supprimé pas avec succès");
         }
       }
     } catch (error) {

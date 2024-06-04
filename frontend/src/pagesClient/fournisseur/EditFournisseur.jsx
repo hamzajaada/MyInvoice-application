@@ -37,10 +37,10 @@ const EditFournisseur = () => {
       if(fournisseurData) {
         const {data} = await editFournisseur({ id, fournisseur: { ...fournisseurData, active: false } });
         if(data.success) {
-          toast.success("La suppresion du fournisseur se passe correctement");
+          toast.success("Fournisseur supprimé avec succès");
           navigate(`/${userName}/fournisseurs`);
         } else {
-          toast.error("La suppresion du fournisseur ne s'est pas déséli");
+          toast.error("Le fournisseur ne pas supprimé avec succès");
         }
       }
     } catch (error) {
@@ -54,10 +54,10 @@ const EditFournisseur = () => {
       console.log(fournisseur);
       const {data} = await editFournisseur({ id, fournisseur });
       if(data.success) {
-        toast.success("La suppresion du fournisseur se passe correctement");
+        toast.success("Fournisseur modifié avec succès");
         navigate(`/${userName}/fournisseurs`);
       } else {
-        toast.error("La suppresion du fournisseur ne s'est pas déséli");
+        toast.error("Le fournisseur ne pas modifié avec succès");
       }
     } catch (error) {
       console.log(error);
