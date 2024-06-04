@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, useTheme, Button, IconButton } from "@mui/material";
-import {  useUpdateServiceMutation } from "state/api";
+import { useUpdateServiceMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -11,20 +11,20 @@ import FlexBetween from "componentsAdmin/FlexBetween";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useMediaQuery } from "@mui/material";
 
 const Services = () => {
-  
-  const navigate = useNavigate()
-  if(!localStorage.getItem('userId')) {
-    navigate('/');
+  const navigate = useNavigate();
+  if (!localStorage.getItem("userId")) {
+    navigate("/");
   }
   const [service, setService] = useState({
     _id: "",
     ServiceName: "",
-  })
+  });
   const theme = useTheme();
   const [updateService] = useUpdateServiceMutation();
-
+  const isNonMobile = useMediaQuery("(min-width: 400px)");
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -37,7 +37,6 @@ const Services = () => {
 
     fetchServices();
   }, []);
- 
 
   const columns = [
     {
@@ -75,11 +74,11 @@ const Services = () => {
 
   const handleDelete = async (id) => {
     try {
-      const thisService = service.find((s) => s._id === id)
-      if(thisService) {
-        thisService.active = false
-        const {data} = await updateService({ id, ServiceData : thisService });
-        if(data.success) {
+      const thisService = service.find((s) => s._id === id);
+      if (thisService) {
+        thisService.active = false;
+        const { data } = await updateService({ id, ServiceData: thisService });
+        if (data.success) {
           toast.success("Service supprimé avec succès");
           setService(service.filter((s) => s._id !== id));
         } else {
@@ -93,20 +92,39 @@ const Services = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <FlexBetween>
-        <Header title="SERVICES" subtitle="Liste de services" />
-        <Link to="/Services/new">
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddOutlinedIcon />}
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Ajoute de service
-          </Button>
-        </Link>
-      </FlexBetween>
-
+      {isNonMobile ? (
+        <FlexBetween>
+          <Header title="SERVICES" subtitle="Liste de services" />
+          <Link to="/Services/new">
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddOutlinedIcon />}
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Ajoute de service
+            </Button>
+          </Link>
+        </FlexBetween>
+      ) : (
+        <>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Header title="SERVICES" subtitle="Liste de services" />
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <Link to="/Services/new">
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddOutlinedIcon />}
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Ajoute de service
+              </Button>
+            </Link>
+          </Box>
+        </>
+      )}
       <Box
         mt="40px"
         height="75vh"
