@@ -18,6 +18,7 @@ const Layout = () => {
   })
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const userId = localStorage.getItem('userId');
+  
 
   useEffect(()=>{
     const fetchEntreprise = async () => {
@@ -39,11 +40,11 @@ const Layout = () => {
       <Sidebar
         user = {entreprise && (entreprise || {})}
         isNonMobile={isNonMobile}
-        drawerWidth="250px"
+        drawerWidth="270px"
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
       />
-      <Box flexGrow={1}>
+      <Box flexGrow={1} width={(isSidebarOpen && window.width > "500px")? "calc(100% - 270px)": "100%" }>
         <Navbar  
           user = {entreprise && (entreprise || {})}
           isSidebarOpen={isSidebarOpen}
