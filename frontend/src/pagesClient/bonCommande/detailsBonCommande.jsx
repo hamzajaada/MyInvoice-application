@@ -2,6 +2,7 @@ import React from "react";
 import { useGetBonCommandeDetailsQuery } from "state/api";
 import { useParams, useNavigate } from "react-router-dom";
 import {
+  useMediaQuery,
   Box,
   Typography,
   Table,
@@ -21,6 +22,7 @@ const DetailsBonCommande = () => {
   if (!localStorage.getItem("userId")) {
     navigate("/");
   }
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
   const { id } = useParams();
   const { data, isLoading } = useGetBonCommandeDetailsQuery(id);
   const theme = useTheme();
@@ -58,6 +60,7 @@ const DetailsBonCommande = () => {
   } = data;
 
   const sousTotale = itemsTable.reduce((total, item) => total + item.price * item.quantity, 0);
+  
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -70,7 +73,7 @@ const DetailsBonCommande = () => {
         elevation={3}
         style={{ padding: theme.spacing(3), marginBottom: theme.spacing(3) }}
       >
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box display={isNonMobile ? "flex" : "block"}  justifyContent="space-between" alignItems="center">
           <Box bgcolor="gray" borderRadius={4} p={2}>
             <Typography
               variant="h5"
@@ -79,7 +82,7 @@ const DetailsBonCommande = () => {
               Numéro de bon de commande: #{_id}
             </Typography>
           </Box>
-          <Box bgcolor={getStatusColor(bonCommandeStatus)} borderRadius={4} p={2}>
+          <Box bgcolor={getStatusColor(bonCommandeStatus)} marginTop={isNonMobile ? "0" : "10px"} marginLeft={isNonMobile ? "2px" : "0"} borderRadius={4} p={2}>
             <Typography
               variant="h6"
               sx={{ color: "white", fontWeight: "bold" }}
@@ -88,9 +91,9 @@ const DetailsBonCommande = () => {
             </Typography>
           </Box>
         </Box>
-        <Box display="flex" justifyContent="center" mt={3}>
+        <Box display={isNonMobile ? "flex" : "block"} justifyContent="center" mt={3}>
           <Box
-            width="50%"
+            width={isNonMobile ? "49%": "100%"}
             borderRadius={4}
             border={`1px solid ${theme.palette.grey[300]}`}
             p={2}
@@ -132,7 +135,8 @@ const DetailsBonCommande = () => {
             </Typography>
           </Box>
           <Box
-            width="50%"
+            width={isNonMobile ? "49%": "100%"}
+            marginTop={isNonMobile ? "0" : "10px"}
             borderRadius={4}
             border={`1px solid ${theme.palette.grey[300]}`}
             p={2}

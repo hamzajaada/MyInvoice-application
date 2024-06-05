@@ -303,7 +303,7 @@ const BonCommandes = () => {
     setOpenDialog(false);
   };
 
-  const isNoMobile = useMediaQuery("(min-width: 500px)");
+  const isNoMobile = useMediaQuery("(min-width: 680px)");
 
   return (
     <Box m="1.5rem 2.5rem">

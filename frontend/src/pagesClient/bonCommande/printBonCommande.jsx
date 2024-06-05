@@ -15,6 +15,7 @@ import {
   Paper,
   Button,
   CircularProgress,
+  useMediaQuery
 } from "@mui/material";
 import profileImage from "assets/logo.png";
 
@@ -23,6 +24,7 @@ const PrintBonCommande = () => {
   if (!localStorage.getItem("userId")) {
     navigate("/");
   }
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
   const { id } = useParams();
   const { data, isLoading } = useGetBonCommandeDetailsQuery(id);
   const theme = useTheme();
@@ -86,7 +88,7 @@ const PrintBonCommande = () => {
           />
         </Box>
         <Box m={2} />
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box display={isNonMobile ? "flex" : "block"} justifyContent="space-between" alignItems="center">
           <Box bgcolor="gray" borderRadius={4} p={2}>
             <Typography
               variant="h6"
@@ -96,6 +98,8 @@ const PrintBonCommande = () => {
             </Typography>
           </Box>
           <Box
+            marginTop={isNonMobile ? "0" : "10px"} 
+            marginLeft={isNonMobile ? "2px" : "0"}
             bgcolor={getStatusColor(bonCommandeStatus)}
             borderRadius={4}
             p={2}
@@ -112,9 +116,9 @@ const PrintBonCommande = () => {
             </Typography>
           </Box>
         </Box>
-        <Box display="flex" justifyContent="center" mt={3}>
+        <Box display={isNonMobile ? "flex" : "block"} justifyContent="center" mt={3}>
           <Box
-            width="50%"
+            width={isNonMobile ? "49%": "100%"}
             borderRadius={4}
             border={`1px solid ${theme.palette.grey[300]}`}
             p={2}
@@ -148,7 +152,8 @@ const PrintBonCommande = () => {
             </Typography>
           </Box>
           <Box
-            width="50%"
+            width={isNonMobile ? "49%": "100%"}
+            marginTop={isNonMobile ? "0" : "10px"}
             borderRadius={4}
             border={`1px solid ${theme.palette.grey[300]}`}
             p={2}

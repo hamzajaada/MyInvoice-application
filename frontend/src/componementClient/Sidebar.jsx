@@ -149,19 +149,20 @@ const Sidebar = ({
           onClose={() => setIsSidebarOpen(false)}
           variant="persistent"
           anchor="left"
+          fullWidth
           sx={{
             width: drawerWidth,
             "& .MuiDrawer-paper": {
               color: theme.palette.secondary[200],
               backgroundColor: theme.palette.background.alt,
               boxSizing: "border-box",
-              borderWidth: isNonMobile ? 0 : "2px",
+              // borderWidth: isNonMobile ? 0 : "2px",
               width: drawerWidth,
             },
           }}
         >
-          <Box width="100%">
-            <Box m="1.5rem 2rem 2rem 3rem">
+          <Box fullWidth>
+            <Box m="1.5rem 2rem 2rem 3rem" fullWidth>
               <FlexBetween color={theme.palette.secondary.main}>
                 <Box display="flex" alignItems="center" gap="0.5rem">
                   <Link to="/">
@@ -182,7 +183,7 @@ const Sidebar = ({
                 )}
               </FlexBetween>
             </Box>
-            <List>
+            <List fullWidth>
               {navItems.map(({ text, icon, title, subMenu }) => {
                 if (!icon) {
                   return (
