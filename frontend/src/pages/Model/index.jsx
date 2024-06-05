@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, useTheme, Button, IconButton, Avatar } from "@mui/material";
+import { Box, useTheme, Button, IconButton, Avatar, useMediaQuery } from "@mui/material";
 import { useUpdateModelActiveMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
@@ -11,7 +11,6 @@ import FlexBetween from "componentsAdmin/FlexBetween";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useMediaQuery } from "@mui/material";
 
 const Models = () => {
   const navigate = useNavigate();
@@ -27,6 +26,8 @@ const Models = () => {
   const [updateModel] = useUpdateModelActiveMutation();
   const theme = useTheme();
   const isNonMobile = useMediaQuery("(min-width: 400px)");
+  const isNoMobile = useMediaQuery("(min-width: 1000px)");
+
   useEffect(() => {
     const fetchModels = async () => {
       try {
@@ -148,11 +149,15 @@ const Models = () => {
         mt="40px"
         height="75vh"
         sx={{
+          overflowX: "auto",
           "& .MuiDataGrid-root": {
             border: "none",
+            minWidth: isNoMobile ? "none" : "1000px",
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+            backgroundColor: theme.palette.background.test,
+            lineHeight: "2rem",
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,

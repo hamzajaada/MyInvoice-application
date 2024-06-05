@@ -9,11 +9,12 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  useMediaQuery,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "componementClient/Header";
 import { useGetOnePackQuery, useUpdateBonCommandeMutation } from "state/api";
-import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
+// import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
 import { useNavigate } from "react-router-dom";
 import {
   CheckCircleOutline,
@@ -44,6 +45,7 @@ const BonCommandes = () => {
   const [generatePdf, setGeneratePdf] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
 
   useEffect(() => {
     if (packData) {
@@ -301,33 +303,64 @@ const BonCommandes = () => {
     setOpenDialog(false);
   };
 
+  const isNoMobile = useMediaQuery("(min-width: 500px)");
+
   return (
     <Box m="1.5rem 2.5rem">
-      <FlexBetween>
-        <Header
-          title="BON DE COMMANDES"
-          subtitle="Liste des bon de commandes "
-          total={bonCommandes ? bonCommandes.length : 0}
-        />
-        <Link to={`/${userName}/bon-commandes/new`}>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddOutlinedIcon />}
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Ajoute de bon de commandes
-          </Button>
-        </Link>
-      </FlexBetween>
+      {isNoMobile ? (
+        <FlexBetween>
+          <Header
+            title="BON DE COMMANDES"
+            subtitle="Liste des bon de commandes "
+            total={bonCommandes ? bonCommandes.length : 0}
+          />
+          <Link to={`/${userName}/bon-commandes/new`}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddOutlinedIcon />}
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Ajoute de bon de commandes
+            </Button>
+          </Link>
+        </FlexBetween>
+      ) : (
+        <>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Header
+              title="BON DE COMMANDES"
+              subtitle="Liste des bon de commandes "
+              total={bonCommandes ? bonCommandes.length : 0}
+            />
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <Link to={`/${userName}/bon-commandes/new`}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddOutlinedIcon />}
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Ajoute de bon de commandes
+              </Button>
+            </Link>
+          </Box>
+        </>
+      )}
       <Box
-        height="80vh"
+        mt="40px"
+        height="75vh"
         sx={{
+          overflowX: "auto",
           "& .MuiDataGrid-root": {
             border: "none",
+            minWidth: isNonMobile ? "none" : "1000px",
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+            backgroundColor: theme.palette.background.test,
+            lineHeight: "2rem",
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,
@@ -352,11 +385,6 @@ const BonCommandes = () => {
           getRowId={(row) => row._id}
           rows={bonCommandes}
           columns={columns}
-          rowsPerPageOptions={[20, 50, 100]}
-          pagination
-          paginationMode="server"
-          sortingMode="server"
-          components={{ Toolbar: DataGridCustomToolbar }}
         />
       </Box>
       <Dialog

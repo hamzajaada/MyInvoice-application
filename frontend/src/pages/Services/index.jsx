@@ -25,6 +25,7 @@ const Services = () => {
   const theme = useTheme();
   const [updateService] = useUpdateServiceMutation();
   const isNonMobile = useMediaQuery("(min-width: 400px)");
+  const isNoMobile = useMediaQuery("(min-width: 1000px)");
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -129,11 +130,15 @@ const Services = () => {
         mt="40px"
         height="75vh"
         sx={{
+          overflowX: "auto",
           "& .MuiDataGrid-root": {
             border: "none",
+            minWidth: isNoMobile ? "none" : "1000px",
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+            backgroundColor: theme.palette.background.test,
+            lineHeight: "2rem",
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,

@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  useTheme,
-  IconButton,
-  Avatar,
-} from "@mui/material";
+import { Box, useTheme, IconButton, Avatar, useMediaQuery } from "@mui/material";
 import { useUpdateEntrepriseStatusMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
@@ -17,6 +12,7 @@ import { toast } from "react-toastify";
 const Entreprises = () => {
   const navigate = useNavigate();
   const theme = useTheme();
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
   const [isLoading, setIsLoading] = useState(true);
   const [entreprises, setEntreprises] = useState([]);
   const [updateEntreprise] = useUpdateEntrepriseStatusMutation();
@@ -24,9 +20,7 @@ const Entreprises = () => {
   useEffect(() => {
     const fetchEntreprises = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/Api/Entreprise"
-        );
+        const response = await axios.get("http://localhost:3001/Api/Entreprise");
         setEntreprises(response.data);
         setIsLoading(false);
       } catch (error) {
@@ -44,8 +38,8 @@ const Entreprises = () => {
 
   const handleDelete = async (id) => {
     try {
-      const {data} = await updateEntreprise({ id });
-      if(data.success) {
+      const { data } = await updateEntreprise({ id });
+      if (data.success) {
         toast.success("Entreprise supprimé avec succès");
       } else {
         toast.error("L'entreprise ne pas supprimé avec succès");
@@ -72,42 +66,36 @@ const Entreprises = () => {
     {
       field: "name",
       headerName: "Entreprise",
-      flex: 0.5,
+      flex: 1,
       renderCell: renderAvatarCell,
     },
     {
       field: "email",
       headerName: "Email",
-      flex: 0.5,
+      flex: 1,
     },
     {
       field: "phone",
-      headerName: "Phone Number",
-      flex: 0.5,
+      headerName: "Numéro de téléphone",
+      flex: 1,
     },
     {
       field: "address",
-      headerName: "Address",
-      flex: 0.8,
+      headerName: "Adresse",
+      flex: 1.5,
     },
     {
       field: "actions",
       headerName: "Actions",
-      flex: 0.3,
+      flex: 0.5,
       sortable: false,
       renderCell: (params) => (
         <Box>
-          <IconButton
-            onClick={() => handleEdit(params.row._id)}
-            aria-label="edit"
-          >
+          <IconButton onClick={() => handleEdit(params.row._id)} aria-label="edit">
             <InfoOutlinedIcon />
           </IconButton>
 
-          <IconButton
-            onClick={() => handleDelete(params.row._id)}
-            aria-label="delete"
-          >
+          <IconButton onClick={() => handleDelete(params.row._id)} aria-label="delete">
             <DeleteIcon />
           </IconButton>
         </Box>
@@ -122,8 +110,10 @@ const Entreprises = () => {
         mt="40px"
         height="75vh"
         sx={{
+          overflowX: "auto",
           "& .MuiDataGrid-root": {
             border: "none",
+            minWidth: isNonMobile ? "none" : "1000px",
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",

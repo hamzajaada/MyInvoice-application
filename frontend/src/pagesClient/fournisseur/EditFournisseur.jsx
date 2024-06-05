@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { TextField, useTheme, Button, Box } from "@mui/material";
+import { TextField, useTheme, Button, Box, useMediaQuery } from "@mui/material";
 import Header from "componentsAdmin/Header";
-import { useUpdateFournisseurMutation, useGetOneFournisseurQuery } from "state/api";
+import {
+  useUpdateFournisseurMutation,
+  useGetOneFournisseurQuery,
+} from "state/api";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const EditFournisseur = () => {
-  const navigate = useNavigate()
-  if(!localStorage.getItem('userId')) {
-    navigate('/');
+  const navigate = useNavigate();
+  if (!localStorage.getItem("userId")) {
+    navigate("/");
   }
   const theme = useTheme();
   const [fournisseur, setFournisseur] = useState({
@@ -17,8 +20,8 @@ const EditFournisseur = () => {
     phone: "",
     address: "",
   });
-  const {id} = useParams();
-  const {data : fournisseurData} =useGetOneFournisseurQuery(id);
+  const { id } = useParams();
+  const { data: fournisseurData } = useGetOneFournisseurQuery(id);
   const [editFournisseur] = useUpdateFournisseurMutation();
   const userName = localStorage.getItem("userName");
 
@@ -34,9 +37,12 @@ const EditFournisseur = () => {
 
   const handleDelete = async () => {
     try {
-      if(fournisseurData) {
-        const {data} = await editFournisseur({ id, fournisseur: { ...fournisseurData, active: false } });
-        if(data.success) {
+      if (fournisseurData) {
+        const { data } = await editFournisseur({
+          id,
+          fournisseur: { ...fournisseurData, active: false },
+        });
+        if (data.success) {
           toast.success("Fournisseur supprimé avec succès");
           navigate(`/${userName}/fournisseurs`);
         } else {
@@ -52,8 +58,8 @@ const EditFournisseur = () => {
     event.preventDefault();
     try {
       console.log(fournisseur);
-      const {data} = await editFournisseur({ id, fournisseur });
-      if(data.success) {
+      const { data } = await editFournisseur({ id, fournisseur });
+      if (data.success) {
         toast.success("Fournisseur modifié avec succès");
         navigate(`/${userName}/fournisseurs`);
       } else {
@@ -64,14 +70,22 @@ const EditFournisseur = () => {
     }
   };
 
+  const isNonMobile = useMediaQuery("(min-width: 600px)");
+
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="MODIFICATION DU FOURNISSEU" subtitle="modification d'un fournisseur" />
-      <form onSubmit={handleSubmit} sx={{
-        backgroundImage: "none",
-        backgroundColor: theme.palette.background.alt,
-        borderRadius: "0.55rem",
-      }} >
+      <Header
+        title="MODIFICATION DU FOURNISSEU"
+        subtitle="modification d'un fournisseur"
+      />
+      <form
+        onSubmit={handleSubmit}
+        sx={{
+          backgroundImage: "none",
+          backgroundColor: theme.palette.background.alt,
+          borderRadius: "0.55rem",
+        }}
+      >
         <TextField
           label="Nom de client"
           name="name"
@@ -110,12 +124,19 @@ const EditFournisseur = () => {
           required
           margin="normal"
         />
-        
-        <Box mt={2}>
-        <Button type="submit" variant="contained" color="primary">
+
+        <Box mt={2} display={isNonMobile ? "block" : "flex"}>
+          <Button type="submit" variant="contained" color="primary">
             Modifier le fournisseur
           </Button>
-          <Button type="button" onClick={handleDelete} aria-label="delete" sx={{ ml: 2 }} variant="contained" color="primary">
+          <Button
+            type="button"
+            onClick={handleDelete}
+            aria-label="delete"
+            sx={{ ml: 2 }}
+            variant="contained"
+            color="primary"
+          >
             Supprimer le fournisseur
           </Button>
         </Box>
@@ -125,4 +146,3 @@ const EditFournisseur = () => {
 };
 
 export default EditFournisseur;
-

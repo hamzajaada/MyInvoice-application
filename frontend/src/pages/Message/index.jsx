@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Box, useTheme, IconButton } from "@mui/material";
-import axios from "axios"; // Importer axios
+import { Box, useTheme, IconButton, useMediaQuery } from "@mui/material";
+import axios from "axios"; 
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -16,6 +16,7 @@ const Messages = () => {
   }
   const [messages, setMessages] = useState([]);
   const theme = useTheme();
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
   const [updateMessage] = useUpdateMessageMutation();
   useEffect(() => {
     const fetchMessages = async () => {
@@ -110,11 +111,15 @@ const Messages = () => {
         mt="40px"
         height="75vh"
         sx={{
+          overflowX: "auto",
           "& .MuiDataGrid-root": {
             border: "none",
+            minWidth: isNonMobile ? "none" : "1000px",
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+            backgroundColor: theme.palette.background.test,
+            lineHeight: "2rem",
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,

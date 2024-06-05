@@ -7,6 +7,7 @@ import {
   FormControl,
   InputLabel,
   Input,
+  useMediaQuery
 } from "@mui/material";
 import Header from "componentsAdmin/Header";
 import {
@@ -23,6 +24,7 @@ const EditModel = () => {
     navigate("/");
   }
   const theme = useTheme();
+  const isNonMobile = useMediaQuery("(min-width: 400px)");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [icon, setIcon] = useState([]);
@@ -149,7 +151,7 @@ const EditModel = () => {
             accept="image/*"
           />
         </FormControl>
-        <Box mt={2}>
+        <Box mt={2} display={isNonMobile ? "flex" : "block"} >
           <Button type="submit" variant="contained" color="primary">
             Modifier le model
           </Button>

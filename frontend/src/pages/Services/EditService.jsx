@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TextField, Box, Button, useTheme } from "@mui/material";
+import { TextField, Box, Button, useTheme, useMediaQuery } from "@mui/material";
 import Header from "componentsAdmin/Header";
 import { useUpdateServiceMutation, useGetOneServiceQuery } from "state/api";
 import { useNavigate, useParams } from "react-router-dom";
@@ -60,6 +60,8 @@ const EditService = () => {
     }
   };
 
+  const isNonMobile = useMediaQuery("(min-width: 400px)");
+
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="MODIFIER SERVICE" subtitle="Modification d'une service" />
@@ -77,7 +79,7 @@ const EditService = () => {
           required
           margin="normal"
         />
-        <Box mt={2}>
+        <Box mt={2} display={isNonMobile ? "flex" : "block"}>
           <Button type="submit" variant="contained" color="primary">
           Modification de service
           </Button>
