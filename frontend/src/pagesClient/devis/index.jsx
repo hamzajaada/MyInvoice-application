@@ -229,7 +229,7 @@ const Devis = () => {
           >
             <EmailIcon />
           </IconButton>
-          {generatePdf === true ? (
+          {/*{generatePdf === true ? (*/}
             <IconButton
               onClick={() => {
                 setSelectedInvoiceId(params.row._id);
@@ -239,9 +239,9 @@ const Devis = () => {
             >
               <PrintIcon />
             </IconButton>
-          ) : (
+         {/* ) : (
             ""
-          )}
+          )}*/}
           <IconButton
             onClick={() => handleDelete(params.row._id)}
             aria-label="delete"
