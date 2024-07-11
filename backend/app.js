@@ -45,7 +45,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("Public"));
-app.use(session({   // Utilisation de express-session
+app.use(session({   
   secret: "secret",
   resave: false,
   saveUninitialized: false
@@ -92,6 +92,5 @@ cron.schedule(
 );
 
 app.listen(Port, () => {
-  
   console.log("the platform is running well");
 });

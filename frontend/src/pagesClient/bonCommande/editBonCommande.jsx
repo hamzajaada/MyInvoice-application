@@ -426,7 +426,7 @@ const EditBonCommande = () => {
         </Card>
         <Box mt={2} display="flex" justifyContent="flex-end">
           <Button type="submit" variant="contained" color="primary">
-            Modifier la facture
+            Modifier le bon de commande
           </Button>
           <Button
             onClick={handleDelete}
@@ -435,7 +435,7 @@ const EditBonCommande = () => {
             color="primary"
             style={{ marginLeft: "1rem" }}
           >
-            Supprimer la facture
+            Supprimer le bon de commande
           </Button>
         </Box>
         <Box mt={2} display="flex" justifyContent="flex-end">

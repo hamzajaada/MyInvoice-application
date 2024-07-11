@@ -50,7 +50,7 @@ const AddBonCommande = () => {
     if (productsData && taxData) {
       calculateTotalAmount();
     }
-  }, [bonCommande.items, bonCommande.taxes, productsData, taxData]);
+  }, [bonCommande.items, bonCommande.taxes, productsData, taxData, ]);
 
   const calculateTotalAmount = () => {
     let totalAmount = 0;
