@@ -1,6 +1,7 @@
 const Subscription = require("../Models/SubscriptionSchema");
 const nodemailer = require("nodemailer");
 const Enterprise = require("../Models/EntrepriseSchema");
+
 const addSubscription = async (req, res) => {
   try {
     const subscriptionData = req.body;

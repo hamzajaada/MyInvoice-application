@@ -1,8 +1,5 @@
 const Devi = require("../Models/DeviModel");
-<<<<<<< HEAD
-=======
 const Client = require("../Models/ClientSchema");
->>>>>>> 67d75b4aba854c5231565b1c6123a96b756bcbbb
 const Product = require("../Models/ProductSchema");
 const nodemailer = require("nodemailer");
 
