@@ -9,11 +9,11 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  useMediaQuery,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetOnePackQuery, useUpdateDeviMutation } from "state/api";
 import Header from "componementClient/Header";
-import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
 import FlexBetween from "componentsAdmin/FlexBetween";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { Link } from "react-router-dom";
@@ -47,6 +47,8 @@ const Devis = () => {
   const [generatePdf, setGeneratePdf] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
+  const isNoMobile = useMediaQuery("(min-width: 680px)");
 
   useEffect(() => {
     if (packData) {
@@ -229,7 +231,7 @@ const Devis = () => {
           >
             <EmailIcon />
           </IconButton>
-          {/*{generatePdf === true ? (*/}
+          {generatePdf === true ? (
             <IconButton
               onClick={() => {
                 setSelectedInvoiceId(params.row._id);
@@ -239,9 +241,9 @@ const Devis = () => {
             >
               <PrintIcon />
             </IconButton>
-         {/* ) : (
+         ) : (
             ""
-          )}*/}
+          )}
           <IconButton
             onClick={() => handleDelete(params.row._id)}
             aria-label="delete"
@@ -302,6 +304,7 @@ const Devis = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
+      {isNoMobile ? (
       <FlexBetween>
         <Header
           title="DEVIS"
@@ -319,14 +322,42 @@ const Devis = () => {
           </Button>
         </Link>
       </FlexBetween>
+      ) : (
+        <>
+          <Box sx={{ display: "flex"}}>
+            <Header
+              title="DEVIS"
+              subtitle="Liste des bons des "
+              total={Devis ? Devis.length : 0}
+            />
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Link to={`/${userName}/devis/new`}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddOutlinedIcon />}
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Ajouter un Devi
+              </Button>
+            </Link>
+          </Box>
+        </>
+    )}
       <Box
-        height="80vh"
+      mt={1}
+      height="80vh"
         sx={{
+          overflowX: "auto",
           "& .MuiDataGrid-root": {
             border: "none",
+            minWidth: isNonMobile ? "none" : "1000px",
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+            backgroundColor: theme.palette.background.test,
+            lineHeight: "2rem",
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,

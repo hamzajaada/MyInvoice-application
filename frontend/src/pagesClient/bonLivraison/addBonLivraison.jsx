@@ -11,7 +11,7 @@ import {
   Grid,
 } from "@mui/material";
 import Header from "componentsAdmin/Header";
-// import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { toast } from "react-toastify";
 import { useAddBonLivraisonMutation, useGetBonCommandesQuery } from "state/api";
 import { useNavigate } from "react-router-dom";
 
@@ -48,22 +48,23 @@ const AddBonLivraison = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      // Récupérer les détails de la commande à partir de son ID
       const bonCommandeId = bonLivraison.bonCommandeId;
       const bonCommandeDetails = bonCommandesData.find(
         (bonCommande) => bonCommande._id === bonCommandeId
       );
-      // Vérifier si les détails de la commande existent
       if (bonCommandeDetails) {
-        // Récupérer le montant de la commande
         const amount = bonCommandeDetails.amount;
         console.log('amount : ', amount);
-        // Ajouter le bon de livraison avec le montant de la commande
-        await AddBonLivraison({ bonLivraison: { ...bonLivraison, amount } });
-        console.log(bonLivraison);
-        Navigate(`/${userName}/bon-livraison`);
+        const {data} = await AddBonLivraison({ bonLivraison: { ...bonLivraison, amount } });
+        if (data.success) {
+          toast.success("Bon de livraison ajouté avec succès");
+          Navigate(`/${userName}/bon-livraison`);
+        } else {
+          toast.error("Le bon de livraison ne pas ajouté avec succès");
+        }
+        
       } else {
-        console.error("Détails de la commande non trouvés.");
+        console.error("Détails de la livraison non trouvés.");
       }
     } catch (error) {
       console.log(error);

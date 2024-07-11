@@ -145,12 +145,10 @@ const EditBonCommande = () => {
         bonCommandeData: updatedBonCommande,
       });
       if (data.success) {
-        toast.success(
-          "La modification de bon de commande se passe correctement"
-        );
+        toast.success("Bon de commande modifié avec succès");
         navigate(`/${userName}/bon-commandes`);
       } else {
-        toast.error("La modification de bon de commande ne s'est pas réussie");
+        toast.error("Le bon de commande ne pas modifié avec succès");
       }
     } catch (error) {
       console.log(error);
@@ -180,12 +178,10 @@ const EditBonCommande = () => {
           bonCommandeData: newBon,
         });
         if (data.success) {
-          toast.success(
-            "La suppresion de bon de commande se passe correctement"
-          );
+          toast.success("Bon de commande supprimé avec succès");
           navigate(`/${userName}/bon-commandes`);
         } else {
-          toast.error("La suppresion de bon de commande ne s'est pas réussie");
+          toast.error("Le bon de commande ne pas supprimé avec succès");
         }
       }
     } catch (error) {
@@ -430,7 +426,7 @@ const EditBonCommande = () => {
         </Card>
         <Box mt={2} display="flex" justifyContent="flex-end">
           <Button type="submit" variant="contained" color="primary">
-            Modifier la facture
+            Modifier le bon de commande
           </Button>
           <Button
             onClick={handleDelete}
@@ -439,7 +435,7 @@ const EditBonCommande = () => {
             color="primary"
             style={{ marginLeft: "1rem" }}
           >
-            Supprimer la facture
+            Supprimer le bon de commande
           </Button>
         </Box>
         <Box mt={2} display="flex" justifyContent="flex-end">

@@ -95,7 +95,7 @@ const BreakdownChart = ({ idBreakDownChart }) => {
             anchor: "bottom",
             direction: "row",
             justify: false,
-            translateX: 8,
+            translateX: -2,
             translateY: 50,
             itemsSpacing: 40,
             itemWidth: 85,

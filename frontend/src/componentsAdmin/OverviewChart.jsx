@@ -1,26 +1,22 @@
 import React, { useMemo } from "react";
 import { ResponsiveLine } from "@nivo/line";
 import { useTheme } from "@mui/material";
-import { useGetEntrepriseStateQuery } from "state/api";
 
-const OverviewChart = ({ isDashboard = false }) => {
+const OverviewChart = ({ isDashboard = false,  donnee }) => {
   const theme = useTheme();
-  const { data, isLoading } = useGetEntrepriseStateQuery();
 
   const enterpriseData = useMemo(() => {
-    if (!data) return [];
+    if (!donnee) return [];
 
-    return data.map((entry) => ({
-      x: `${entry._id.month}/${entry._id.year}`,
+    return donnee.map((entry) => ({
+      x: `${entry.month}/${entry.year}`,
       y: entry.count,
     }));
-  }, [data]);
-
-  if (isLoading) return "Loading...";
+  }, [donnee]);
 
   return (
     <ResponsiveLine
-      data={[{ id: "Compte d'entreprise", color: theme.palette.secondary.main, data: enterpriseData }]}
+      data={[{ id: "Nombre d'entreprise", color: theme.palette.secondary.main, data: enterpriseData }]}
       theme={{
         axis: {
           domain: {
@@ -54,7 +50,7 @@ const OverviewChart = ({ isDashboard = false }) => {
           },
         },
       }}
-      margin={{ top: 20, right: 50, bottom: 50, left: 70 }}
+      margin={{ top: 20, right: 50, bottom: 80, left: 70 }}
       xScale={{ type: "point" }}
       yScale={{
         type: "linear",
@@ -78,7 +74,7 @@ const OverviewChart = ({ isDashboard = false }) => {
         tickPadding: 5,
         tickRotation: 0,
         legend: isDashboard ? "Mois" : "",
-        legendOffset: 36,
+        legendOffset: 50,
         legendPosition: "middle",
       }}
       axisLeft={{
@@ -87,7 +83,7 @@ const OverviewChart = ({ isDashboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? "Compte d'entreprise" : "",
+        legend: isDashboard ? "Nombre d'entreprise" : "",
         legendOffset: -60,
         legendPosition: "middle",
       }}
@@ -100,8 +96,9 @@ const OverviewChart = ({ isDashboard = false }) => {
       pointLabelYOffset={-12}
       useMesh={true}
       legends={
-        !isDashboard 
-          ? undefined : [
+        !isDashboard
+          ? undefined
+          : [
               {
                 anchor: "bottom-right",
                 direction: "column",
@@ -110,7 +107,7 @@ const OverviewChart = ({ isDashboard = false }) => {
                 translateY: -160,
                 itemsSpacing: 0,
                 itemDirection: "left-to-right",
-                itemWidth: 80,
+                itemWidth: 120,
                 itemHeight: 20,
                 itemOpacity: 0.75,
                 symbolSize: 12,
@@ -127,10 +124,10 @@ const OverviewChart = ({ isDashboard = false }) => {
                 ],
               },
             ]
-           
       }
     />
   );
 };
 
 export default OverviewChart;
+

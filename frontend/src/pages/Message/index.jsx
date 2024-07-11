@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Box, useTheme, IconButton } from "@mui/material";
-import axios from "axios"; // Importer axios
+import { Box, useTheme, IconButton, useMediaQuery } from "@mui/material";
+import axios from "axios"; 
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 import AddTaskOutlinedIcon from '@mui/icons-material/AddTaskOutlined';
 import { useUpdateMessageMutation } from "state/api";
+import { toast } from "react-toastify";
 
 const Messages = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Messages = () => {
   }
   const [messages, setMessages] = useState([]);
   const theme = useTheme();
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
   const [updateMessage] = useUpdateMessageMutation();
   useEffect(() => {
     const fetchMessages = async () => {
@@ -31,7 +33,12 @@ const Messages = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/Api/Message/remove/${id}`);
+      const {data} = await axios.delete(`http://localhost:3001/Api/Message/remove/${id}`);
+      if(data.success) {
+        toast.success("Message supprimé avec succès");
+      } else {
+        toast.error("Le message ne pas supprimé avec succès");
+      }
       setMessages(messages.filter((message) => message._id !== id));
     } catch (error) {
       console.log(error);
@@ -42,7 +49,12 @@ const Messages = () => {
     const thisMessage = messages.find((message) => message._id === id);
     if(thisMessage) {
       thisMessage.status = "accepter";
-      await updateMessage({ id, MessageData : thisMessage });
+      const {data} = await updateMessage({ id, MessageData : thisMessage });
+      if(data.success) {
+        toast.success("Message accepté avec succès");
+      } else {
+        toast.error("Le message né accpeté pas avec succès");
+      }
     }
   };
 
@@ -99,11 +111,15 @@ const Messages = () => {
         mt="40px"
         height="75vh"
         sx={{
+          overflowX: "auto",
           "& .MuiDataGrid-root": {
             border: "none",
+            minWidth: isNonMobile ? "none" : "1000px",
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+            backgroundColor: theme.palette.background.test,
+            lineHeight: "2rem",
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,

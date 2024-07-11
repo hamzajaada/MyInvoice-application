@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, useTheme, Button, IconButton } from "@mui/material";
+import { useMediaQuery, Box, useTheme, Button, IconButton } from "@mui/material";
 import {  useUpdateCategorieMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
@@ -22,8 +22,9 @@ const Categories = () => {
   const userName = localStorage.getItem("userName");
   const [Categorie, setCategorie] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
+  const isNoMobile = useMediaQuery("(min-width: 680px)");
 
-  // hadi
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -99,6 +100,7 @@ const Categories = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
+       {isNoMobile ? (
       <FlexBetween>
         <Header title="CATEGORIES" subtitle="Liste des Catégories" />
         <Link to={`/${userName}/categories/new`}>
@@ -112,16 +114,41 @@ const Categories = () => {
           </Button>
         </Link>
       </FlexBetween>
-
+ ) : (
+  <>
+      <Box sx={{ display: "flex"}}>
+        <Header
+          title="CATEGORIES"
+          subtitle="Liste des Catégories"
+        />
+      </Box>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+      <Link to={`/${userName}/categories/new`}>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddOutlinedIcon />}
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Ajouter une Catégorie
+          </Button>
+        </Link>
+      </Box>
+    </>
+)}
       <Box
-        mt="40px"
-        height="75vh"
+        mt={1}
+        height="80vh"
         sx={{
+          overflowX: "auto",
           "& .MuiDataGrid-root": {
             border: "none",
+            minWidth: isNonMobile ? "none" : "1000px",
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+            backgroundColor: theme.palette.background.test,
+            lineHeight: "2rem",
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,

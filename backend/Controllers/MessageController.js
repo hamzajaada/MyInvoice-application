@@ -12,11 +12,8 @@ const addMessage = async (req, res) => {
 }
 
 const  getAllMessages = async (req, res) => {
-  console.log("hello from msgs");
   try {
-
     const  messages = await Message.find().populate('userId', ['name', 'logo']);
-    console.log("message :"+messages);
     const organizedmessages = messages.map(message => {
       const createdAt = new Date(message.createdAt).toLocaleDateString('fr-FR');
       return {
@@ -68,7 +65,7 @@ const  getOneMessage = async (req, res) => {
 const  updateMessage = async (req,res)=>{
   try {
     const  message = await Message.findByIdAndUpdate(req.params.id, req.body, {new: true});
-    res.status(201).json(message);
+    res.status(201).json({success: true, message});
   } catch (error) {
     res.status(500).send("Erreur serveur lors de la mise à jour de Message");
   }
@@ -77,7 +74,7 @@ const  updateMessage = async (req,res)=>{
 const  removeMessage = async (req, res) => {
   try {
     const  message = await Message.findByIdAndDelete(req.params.id);
-    res.status(201).json(message);
+    res.status(201).json({success: true, message});
   } catch (error) {
     res.status(500).send("Erreur serveur lors de la suppression de Message");
   }

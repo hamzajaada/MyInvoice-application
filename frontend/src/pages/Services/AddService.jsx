@@ -3,6 +3,7 @@ import { TextField, useTheme, Button, Box } from "@mui/material";
 import Header from "componentsAdmin/Header";
 import { useAddServiceMutation } from "state/api";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AddService = () => {
   const navigate = useNavigate()
@@ -21,8 +22,14 @@ const AddService = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await addService( { ServiceName: serviceName });
-      Navigate("/Services");
+      const {data} = await addService( { ServiceName: serviceName });
+      if (data.success) {
+        toast.success("Service ajouté avec success");
+        Navigate("/Services");
+      } else {
+        toast.error("Le service ne s'ajoute pas avec success");
+        console.log(data.error);
+      }
     } catch (error) {
       console.log(error);
     }

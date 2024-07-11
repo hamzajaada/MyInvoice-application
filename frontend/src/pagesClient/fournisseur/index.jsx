@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
-
-import { Box, useTheme, IconButton, Button,  useMediaQuery } from "@mui/material";
+import {
+  Box,
+  useTheme,
+  IconButton,
+  Button,
+  useMediaQuery,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import {useUpdateFournisseurMutation} from "state/api";
+import { useUpdateFournisseurMutation } from "state/api";
 import Header from "componementClient/Header";
-import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
+// import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
 import PersonIcon from "@mui/icons-material/Person";
 import FlexBetween from "componentsAdmin/FlexBetween";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -26,7 +31,9 @@ const Fournisseurs = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/Api/Fournisseur/Entreprise/${id}`);
+        const response = await axios.get(
+          `http://localhost:3001/Api/Fournisseur/Entreprise/${id}`
+        );
         setFourinsseur(response.data);
         setIsLoading(false);
       } catch (error) {
@@ -40,7 +47,7 @@ const Fournisseurs = () => {
     } else {
       navigate("/");
     }
-  }, [id, navigate]); 
+  }, [id, navigate]);
   const [updateFournisseur] = useUpdateFournisseurMutation();
   const columns = [
     {
@@ -111,57 +118,83 @@ const Fournisseurs = () => {
 
   const handleDelete = async (id) => {
     try {
-      const thisFournisseur = Fourinsseur.find((f) => f._id === id)
-      if(thisFournisseur) {
-        thisFournisseur.active = false
-        const {data} = await updateFournisseur({id, fournisseur: thisFournisseur})
-        if(data.success) {
-          toast.success("La suppresion de fournisseur se passe correctement");
+      const thisFournisseur = Fourinsseur.find((f) => f._id === id);
+      if (thisFournisseur) {
+        thisFournisseur.active = false;
+        const { data } = await updateFournisseur({
+          id,
+          fournisseur: thisFournisseur,
+        });
+        if (data.success) {
+          toast.success("Fournisseur supprimé avec succès");
           setFourinsseur(Fourinsseur.filter((f) => f._id !== id));
         } else {
-          toast.error("La suppresion de fournisseur ne s'est pas passé correctement");
+          toast.error("Le fournisseur ne pas supprimé avec succès");
         }
       }
-      // window.location.reload();
     } catch (error) {
       console.log(error);
     }
   };
 
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
+  const isNoMobile = useMediaQuery("(min-width: 500px)");
+
   return (
     <Box m="1.5rem 2.5rem">
-      <FlexBetween>
-        <Header
-          title="FOURNISSEURS"
-          subtitle="Liste des fournisseus"
-          total={Fourinsseur ? Fourinsseur.length : 0}
-        />
-        <Link to={`/${userName}/fournisseurs/new`}>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddOutlinedIcon />}
-            sx={{ 
-              mt: 3, 
-              mb: 2,
-              fontSize: isSmallScreen ? "11px" : "14px",
-              fontWeight: "bold",
-              padding: isSmallScreen ? "8px 14px" : "10px 20px",
-             }}
-          >
-            Ajoute de fournisseur
-          </Button>
-        </Link>
-      </FlexBetween>
-
+      {isNoMobile ? (
+        <FlexBetween>
+          <Header
+            title="FOURNISSEURS"
+            subtitle="Liste des fournisseus"
+            total={Fourinsseur ? Fourinsseur.length : 0}
+          />
+          <Link to={`/${userName}/fournisseurs/new`}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddOutlinedIcon />}
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Ajoute de fournisseur
+            </Button>
+          </Link>
+        </FlexBetween>
+      ) : (
+        <>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Header
+              title="FOURNISSEURS"
+              subtitle="Liste des fournisseus"
+              total={Fourinsseur ? Fourinsseur.length : 0}
+            />
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <Link to={`/${userName}/fournisseurs/new`}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddOutlinedIcon />}
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Ajoute de fournisseur
+              </Button>
+            </Link>
+          </Box>
+        </>
+      )}
       <Box
         height="80vh"
         sx={{
+          overflowX: "auto",
           "& .MuiDataGrid-root": {
             border: "none",
+            minWidth: isNonMobile ? "none" : "1000px",
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+            backgroundColor: theme.palette.background.test,
+            lineHeight: "2rem",
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,
@@ -182,15 +215,15 @@ const Fournisseurs = () => {
         }}
       >
         <DataGrid
-          loading={isLoading }
+          loading={isLoading}
           getRowId={(row) => row._id}
           rows={Fourinsseur}
           columns={columns}
-          rowsPerPageOptions={[20, 50, 100]}
-          pagination
-          paginationMode="server"
-          sortingMode="server"
-          components={{ Toolbar: DataGridCustomToolbar }}
+          // rowsPerPageOptions={[20, 50, 100]}
+          // pagination
+          // paginationMode="server"
+          // sortingMode="server"
+          // components={{ Toolbar: DataGridCustomToolbar }}
         />
       </Box>
     </Box>

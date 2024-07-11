@@ -124,10 +124,10 @@ const Packs = () => {
         thisPack.active = false;
         const {data} = await updatePack({ id, pack: thisPack });
         if(data.success) {
-          toast.success("La suppresion de pack se passe correctement");
+          toast.success("Pack supprimé avec succès");
           setPacks(packs.filter((pack) => pack._id !== id));
         } else {
-          toast.error("La suppresion de pack ne s'est pas passé correctement");
+          toast.error("Le pack ne pas supprimé avec succès");
         }
         
       }

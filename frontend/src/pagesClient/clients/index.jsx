@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, useTheme, IconButton, Button } from "@mui/material";
+import { useMediaQuery, Box, useTheme, IconButton, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useUpdateClientMutation } from "state/api";
 import Header from "componementClient/Header";
@@ -22,6 +22,10 @@ const Clients  = () => {
   // hadi
   const [Client, setClient] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
+  const isNoMobile = useMediaQuery("(min-width: 680px)");
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -131,8 +135,9 @@ const Clients  = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
+      {isNoMobile ? (
       <FlexBetween>
-      <Header title="CLIENTS" subtitle="Liste entier des "   total={Client ? Client.length : 0} />
+      <Header title="CLIENTS" subtitle="Liste entier de vos "   total={Client ? Client.length : 0} />
         <Link to={`/${userName}/ajouterClient`}>
           <Button
             variant="contained"
@@ -144,16 +149,43 @@ const Clients  = () => {
           </Button>
         </Link>
       </FlexBetween>
-      
+       ) : (
+        <>
+            <Box sx={{ display: "flex"}}>
+              <Header
+                title="CLIENTS"
+                subtitle="Liste entier de vos "
+                total={Client ? Client.length : 0}
+              />
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Link to={`/${userName}/ajouterClient`}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<AddOutlinedIcon />}
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Ajouter un client
+                </Button>
+              </Link>
+            </Box>
+          </>
+      )}
       <Box
-        height="80vh"
-        sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none",
-          },
+         mt={1}
+         height="80vh"
+         sx={{
+           overflowX: "auto",
+           "& .MuiDataGrid-root": {
+             border: "none",
+             minWidth: isNonMobile ? "none" : "1000px",
+           },
+           "& .MuiDataGrid-cell": {
+             borderBottom: "none",
+             backgroundColor: theme.palette.background.test,
+             lineHeight: "2rem",
+           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,
             color: theme.palette.secondary[100],

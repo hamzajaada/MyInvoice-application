@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGetInvoiceDetailsQuery } from "state/api";
 import { useParams, useNavigate } from "react-router-dom";
-import { CircularProgress, Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, useTheme, Button } from "@mui/material";
+import { useMediaQuery, CircularProgress, Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, useTheme, Button } from "@mui/material";
 import Header from "componentsAdmin/Header";
 
 const DetailsInvoice = () => {
@@ -9,6 +9,7 @@ const DetailsInvoice = () => {
   if (!localStorage.getItem('userId')) {
     navigate('/');
   }
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
   const { id } = useParams();
   const { data, isLoading } = useGetInvoiceDetailsQuery(id);
   const theme = useTheme();
@@ -52,16 +53,16 @@ const DetailsInvoice = () => {
       <Header title="DETAILS DU FACTURE" subtitle="Détails de facture que vous avez sélectionné" />
       <Box m={2} />
       <Paper elevation={3} style={{ padding: theme.spacing(3), marginBottom: theme.spacing(3) }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box display={isNonMobile ? "flex" : "block"}  justifyContent="space-between" alignItems="center">
           <Box bgcolor="gray" borderRadius={4} p={2} >
             <Typography variant="h5" sx={{ color: "white", fontWeight: "bold" }}>Numéro de Facture: #{_id}</Typography>
           </Box>
-          <Box bgcolor={getStatusColor(invoiceStatus)} borderRadius={4} p={2}>
+          <Box bgcolor={getStatusColor(invoiceStatus)} marginTop={isNonMobile ? "0" : "10px"} marginLeft={isNonMobile ? "2px" : "0"} borderRadius={4} p={2}>
             <Typography variant="h6" sx={{ color: "white", fontWeight: "bold" }}>Status: {invoiceStatus}</Typography>
           </Box>
         </Box>
-        <Box display="flex" justifyContent="center" mt={3}>
-          <Box width="50%" borderRadius={4} border={`1px solid ${theme.palette.grey[300]}`} p={2} mr={2}>
+        <Box display={isNonMobile ? "flex" : "block"} justifyContent="center" mt={3}>
+          <Box width={isNonMobile ? "49%": "100%"} borderRadius={4} border={`1px solid ${theme.palette.grey[300]}`} p={2} mr={2}>
           <Typography variant="h6" fontWeight="bold" color={theme.palette.secondary[300]}>INFORMATIONS D'ENTREPRISE :<br/><br/></Typography>
             {userLogo &&<Box component="img" alt="profile" src={`${userLogo.url}`} height="40px" width="40px" borderRadius="50%" sx={{ objectFit: "cover" }} />}
             <Box ml={2}><br /></Box>
@@ -70,7 +71,12 @@ const DetailsInvoice = () => {
             <Typography variant="body1" fontWeight= "bold">Téléphone:  {userPhone}</Typography>
             <Typography variant="body1" fontWeight= "bold">Addresse:  {userAddress}</Typography>
           </Box>
-          <Box width="50%" borderRadius={4} border={`1px solid ${theme.palette.grey[300]}`} p={2}>
+          <Box 
+            width={isNonMobile ? "49%": "100%"}
+            marginTop={isNonMobile ? "0" : "10px"}
+            borderRadius={4}
+            border={`1px solid ${theme.palette.grey[300]}`}
+            p={2}>
             <Typography variant="h6" fontWeight="bold" color={theme.palette.secondary[300]}>INFORMATIONS DU CLIENT : <br/><br/><br/></Typography>
             <Typography variant="body1" fontWeight= "bold">Nom:  {clientName}</Typography>
             <Typography variant="body1" fontWeight= "bold">Email:  {clientEmail}</Typography>

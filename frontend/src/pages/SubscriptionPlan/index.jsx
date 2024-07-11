@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Box, useTheme, IconButton } from "@mui/material";
-// import {  useRemoveSubscriptionMutation } from "state/api";
+import { Box, useTheme, IconButton, useMediaQuery } from "@mui/material";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
-// import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 
 const SubscriptionPalns = () => {
@@ -67,7 +65,7 @@ const SubscriptionPalns = () => {
     },
     {
       field: "status",
-      headerName: "Statue",
+      headerName: "Statue d'abonnement",
       flex: 0.5,
     },
     {
@@ -98,6 +96,8 @@ const SubscriptionPalns = () => {
     window.location.href = `/SubscriptionsPlans/edit/${id}`;
   };
 
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
+
   // const handleDelete = async (id) => {
   //   try {
   //     await removeSubscription(id);
@@ -114,11 +114,15 @@ const SubscriptionPalns = () => {
         mt="40px"
         height="75vh"
         sx={{
+          overflowX: "auto",
           "& .MuiDataGrid-root": {
             border: "none",
+            minWidth: isNonMobile ? "none" : "1000px",
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+            backgroundColor: theme.palette.background.test,
+            lineHeight: "2rem",
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,

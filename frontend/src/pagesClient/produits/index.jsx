@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-
-import { Box, useTheme, Button, IconButton } from "@mui/material";
+import { useMediaQuery, Box, useTheme, Button, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import {  useUpdateProduitMutation } from "state/api";
 import Header from "componementClient/Header";
-import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FlexBetween from "componentsAdmin/FlexBetween";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
@@ -21,6 +19,8 @@ const Products  = () => {
   const userName = localStorage.getItem("userName");
 
   const navigate = useNavigate();
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
+  const isNoMobile = useMediaQuery("(min-width: 680px)");
 
   const [Product, setProduct] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -147,7 +147,7 @@ const Products  = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      
+      {isNoMobile ? (
       <FlexBetween>
         <Header title="PRODUITS" subtitle="Liste entier de vos "   total= {Product ? Product.length : 0} />        
         <Link to={`/${userName}/ajouterProduit`}>
@@ -161,15 +161,43 @@ const Products  = () => {
           </Button>
         </Link>
       </FlexBetween>
+          ) : (
+            <>
+                <Box sx={{ display: "flex"}}>
+                  <Header
+                    title="PRODUITS"
+                    subtitle="Liste entier de vos "
+                    total= {Product ? Product.length : 0}
+                  />
+                </Box>
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Link to={`/${userName}/ajouterProduit`}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      startIcon={<AddOutlinedIcon />}
+                      sx={{ mt: 3, mb: 2 }}
+                    >
+                      Ajouter un produit
+                    </Button>
+                  </Link>
+                </Box>
+              </>
+          )}
       {/* <AddButton label="Nouveau Produit"  /> */}
       <Box
+        mt={1}
         height="80vh"
         sx={{
+          overflowX: "auto",
           "& .MuiDataGrid-root": {
             border: "none",
+            minWidth: isNonMobile ? "none" : "1000px",
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+            backgroundColor: theme.palette.background.test,
+            lineHeight: "2rem",
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TextField, Box, Button, useTheme } from "@mui/material";
+import { TextField, Box, Button, useTheme, useMediaQuery } from "@mui/material";
 import Header from "componentsAdmin/Header";
 import { useUpdateServiceMutation, useGetOneServiceQuery } from "state/api";
 import { useNavigate, useParams } from "react-router-dom";
@@ -33,10 +33,10 @@ const EditService = () => {
     try {
       const { data } = await updateService({ id, ServiceData: { ServiceName: serviceName, active: active } });
       if(data.success) {
-        toast.success("La modification de service se passe correctement");
+        toast.success("Service modifié avec succès");
         navigate("/Services");
       } else {
-        toast.error("La modification de service ne s'est pas dés correctement");
+        toast.error("Le service ne pas modifié avec succès");
       }
     } catch (error) {
       console.log(error);
@@ -49,17 +49,18 @@ const EditService = () => {
         setActive(false)
         const {data} = await updateService({ id, ServiceData: { ServiceName: serviceName, active: active } });
         if(data.success) {
-          toast.success("La suppresion de service se passe correctement");
+          toast.success("Service supprimé avec succès");
           navigate("/Services");
         } else {
-          toast.error("La suppresion de service ne s'est pas dés correctement");
+          toast.error("Le service ne pas supprimé avec succès");
         }
       }
-      
     } catch (error) {
       console.log(error);
     }
   };
+
+  const isNonMobile = useMediaQuery("(min-width: 400px)");
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -78,7 +79,7 @@ const EditService = () => {
           required
           margin="normal"
         />
-        <Box mt={2}>
+        <Box mt={2} display={isNonMobile ? "flex" : "block"}>
           <Button type="submit" variant="contained" color="primary">
           Modification de service
           </Button>

@@ -134,7 +134,7 @@ const Dashboard = () => {
           <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
             Entreprises par mois
           </Typography>
-          <OverviewChart isDashboard={true} />
+          <OverviewChart isDashboard={true} donnee={dashboard && dashboard.enterpriseCountByMonthAndYear} />
         </Box>
       </Box>
     </Box>

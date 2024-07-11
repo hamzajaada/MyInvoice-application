@@ -52,8 +52,9 @@ const Dashboard = () => {
   const genererRapport = "6630fe581c1fec2176ead2c9";
   const { data: packData } = useGetOnePackQuery(packId);
   //const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-  const isNonMediumScreens = useMediaQuery('(min-width: 768px)');
-  const isSmallScreen = useMediaQuery('(max-width: 820px)');
+  const isNonMediumScreens = useMediaQuery('(min-width: 1000px)');
+  const isNoMobile = useMediaQuery("(min-width: 680px)");
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
   const { data, isLoading } = useGetDashboardClientQuery(id);
   const [enterpriseDetails, setEnterpriseDetails] = useState(null);
   const [generateRapport, setGenerateRapport] = useState(false);
@@ -308,7 +309,7 @@ const Dashboard = () => {
     {
       field: "_id",
       headerName: "Numéro de Facture",
-      flex: 0.7,
+      flex: 1,
       renderCell: (params) => (
         <span
           style={{
@@ -328,7 +329,7 @@ const Dashboard = () => {
     {
       field: "clientId",
       headerName: "Client",
-      flex: 1,
+      flex: 0.9,
       renderCell: (params) => params.row.clientId.name,
     },
     {
@@ -428,17 +429,18 @@ const Dashboard = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
+      {isNoMobile ? (
       <FlexBetween>
         <Box>
           <Typography
-            variant={isSmallScreen ? "h4" : "h2"}
+            variant="h2"
             color={theme.palette.secondary[100]}
             fontWeight="bold"
             sx={{ mb: "5px" }}
           >
             TABLEAU DE BORD
           </Typography>
-          <Typography variant={isSmallScreen ? "h6" : "h5"} color={theme.palette.secondary[300]}>
+          <Typography variant="h5" color={theme.palette.secondary[300]}>
             Bienvenue sur votre tableau de bord
           </Typography>
         </Box>
@@ -448,9 +450,9 @@ const Dashboard = () => {
               sx={{
                 backgroundColor: theme.palette.secondary[400],
                 color: theme.palette.secondary[50],
-                fontSize: isSmallScreen ? "11px" : "14px",
-                fontWeight: "bold",
-                padding: isSmallScreen ? "8px 14px" : "10px 20px",
+                fontSize:"14px",
+                fontWeight:"bold",
+                padding:"10px 20px",
               }}
               onClick={generatePDF}
             >
@@ -462,7 +464,43 @@ const Dashboard = () => {
           ""
         )} */}
       </FlexBetween>
-
+    ) : (
+      <>
+        <Box sx={{ display: "block", justifyContent: "center" }}>
+          <Typography
+            variant="h2"
+            color={theme.palette.secondary[100]}
+            fontWeight="bold"
+            sx={{ mb: "5px" }}
+          >
+            TABLEAU DE BORD
+          </Typography>
+          <Typography variant="h5" color={theme.palette.secondary[300]}>
+            Bienvenue sur votre tableau de bord
+          </Typography>
+        </Box>
+        
+        {/*{generateRapport ? ( */}
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <Button
+              sx={{
+                backgroundColor: theme.palette.secondary[400],
+                color: theme.palette.secondary[50],
+                fontSize:"12px",
+                fontWeight:"bold",
+                padding:"10px 15px",
+              }}
+              onClick={generatePDF}
+            >
+              <DownloadOutlined sx={{ mr: "10px" }} />
+              Télécharger Rapports
+            </Button>
+          </Box>
+       {/* ) : (
+          ""
+        )} */}
+         </>
+      )}
       <Box
         mt="20px"
         display="grid"
@@ -529,12 +567,16 @@ const Dashboard = () => {
           gridColumn="span 8"
           gridRow="span 3"
           sx={{
+            overflowX: "auto",
             "& .MuiDataGrid-root": {
               border: "none",
               borderRadius: "5rem",
+              minWidth: isNonMobile ? "none" : "1000px",
             },
             "& .MuiDataGrid-cell": {
               borderBottom: "none",
+              backgroundColor: theme.palette.background.test,
+              lineHeight: "2rem",
             },
             "& .MuiDataGrid-columnHeaders": {
               backgroundColor: theme.palette.background.alt,
@@ -543,7 +585,6 @@ const Dashboard = () => {
             },
             "& .MuiDataGrid-virtualScroller": {
               backgroundColor: theme.palette.background.alt,
-              overflowX: isSmallScreen ? "auto" : "hidden",
             },
             "& .MuiDataGrid-footerContainer": {
               backgroundColor: theme.palette.background.alt,

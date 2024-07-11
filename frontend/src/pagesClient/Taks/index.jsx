@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, useTheme, Button, IconButton } from "@mui/material";
+import { useMediaQuery, Box, useTheme, Button, IconButton } from "@mui/material";
 import { useUpdateTaxMutation } from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
@@ -23,7 +23,7 @@ const Categories = () => {
   const [Taks, setTaks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const userName = localStorage.getItem("userName");
-
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
 
   // hadi
   useEffect(() => {
@@ -127,14 +127,18 @@ const Categories = () => {
       </FlexBetween>
 
       <Box
-        mt="40px"
-        height="75vh"
+        mt={1}
+        height="80vh"
         sx={{
+          overflowX: "auto",
           "& .MuiDataGrid-root": {
             border: "none",
+            minWidth: isNonMobile ? "none" : "1000px",
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+            backgroundColor: theme.palette.background.test,
+            lineHeight: "2rem",
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,

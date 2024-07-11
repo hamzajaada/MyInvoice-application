@@ -6,29 +6,33 @@ import Sidebar from "componementClient/Sidebar";
 import { useGetUserQuery } from "state/api";
 
 const Layout = () => {
-  const isNonMobile = useMediaQuery("(min-width: 600px)");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // boolean for knowing the state of sidebar
-  const userId = localStorage.getItem('userId');
-  const { data } = useGetUserQuery(userId);//get data with the id in state
-  //console.log("Data de l'entreprise",data);
+  const isNonMobile = useMediaQuery("(min-width: 700px)");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const userId = localStorage.getItem("userId");
+  const { data } = useGetUserQuery(userId);
+
   return (
-    <Box  display={isNonMobile ? "flex" : "block"} width="100%" height="100%">
-    <Sidebar
-      user={data || {}}
-      isNonMobile={isNonMobile}
-      drawerWidth="250px"
-      isSidebarOpen={isSidebarOpen}
-      setIsSidebarOpen={setIsSidebarOpen}
-    />
-      <Box flexGrow={1}>
-        <Navbar 
+    <Box display={isNonMobile ? "flex" : "block"} width="100%" height="100%">
+      <Sidebar
         user={data || {}}
+        isNonMobile={isNonMobile}
+        drawerWidth="250px"
         isSidebarOpen={isSidebarOpen}
-        setIsSidebarOpen={setIsSidebarOpen}/>
+        setIsSidebarOpen={setIsSidebarOpen}
+      />
+      <Box
+        flexGrow={1}
+        width={isSidebarOpen && isNonMobile ? "calc(100% - 250px)" : "100%"}
+      >
+        <Navbar
+          user={data || {}}
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
+        />
         <Outlet />
       </Box>
     </Box>
   );
 };
 
-export default Layout ;
+export default Layout;

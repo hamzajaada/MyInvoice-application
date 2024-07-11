@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TextField, useTheme, Button, Box } from "@mui/material";
+import { useMediaQuery, TextField, useTheme, Button, Box } from "@mui/material";
 import Header from "componentsAdmin/Header";
 import { useUpdateClientMutation, useGetOneClientQuery } from "state/api";
 import { useNavigate, useParams } from "react-router-dom";
@@ -65,7 +65,7 @@ const EditClient = () => {
       console.log(error);
     }
   };
-
+  const isNonMobile = useMediaQuery('(min-width: 480px)');
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="MODIFICATION DE CLIENT" subtitle="Modification de Client Sélectionné" />
@@ -118,7 +118,7 @@ const EditClient = () => {
         <Button type="submit" variant="contained" color="primary">
             Modifier le client
           </Button>
-          <Button type="button" onClick={handleDelete} aria-label="delete" sx={{ ml: 2 }} variant="contained" color="primary">
+          <Button type="button" onClick={handleDelete} aria-label="delete" sx={{ display : isNonMobile ? "inline" : "block", ml: isNonMobile ? 2 : 0, mt: isNonMobile ? 0 : 2, }} variant="contained" color="primary">
             Supprimer le client
           </Button>
         </Box>

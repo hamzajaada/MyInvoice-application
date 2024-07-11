@@ -89,6 +89,15 @@ const getOnePack = async (req, res) => {
   }
 };
 
+const getPack = async (req, res) => {
+  try {
+    const pack = await Pack.findById(req.params.id);
+    res.status(201).json(pack);
+  } catch (error) {
+    res.status(500).send("Erreur serveur lors de la recherche de pack");
+  }
+};
+
 
 const updatePack = async (req, res) => {
   try {
@@ -183,6 +192,7 @@ module.exports = {
   getAllPacks,
   getThreePacks,
   getOnePack,
+  getPack,
   updatePack,
   removePack,
   getAllPacksThreeService,

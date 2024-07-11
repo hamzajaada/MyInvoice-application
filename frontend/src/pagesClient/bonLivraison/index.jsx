@@ -9,11 +9,12 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  useMediaQuery,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetOnePackQuery, useUpdateBonLivraisonMutation } from "state/api";
 import Header from "componementClient/Header";
-import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
+// import DataGridCustomToolbar from "componementClient/DataGridCustomToolbar";
 import FlexBetween from "componentsAdmin/FlexBetween";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { Link } from "react-router-dom";
@@ -285,14 +286,10 @@ const BonLivraison = () => {
           BonLivraisonData: thisBon,
         });
         if (data.success) {
-          toast.success(
-            "La suppresion de bon de livraison se passe correctement"
-          );
+          toast.success("Bon de livraison supprimé avec succès");
           setbonLivraison(bonLivraison.filter((b) => b._id !== id));
         } else {
-          toast.error(
-            "La suppresion de bon de livraison ne s'est pas passé correctement"
-          );
+          toast.error("Le bon de livraison né supprimé pas avec succès");
         }
       }
     } catch (error) {
@@ -304,33 +301,64 @@ const BonLivraison = () => {
     setOpenDialog(false);
   };
 
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
+  const isNoMobile = useMediaQuery("(min-width: 500px)");
+
   return (
     <Box m="1.5rem 2.5rem">
-      <FlexBetween>
-        <Header
-          title="BON DE LIVRAISON"
-          subtitle="Liste des bon de livraison "
-          total={bonLivraison ? bonLivraison.length : 0}
-        />
-        <Link to={`/${userName}/bon-livraison/new`}>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddOutlinedIcon />}
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Ajoute de bon de livraison
-          </Button>
-        </Link>
-      </FlexBetween>{" "}
+      {isNoMobile ? (
+        <FlexBetween>
+          <Header
+            title="BON DE LIVRAISON"
+            subtitle="Liste des bon de livraison "
+            total={bonLivraison ? bonLivraison.length : 0}
+          />
+          <Link to={`/${userName}/bon-livraison/new`}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddOutlinedIcon />}
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Ajoute de bon de livraison
+            </Button>
+          </Link>
+        </FlexBetween>
+      ) : (
+        <>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Header
+              title="BON DE LIVRAISON"
+              subtitle="Liste des bon de livraison "
+              total={bonLivraison ? bonLivraison.length : 0}
+            />
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <Link to={`/${userName}/bon-livraison/new`}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddOutlinedIcon />}
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Ajoute de bon de livraison
+              </Button>
+            </Link>
+          </Box>
+        </>
+      )}
       <Box
         height="80vh"
         sx={{
+          overflowX: "auto",
           "& .MuiDataGrid-root": {
             border: "none",
+            minWidth: isNonMobile ? "none" : "1000px",
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+            backgroundColor: theme.palette.background.test,
+            lineHeight: "2rem",
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,
@@ -355,11 +383,11 @@ const BonLivraison = () => {
           getRowId={(row) => row._id}
           rows={bonLivraison}
           columns={columns}
-          rowsPerPageOptions={[20, 50, 100]}
-          pagination
-          paginationMode="server"
-          sortingMode="server"
-          components={{ Toolbar: DataGridCustomToolbar }}
+          // rowsPerPageOptions={[20, 50, 100]}
+          // pagination
+          // paginationMode="server"
+          // sortingMode="server"
+          // components={{ Toolbar: DataGridCustomToolbar }}
         />
       </Box>
       <Dialog

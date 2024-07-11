@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  useMediaQuery,
   TextField,
   useTheme,
   Button,
@@ -89,10 +90,11 @@ const EditProduit = () => {
       console.log(error);
     }
   };
-
+  const isNonMobile = useMediaQuery('(min-width: 480px)');
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="MODIFICATION DU PRODUIT" subtitle="Modification du produit que vus avez sélectionné" />
+      <Box m={2} />
       <form
         onSubmit={handleSubmit}
         sx={{
@@ -177,7 +179,11 @@ const EditProduit = () => {
           <Button
             onClick={handleDelete}
             aria-label="delete"
-            sx={{ ml: 2 }}
+            sx={{ 
+                  display : isNonMobile ? "inline" : "block",
+                  ml: isNonMobile ? 2 : 0,
+                  mt: isNonMobile ? 0 : 2,
+                }}
             variant="contained"
             color="primary"
           >

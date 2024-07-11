@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Box, useTheme, IconButton } from "@mui/material";
-import { useGetSubscriptionEntQuery, useUpdateSubscriptionMutation, useGetDemandesQuery, useUpdateDemandeMutation, useRemoveDemandeMutation } from "state/api";
+import { Box, useTheme, IconButton, useMediaQuery } from "@mui/material";
+import {
+  useGetSubscriptionEntQuery,
+  useUpdateSubscriptionMutation,
+  useUpdateDemandeMutation,
+  useRemoveDemandeMutation,
+} from "state/api";
 import Header from "componentsAdmin/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddTaskOutlinedIcon from '@mui/icons-material/AddTaskOutlined';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { toast } from "react-toastify";
+import axios from "axios";
+
 const SubscriptionPalns = () => {
   const navigate = useNavigate();
   if (!localStorage.getItem("userId")) {
@@ -15,19 +23,29 @@ const SubscriptionPalns = () => {
 
   const [demande, setDemande] = useState([]);
   const theme = useTheme();
-  // hadi
-  const { data, isLoading } = useGetDemandesQuery();
+  const isNonMobile = useMediaQuery("(min-width: 1000px)");
+  const [isLoading, setIsLoading] = useState(true);
   const [idEntreprise, setIdEntreprise] = useState("");
-  const { data: subscriptionData } = useGetSubscriptionEntQuery(idEntreprise, { skip: !idEntreprise });
+  const { data: subscriptionData } = useGetSubscriptionEntQuery(idEntreprise, {
+    skip: !idEntreprise,
+  });
   const [removeDemande] = useRemoveDemandeMutation();
   const [updateDemande] = useUpdateDemandeMutation();
   const [updateSubscription] = useUpdateSubscriptionMutation();
   useEffect(() => {
-    if (data) {
-      setDemande(data);
-      
-    }
-  }, [data]);
+    const fetchEntreprises = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/Api/Demande");
+        setDemande(response.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchEntreprises();
+  }, []);
 
   const columns = [
     {
@@ -92,7 +110,7 @@ const SubscriptionPalns = () => {
 
   const handleEditYes = async (demande) => {
     if (!demande) {
-      console.error("Demande non trouvée");
+      toast.error("Demande non trouvée");
       return;
     }
     setIdEntreprise(demande.enterpriseId);
@@ -100,12 +118,15 @@ const SubscriptionPalns = () => {
 
   useEffect(() => {
     if (subscriptionData && idEntreprise) {
-      const thisDemande = data.find((d) => d.enterpriseId === idEntreprise);
-      // console.log(subscriptionData)
+      const thisDemande = demande.find((d) => d.enterpriseId === idEntreprise);
       if (!thisDemande) return;
 
       const startDate = new Date();
-      const endDate = new Date(startDate.setFullYear(startDate.getFullYear() + Number(thisDemande.nombreAnnee)));
+      const endDate = new Date(
+        startDate.setFullYear(
+          startDate.getFullYear() + Number(thisDemande.nombreAnnee)
+        )
+      );
 
       const subscription = {
         packId: thisDemande.packId,
@@ -117,25 +138,46 @@ const SubscriptionPalns = () => {
 
       (async () => {
         try {
-          
-          await updateSubscription({ id, subscription });
-          const updatedDemande = { ...thisDemande, status: "accepter" };
-          
-          await updateDemande({ id: thisDemande._id, updatedDemande });
-          
-          // setDemande((prev) => prev.map(d => d._id === thisDemande._id ? updatedDemande : d));
-          alert('Changement avec succès');
+          const { data } = await updateSubscription({
+            id,
+            subscriptionData: subscription,
+          });
+          console.log(data)
+          if (data.success) {
+            
+            const updatedDemande = { ...thisDemande, status: "accepter" };
+            const { data } = await updateDemande({
+              id: thisDemande._id,
+              DemandeData: updatedDemande,
+            });
+            if (data.success) {
+              toast.success("Demande accepter avec succès");
+            } else {
+              toast.error("la demande n'accepte pas avec succès");
+            }
+          }
         } catch (error) {
-          console.error("Erreur lors de la mise à jour de la souscription", error);
+          toast.error("Erreur lors de la mise à jour de l'abonnement");
         }
       })();
     }
-  }, [subscriptionData, idEntreprise, data, updateDemande, updateSubscription]);
+  }, [
+    subscriptionData,
+    idEntreprise,
+    demande,
+    updateDemande,
+    updateSubscription,
+  ]);
 
   const handleEditNo = async (id) => {
-    const thisDemande = data.find((demande) => demande._id === id);
+    const thisDemande = demande.find((dem) => dem._id === id);
     thisDemande.status = "rejeter";
-    await updateDemande({ id, ...thisDemande });
+    const {data} = await updateDemande({ id, ...thisDemande });
+    if (data.success) {
+      toast.success("Demande rejeter avec success");
+    } else {
+      toast.error("la demande ne rejéte pas avec success");
+    }
   };
 
   const handleDelete = async (id) => {
@@ -149,16 +191,23 @@ const SubscriptionPalns = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="DEMANDES" subtitle="Les plans de demandes de changement de pack" />
+      <Header
+        title="DEMANDES"
+        subtitle="Les plans de demandes de changement de pack"
+      />
       <Box
         mt="40px"
         height="75vh"
         sx={{
+          overflowX: "auto",
           "& .MuiDataGrid-root": {
             border: "none",
+            minWidth: isNonMobile ? "none" : "1000px",
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+            backgroundColor: theme.palette.background.test,
+            lineHeight: "2rem",
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,

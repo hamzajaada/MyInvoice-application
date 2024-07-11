@@ -17,7 +17,6 @@ import Header from "componentsAdmin/Header";
 import axios from "axios";
 
 const Profil = () => {
-  
   const navigate = useNavigate();
   const id = localStorage.getItem("userId");
   if (!id) {
@@ -31,13 +30,11 @@ const Profil = () => {
     newPassword: "",
     confirmPassword: "",
   });
-
   const [logo, setLogo] = useState(null);
   const [signature, setSignature] = useState(null);
   const [updateEntreprise] = useUpdateEntrepriseMutation();
-  // const [Profil, setProfil] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -55,10 +52,7 @@ const Profil = () => {
     } else {
       navigate("/");
     }
-  }, [id, navigate]); 
-   
- 
-
+  }, [id, navigate]);
 
   if (isLoading || !enterpriseDetails) {
     return <Typography>Loading...</Typography>;
@@ -79,7 +73,6 @@ const Profil = () => {
   };
 
   const handleSubmit = async (event) => {
-    console.log("Détails de l'entreprise modifiés :", enterpriseDetails); 
     event.preventDefault();
     try {
       const formData = new FormData();
@@ -90,7 +83,6 @@ const Profil = () => {
       if (logo) {
         formData.append("logo", logo);
       }
-      const id = localStorage.getItem("userId");
       await updateEntreprise({ id, entreprise: formData });
       window.location.reload();
     } catch (error) {
@@ -100,7 +92,6 @@ const Profil = () => {
 
   const handleChangePassword = async (event) => {
     event.preventDefault();
-    console.log("Mot de passe de l'entreprise modifié :", enterpriseMotPasse);
     try {
       if (enterpriseMotPasse.newPassword === enterpriseMotPasse.confirmPassword) {
         const { data, error } = await changePassword({
@@ -109,7 +100,6 @@ const Profil = () => {
           newPassword: enterpriseMotPasse.newPassword,
         });
         if (data) {
-          console.log("Message :", data.message);
           if (data.message === "Password changed successfully") {
             localStorage.removeItem("userId");
             localStorage.removeItem("token");
@@ -157,200 +147,156 @@ const Profil = () => {
     }
   };
 
-
   return (
-    <Box m="2rem 2.5rem">
-      <Header
-        title="Entreprise Detail"
-        subtitle="Les détails de l'entreprise"
-      />
-      <Typography marginTop={"20px"}>
-        Les informations générale de compte
-      </Typography>
+    <Box m="1.5rem 2.5rem">
+      <Header title="Entreprise Detail" subtitle="Les détails de l'entreprise" />
+      <Typography marginTop={"20px"}>Les informations générale de compte</Typography>
       <Box
-        fullWidth
-        border={`1px solid ${theme.palette.primary.main}`}
-        margin="normal"
-        borderRadius="0.5rem"
-        p="1rem"
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          mt: "2rem",
+          backgroundColor: theme.palette.background.alt,
+          borderRadius: "0.55rem",
+          padding: "1rem",
+          border: `1px solid ${theme.palette.primary.main}`,
+        }}
       >
-        <form
-          onSubmit={handleSubmit}
-          sx={{
-            mt: "2rem",
-            backgroundImage: "none",
-            backgroundColor: theme.palette.background.alt,
-            borderRadius: "0.55rem",
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Avatar
-              src={`${enterpriseDetails.logo.url}`}
-              alt={enterpriseDetails.name}
-              sx={{ width: 70, height: 70 }}
-            />
-            <Box ml={2}>
-              <Input
-                id="icon-input"
-                type="file"
-                name="logo"
-                fullWidth
-                onChange={handleIconChange}
-                accept="image/*"
-              />
-            </Box>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Avatar src={`${enterpriseDetails.logo.url}`} alt={enterpriseDetails.name} sx={{ width: 70, height: 70 }} />
+          <Box ml={2}>
+            <Input id="icon-input" type="file" name="logo" fullWidth onChange={handleIconChange} accept="image/*" />
           </Box>
-          <TextField
-            label="Nom d'entreprise"
-            variant="outlined"
-            fullWidth
-            value={enterpriseDetails.name}
-            onChange={(e) => handleFieldChange("name", e.target.value)}
-            margin="normal"
-          />
-          <TextField
-            label="Email d'entreprise"
-            variant="outlined"
-            fullWidth
-            value={enterpriseDetails.email}
-            margin="normal"
-            onChange={(e) => handleFieldChange("email", e.target.value)}
-          />
-          <TextField
-            label="Numéro de téléphone d'entreprise"
-            variant="outlined"
-            fullWidth
-            value={enterpriseDetails.phone}
-            margin="normal"
-            onChange={(e) => handleFieldChange("phone", e.target.value)}
-          />
-          <TextField
-            label="Adresse d'entreprise"
-            variant="outlined"
-            fullWidth
-            value={enterpriseDetails.address}
-            margin="normal"
-            onChange={(e) => handleFieldChange("address", e.target.value)}
-          />
-          <TextField
-            label="Pack d'entreprise"
-            variant="outlined"
-            fullWidth
-            value={enterpriseDetails.pack}
-            margin="normal"
-            disabled
-          />
-          <TextField
-            label="Prix de pack d'entreprise"
-            variant="outlined"
-            fullWidth
-            value={enterpriseDetails.price}
-            margin="normal"
-            disabled
-          />
-          <TextField
-            label="la date de start d'abonnenent d'entreprise"
-            variant="outlined"
-            fullWidth
-            value={enterpriseDetails.subscriptionStartDate}
-            margin="normal"
-            disabled
-          />
-          <TextField
-            label="la date de fin d'abonnenent d'entreprise"
-            variant="outlined"
-            fullWidth
-            value={enterpriseDetails.subscriptionEndDate}
-            margin="normal"
-            disabled
-          />
-          <Box mt={2}>
-            <Button type="submit" variant="contained" color="primary">
-              Modifier
-            </Button>
-          </Box>
-        </form>
+        </Box>
+        <TextField
+          label="Nom d'entreprise"
+          variant="outlined"
+          fullWidth
+          value={enterpriseDetails.name}
+          onChange={(e) => handleFieldChange("name", e.target.value)}
+          margin="normal"
+        />
+        <TextField
+          label="Email d'entreprise"
+          variant="outlined"
+          fullWidth
+          value={enterpriseDetails.email}
+          margin="normal"
+          onChange={(e) => handleFieldChange("email", e.target.value)}
+        />
+        <TextField
+          label="Numéro de téléphone d'entreprise"
+          variant="outlined"
+          fullWidth
+          value={enterpriseDetails.phone}
+          margin="normal"
+          onChange={(e) => handleFieldChange("phone", e.target.value)}
+        />
+        <TextField
+          label="Adresse d'entreprise"
+          variant="outlined"
+          fullWidth
+          value={enterpriseDetails.address}
+          margin="normal"
+          onChange={(e) => handleFieldChange("address", e.target.value)}
+        />
+        <TextField
+          label="Pack d'entreprise"
+          variant="outlined"
+          fullWidth
+          value={enterpriseDetails.pack}
+          margin="normal"
+          disabled
+        />
+        <TextField
+          label="Prix de pack d'entreprise"
+          variant="outlined"
+          fullWidth
+          value={enterpriseDetails.price}
+          margin="normal"
+          disabled
+        />
+        <TextField
+          label="la date de start d'abonnenent d'entreprise"
+          variant="outlined"
+          fullWidth
+          value={enterpriseDetails.subscriptionStartDate}
+          margin="normal"
+          disabled
+        />
+        <TextField
+          label="la date de fin d'abonnenent d'entreprise"
+          variant="outlined"
+          fullWidth
+          value={enterpriseDetails.subscriptionEndDate}
+          margin="normal"
+          disabled
+        />
+        <Box mt={2}>
+          <Button type="submit" variant="contained" color="primary">
+            Modifier
+          </Button>
+        </Box>
       </Box>
       <Typography marginTop={"20px"}>Changement de mot de passe</Typography>
       <Box
-        fullWidth
-        border={`1px solid ${theme.palette.primary.main}`}
-        margin="normal"
-        borderRadius="0.5rem"
-        p="1rem"
+        component="form"
+        onSubmit={handleChangePassword}
+        sx={{
+          mt: "2rem",
+          backgroundColor: theme.palette.background.alt,
+          borderRadius: "0.55rem",
+          padding: "1rem",
+          border: `1px solid ${theme.palette.primary.main}`,
+        }}
       >
-        <form
-          onSubmit={handleChangePassword}
-          sx={{
-            mt: "2rem",
-            backgroundImage: "none",
-            backgroundColor: theme.palette.background.alt,
-            borderRadius: "0.55rem",
-          }}
-        >
-          <TextField
-            label="Mot de passe actuelle"
-            variant="outlined"
-            fullWidth
-            name="password"
-            type="password"
-            margin="normal"
-            onChange={(e) =>
-              handleFieldPasswordChange("oldPassword", e.target.value)
-            }
-          />
-          <TextField
-            label="Nouveau mot de passe"
-            variant="outlined"
-            fullWidth
-            name="passwordConf"
-            type="password"
-            margin="normal"
-            onChange={(e) =>
-              handleFieldPasswordChange("newPassword", e.target.value)
-            }
-          />
-          <TextField
-            label="Confirmation de mot de pass"
-            variant="outlined"
-            fullWidth
-            name="passwordNew"
-            type="password"
-            margin="normal"
-            onChange={(e) =>
-              handleFieldPasswordChange("confirmPassword", e.target.value)
-            }
-          />
-          <Box mt={2}>
-            <Button type="submit" variant="contained" color="primary">
-              Modifier
-            </Button>
-          </Box>
-        </form>
+        <TextField
+          label="Mot de passe actuelle"
+          variant="outlined"
+          fullWidth
+          name="password"
+          type="password"
+          margin="normal"
+          onChange={(e) => handleFieldPasswordChange("oldPassword", e.target.value)}
+        />
+        <TextField
+          label="Nouveau mot de passe"
+          variant="outlined"
+          fullWidth
+          name="passwordConf"
+          type="password"
+          margin="normal"
+          onChange={(e) => handleFieldPasswordChange("newPassword", e.target.value)}
+        />
+        <TextField
+          label="Confirmation de mot de passe"
+          variant="outlined"
+          fullWidth
+          name="passwordNew"
+          type="password"
+          margin="normal"
+          onChange={(e) => handleFieldPasswordChange("confirmPassword", e.target.value)}
+        />
+        <Box mt={2}>
+          <Button type="submit" variant="contained" color="primary">
+            Modifier
+          </Button>
+        </Box>
       </Box>
       <Typography marginTop={"20px"}>Importer votre signature</Typography>
       <Box
-        fullWidth
-        border={`1px solid ${theme.palette.primary.main}`}
-        margin="normal"
-        borderRadius="0.5rem"
-        p="1rem"
+        sx={{
+          mt: "2rem",
+          backgroundColor: theme.palette.background.alt,
+          borderRadius: "0.55rem",
+          padding: "1rem",
+          border: `1px solid ${theme.palette.primary.main}`,
+        }}
       >
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Avatar
-            src={`${enterpriseDetails.signature.url}`}
-            alt="Signature"
-            sx={{ width: 70, height: 70 }}
-          />
+          <Avatar src={`${enterpriseDetails.signature.url}`} alt="Signature" sx={{ width: 70, height: 70 }} />
           <Box ml={2}>
-            <Input
-              id="signature-input"
-              type="file"
-              name="signature"
-              fullWidth
-              onChange={handleSignatureChange}
-              accept="image/*"
-            />
+            <Input id="signature-input" type="file" name="signature" fullWidth onChange={handleSignatureChange} accept="image/*" />
           </Box>
         </Box>
         <Box mt={2}>
@@ -363,4 +309,4 @@ const Profil = () => {
   );
 };
 
-export default Profil;
+export default Profil;

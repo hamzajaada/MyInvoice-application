@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useGetBonCommandeDetailsQuery } from "state/api";
 import { useNavigate, useParams } from "react-router-dom";
-import { Box, Grid, Button, Typography, Paper } from "@mui/material";
+import { Box, Grid, Button, Typography, Paper, useMediaQuery } from "@mui/material";
 import styled from "styled-components";
 import profileImage from "assets/logo.png";
 import FlexBetween from "componementClient/FlexBetween";
+
 
 const BonCommandeItem = ({ item }) => {
   return (
@@ -30,7 +31,8 @@ const BonCommandeDetails = () => {
   const { id } = useParams();
   const [bonCommande, setBonCommande] = useState(null);
   const { data } = useGetBonCommandeDetailsQuery(id);
-
+  const isNonMobile = useMediaQuery("(min-width: 900px)");
+  const isNoMobile = useMediaQuery("(min-width: 600px)");
   useEffect(() => {
     if (data) {
       setBonCommande(data);
@@ -75,7 +77,8 @@ const BonCommandeDetails = () => {
           </Button>
         </Box>
         <BonCommandeContainer>
-          <Header>
+          {isNoMobile ? (
+            <Header>
             <Logo src={bonCommande.userLogo.url} alt="Company Logo" />
             <UserInfo>
               <Typography variant="h5" className="font-semibold">
@@ -86,34 +89,84 @@ const BonCommandeDetails = () => {
               <Typography>{bonCommande.userPhone}</Typography>
             </UserInfo>
           </Header>
-          <FlexBetween>
-            <ClientInfo>
-              <Typography variant="h6" className="font-semibold">
-                Bon commande de:
+          ) : (
+            <>
+              <Logo src={bonCommande.userLogo.url} alt="Company Logo" />
+            <UserInfo>
+              <Typography variant="h5" className="font-semibold">
+                {bonCommande.userName}
               </Typography>
-              <Typography>{bonCommande.fournisseurName}</Typography>
-              <Typography>{bonCommande.fournisseurEmail}</Typography>
-              <Typography>{bonCommande.fournisseurAddress}</Typography>
-              <Typography>{bonCommande.fournisseurPhone}</Typography>
-            </ClientInfo>
-            <BonCommandeMeta>
-              <Typography>
-                <strong>Date de bon de commande:</strong>{" "}
-                {bonCommande.formattedDate}
-              </Typography>
-              <Typography>
-                <strong>Date d'échéance:</strong> {bonCommande.formattedDueDate}
-              </Typography>
-              <Typography>
-                <strong>Statut:</strong> {bonCommande.bonCommandeStatus}
-              </Typography>
-              <Typography>
-                <strong>Numéro de bon de commande:</strong> {bonCommande._id}
-              </Typography>
-            </BonCommandeMeta>
-          </FlexBetween>
+              <Typography>{bonCommande.userAddress}</Typography>
+              <Typography>{bonCommande.userEmail}</Typography>
+              <Typography>{bonCommande.userPhone}</Typography>
+            </UserInfo>
+            </>
+          )}
+          
+          {isNonMobile ? (
+            <FlexBetween>
+              <ClientInfo>
+                <Typography variant="h6" className="font-semibold">
+                  Bon commande de:
+                </Typography>
+                <Typography>{bonCommande.fournisseurName}</Typography>
+                <Typography>{bonCommande.fournisseurEmail}</Typography>
+                <Typography>{bonCommande.fournisseurAddress}</Typography>
+                <Typography>{bonCommande.fournisseurPhone}</Typography>
+              </ClientInfo>
+              <BonCommandeMeta>
+                <Typography>
+                  <strong>Date de bon de commande:</strong>{" "}
+                  {bonCommande.formattedDate}
+                </Typography>
+                <Typography>
+                  <strong>Date d'échéance:</strong>{" "}
+                  {bonCommande.formattedDueDate}
+                </Typography>
+                <Typography>
+                  <strong>Statut:</strong> {bonCommande.bonCommandeStatus}
+                </Typography>
+                <Typography>
+                  <strong>Numéro de bon de commande:</strong> {bonCommande._id}
+                </Typography>
+              </BonCommandeMeta>
+            </FlexBetween>
+          ) : (
+            <>
+              <Box sx={{ display: "flex" }}>
+                <ClientInfo>
+                  <Typography variant="h6" className="font-semibold">
+                    Bon commande de:
+                  </Typography>
+                  <Typography>{bonCommande.fournisseurName}</Typography>
+                  <Typography>{bonCommande.fournisseurEmail}</Typography>
+                  <Typography>{bonCommande.fournisseurAddress}</Typography>
+                  <Typography>{bonCommande.fournisseurPhone}</Typography>
+                </ClientInfo>
+              </Box>
+              <Box sx={{ display: "flex", mt: 2 }}>
+                <BonCommandeMeta>
+                  <Typography>
+                    <strong>Date de bon de commande:</strong>{" "}
+                    {bonCommande.formattedDate}
+                  </Typography>
+                  <Typography>
+                    <strong>Date d'échéance:</strong>{" "}
+                    {bonCommande.formattedDueDate}
+                  </Typography>
+                  <Typography>
+                    <strong>Statut:</strong> {bonCommande.bonCommandeStatus}
+                  </Typography>
+                  <Typography>
+                    <strong>Numéro de bon de commande:</strong>{" "}
+                    {bonCommande._id}
+                  </Typography>
+                </BonCommandeMeta>
+              </Box>
+            </>
+          )}
 
-          <table className="w-full mb-6 border-collapse">
+          <table className="w-full mb-6 border-collapse" >
             <thead>
               <tr className="bg-gray-200">
                 <th className="border px-4 py-2">Produit</th>
@@ -197,7 +250,7 @@ const Logo = styled.img`
   max-width: 150px;
 `;
 const UserInfo = styled.div`
-  text-align: right;
+  
 `;
 const ClientInfo = styled.div`
   margin-bottom: 20px;
