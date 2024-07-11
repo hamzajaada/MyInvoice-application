@@ -36,7 +36,7 @@ const AddClient = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="ADD CATEGORIES" subtitle="Ajout d'un nouveau catégorie" />
+      <Header title="AJOUTER UNE CATEGORIE" subtitle="Ajout d'une Nouvelle Catégorie" />
       <form onSubmit={handleSubmit} sx={{
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,
@@ -54,9 +54,19 @@ const AddClient = () => {
         
         <Box mt={2}>
           <Button type="submit" variant="contained" color="primary">
-            Ajouter
+            Ajouter la catégorie
           </Button>
         </Box>
+        <Box mt={2} display="flex" justifyContent="left">
+            <Button
+              onClick={() => navigate(-1)}
+              aria-label="cancel"
+              variant="contained"
+              color="secondary"
+            >
+              Annuler
+            </Button>
+          </Box>
       </form>
     </Box>
   );

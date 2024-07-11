@@ -147,7 +147,7 @@ const EditInvoice = () => {
         toast.success("La Facture a été modifiée avec succés");
         Navigate(`/${userName}/factures`);
       } else {
-        toast.error("La modification de facture a échoué");
+        toast.error("La modification de Facture a échoué");
       }
     } catch (error) {
       console.log(error);

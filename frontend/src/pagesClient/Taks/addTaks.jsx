@@ -39,14 +39,15 @@ const AddClient = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-    <Header title="AJOUTE DU TAX" subtitle="Ajout d'un nouveau tax" />
+    <Header title="AJOUTER UN TAXE" subtitle="L'Ajout d'un Nouveau Taxe" />
+    <Box m={4}/>
     <form onSubmit={handleSubmit} sx={{
       backgroundImage: "none",
       backgroundColor: theme.palette.background.alt,
       borderRadius: "0.55rem",
     }} >
       <TextField
-        label="Taks name"
+        label="Taxe"
         name="name"
         value={Taks.name} // Update this to use the correct state
         onChange={handleChange}
@@ -55,7 +56,7 @@ const AddClient = () => {
         margin="normal"
       />
       <TextField
-        label="Taks Valleur"
+        label="Valeur"
         name="TaksValleur"
         value={Taks.TaksValleur} // Update this to use the correct state
         onChange={handleChange}
@@ -67,9 +68,19 @@ const AddClient = () => {
       
       <Box mt={2}>
         <Button type="submit" variant="contained" color="primary">
-          Add Taks
+          Ajouter le TAxe
         </Button>
       </Box>
+      <Box mt={2} display="flex" justifyContent="left">
+            <Button
+              onClick={() => navigate(-1)}
+              aria-label="cancel"
+              variant="contained"
+              color="secondary"
+            >
+              Annuler
+            </Button>
+          </Box>
     </form>
   </Box>
   

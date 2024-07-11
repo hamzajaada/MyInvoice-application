@@ -1,8 +1,4 @@
 const Devi = require("../Models/DeviModel");
-<<<<<<< HEAD
-=======
-const Client = require("../Models/ClientSchema");
->>>>>>> 67d75b4aba854c5231565b1c6123a96b756bcbbb
 const Product = require("../Models/ProductSchema");
 const nodemailer = require("nodemailer");
 
@@ -174,10 +170,11 @@ const sendEmail = async (req, res) => {
     _id,
     itemsTable,
     amount,
-    formattedDueDate,
     userPhone,
     userAddress,
     userEmail,
+    taxesTable,
+    sousTotale,
   } = req.body;
 
   const itemsTableHTML = itemsTable
@@ -188,9 +185,18 @@ const sendEmail = async (req, res) => {
     <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${
       item.quantity
     }</td>
-    <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">${item.price.toFixed(
+    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${item.price.toFixed(
       2
     )} DHs</td>
+  </tr>`
+    )
+    .join("");
+    const taxesTableHTML = taxesTable
+    .map(
+      (tax) => `
+  <tr>
+    <td  colspan="2" style=" border: 1px solid #ddd; padding: 8px; text-align: center;">${tax.taxeName}</td>
+    <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${tax.value}%</td>
   </tr>`
     )
     .join("");
@@ -198,29 +204,37 @@ const sendEmail = async (req, res) => {
   const body = `
   <div style="font-family: Arial, sans-serif; line-height: 1.6;">
     <p style="font-size: 16px;">Cher Client(e) Mr/Mme. <strong>${clientName}</strong>,</p>
-    <p style="font-size: 16px;">Vous avez reçu une devi de l'entreprise <strong><i>${userName}</i></strong>, vérifiez les détails ci-dessous:</p>
-    <p style="font-size: 16px;">- Numéro de devi : <strong>#${_id}</strong></p>
+    <p style="font-size: 16px;">Vous avez reçu un Devi de l'entreprise <strong><i>${userName}</i></strong>, vérifiez les détails ci-dessous:</p>
+    <p style="font-size: 16px;">- Numéro de Devi : <strong>#${_id}</strong></p>
     <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
       <thead>
         <tr>
           <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Nom du Produit</th>
           <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2; text-align: center;">Quantité</th>
-          <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2; text-align: right;">Prix</th>
+          <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2; text-align: center;">Prix</th>
         </tr>
       </thead>
       <tbody>
-        ${itemsTableHTML}
-      </tbody>
+      ${itemsTableHTML}
+      <tr>
+      <th colspan="2" style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2; text-align: center;">Taxes</th>
+      <th colspan="1" style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2; text-align: center;">Taux</th>
+      </tr>
+      ${taxesTableHTML}
+    </tbody>
       <tfoot>
+      <tr>
+        <th colspan="2" style="border: 1px solid #ddd; padding: 8px; text-align: right;">Sous-Total :</th>
+        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;"><strong>${sousTotale.toFixed(2)} DHs</strong></td>
+      </tr>
         <tr>
           <th colspan="2" style="border: 1px solid #ddd; padding: 8px; text-align: right;">Montant :</th>
-          <td style="border: 1px solid #ddd; padding: 8px; text-align: right;"><strong>${amount.toFixed(
+          <td style="border: 1px solid #ddd; padding: 8px; text-align: center;"><strong>${amount.toFixed(
             2
           )} DHs</strong></td>
         </tr>
       </tfoot>
     </table>
-    <p style="font-size: 16px; margin-top: 20px;">Considérez s'il vous plaît le paiement de votre devi avant le <strong style="color: red;">${formattedDueDate}</strong>.</p>
     <p style="font-size: 16px;">Si vous avez des questions, vous trouverez ci-dessus les coordonnées de l'entreprise :</p>
     <ul style="font-size: 16px;">
       <li>Téléphone : <strong>${userPhone}</strong></li>

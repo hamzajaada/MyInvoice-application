@@ -80,7 +80,8 @@ import AddDevi from "pagesClient/devis/addDevi";
 import EditDevi from "pagesClient/devis/editDevi";
 import DetailsDevi from "pagesClient/devis/detailsDevi";
 import PrintDevi from "pagesClient/devis/printDevi";
-import LetterHeadDevi from "pagesClient/devis/letterHeadDevi"
+import LetterHeadDevi from "pagesClient/devis/letterHeadDevi";
+import PrintClassicDevi from "pagesClient/devis/printClassicDevi";
 import SendEmailDevis from "pagesClient/devis/sendEmailDevis";
 
 import BonLivraison from "pagesClient/bonLivraison";
@@ -133,7 +134,7 @@ const App = () => {
           <Route path="/:userName/bon-livraison/imprimer/letter/:id" element={<LetterBonLivraison />} />
           <Route path="/:userName/devis/imprimer/:id" element={<PrintDevi />} />
           <Route path="/:userName/devis/imprimer/letter/:id" element={<LetterHeadDevi />} />
-
+          <Route path="/:userName/devis/imprimer/classic/:id" element={<PrintClassicDevi />} />
           <Route element={<AddThemeProvider theme={theme} pages={Layout} />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/PackAdmin" element={<AddThemeProvider theme={theme} pages={Pack} />} />

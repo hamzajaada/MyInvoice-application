@@ -115,11 +115,11 @@ const DetailsInvoice = () => {
                   </TableRow>
                 ))}
             <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
-              <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Sous - Totale:</Typography></TableCell>
+              <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Sous - Total :</Typography></TableCell>
               <TableCell><Typography fontWeight="bold">{sousTotale.toFixed(2)} DH</Typography></TableCell>
             </TableRow>
             <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
-              <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Montant Totale:</Typography></TableCell>
+              <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Montant Total :</Typography></TableCell>
               <TableCell><Typography fontWeight="bold">{amount.toFixed(2)} DH</Typography></TableCell>
             </TableRow>
           </TableBody>

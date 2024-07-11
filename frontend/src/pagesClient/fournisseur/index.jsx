@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Box, useTheme, IconButton, Button } from "@mui/material";
+import { Box, useTheme, IconButton, Button,  useMediaQuery } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import {useUpdateFournisseurMutation} from "state/api";
 import Header from "componementClient/Header";
@@ -19,7 +19,7 @@ const Fournisseurs = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const id = localStorage.getItem("userId");
-  // hadi
+  const isSmallScreen = useMediaQuery('(max-width: 820px)');
   const userName = localStorage.getItem("userName");
   const [Fourinsseur, setFourinsseur] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -141,7 +141,13 @@ const Fournisseurs = () => {
             variant="contained"
             color="primary"
             startIcon={<AddOutlinedIcon />}
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ 
+              mt: 3, 
+              mb: 2,
+              fontSize: isSmallScreen ? "11px" : "14px",
+              fontWeight: "bold",
+              padding: isSmallScreen ? "8px 14px" : "10px 20px",
+             }}
           >
             Ajoute de fournisseur
           </Button>

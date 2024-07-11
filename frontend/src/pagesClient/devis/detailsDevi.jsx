@@ -29,9 +29,9 @@ const DetailsDevi = () => {
       case "approuvé":
         return "green";
       case "attente d'approbation":
-        return "red";
-      default:
         return "orange";
+      default:
+        return "red";
     }
   };
 
@@ -51,7 +51,6 @@ const DetailsDevi = () => {
     clientPhone,
     clientAddress,
     formattedDate,
-    formattedDueDate,
     itemsTable,
     taxesTable,
     amount,
@@ -161,14 +160,9 @@ const DetailsDevi = () => {
           </Box>
         </Box>
         <Box display="flex" justifyContent="center" mt={3}>
-          <Box mr={15}>
+          <Box mr={1}>
             <Typography variant="body1" fontWeight="bold">
               Créé le: {formattedDate}
-            </Typography>
-          </Box>
-          <Box>
-            <Typography variant="body1" fontWeight="bold">
-              Date d'échéance: {formattedDueDate}
             </Typography>
           </Box>
         </Box>
@@ -201,21 +195,21 @@ const DetailsDevi = () => {
               </TableRow>
             ))}
             <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
-              <TableCell colSpan={2} ><Typography fontWeight="bold" >Taxes </Typography></TableCell>
+              <TableCell colSpan={2} align="center"><Typography fontWeight="bold" >Taxes </Typography></TableCell>
               <TableCell colSpan={1} ><Typography fontWeight="bold" >Taux</Typography></TableCell>
             </TableRow>
             {taxesTable.map((tax, index) => (
                   <TableRow key={index}>
-                    <TableCell colSpan={2} >{tax.taxeName}</TableCell>
+                    <TableCell colSpan={2} align="center">{tax.taxeName}</TableCell>
                     <TableCell>{tax.value}%</TableCell>
                   </TableRow>
                 ))}
             <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
-              <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Sous - Totale:</Typography></TableCell>
+              <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Sous - Total :</Typography></TableCell>
               <TableCell><Typography fontWeight="bold">{sousTotale.toFixed(2)} DH</Typography></TableCell>
             </TableRow>
             <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
-              <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Montant Totale:</Typography></TableCell>
+              <TableCell colSpan={2} align="right"><Typography fontWeight="bold">Montant Total :</Typography></TableCell>
               <TableCell><Typography fontWeight="bold">{amount.toFixed(2)} DH</Typography></TableCell>
             </TableRow>
           </TableBody>

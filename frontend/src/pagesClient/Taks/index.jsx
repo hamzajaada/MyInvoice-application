@@ -98,10 +98,10 @@ const Categories = () => {
         thisTax.active = false
         const {data} = await updateTaks({id, taxData: thisTax})
         if(data.success) {
-          toast.success("La suppresion de tax se passe correctement");
+          toast.success("Le Taxe est supprimé avec succès");
           setTaks(Taks.filter((t) => t._id !== id));
         } else {
-          toast.error("La suppresion de tax ne s'est pas passé correctement");
+          toast.error("La suppresion de Taxe a échoué");
         }
       }
       // window.location.reload();
@@ -113,7 +113,7 @@ const Categories = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
-        <Header title="Taxes" subtitle="Liste de Taxes" />
+        <Header title="Taxes" subtitle="Liste de Vos Taxes" />
         <Link to={`/${userName}/Taks/new`}>
           <Button
             variant="contained"
@@ -121,7 +121,7 @@ const Categories = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Ajoute du tax
+            Ajouter un Taxe
           </Button>
         </Link>
       </FlexBetween>

@@ -141,7 +141,7 @@ const AddDevi = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="AJOUTER DES DEVIS" subtitle="Ajout d'un nouveau devis" />
+      <Header title="AJOUTER DES DEVIS" subtitle="Ajout d'un nouveau devi" />
       <Box
         m="1.5rem auto"
         border={`2px solid ${theme.palette.primary.main}`}
@@ -261,7 +261,7 @@ const AddDevi = () => {
                 startIcon={<AddShoppingCartIcon />}
                 fullWidth
               >
-                Ajouter une taxe
+                Ajouter Taxe
               </Button>
             </Grid>
             {devi.taxes.map((tax, index) => (
@@ -305,10 +305,20 @@ const AddDevi = () => {
             </Grid>
             <Grid item xs={12}>
               <Button type="submit" variant="contained" color="primary">
-                Ajouter le devis
+                Ajouter le devi
               </Button>
             </Grid>
           </Grid>
+          <Box mt={2} display="flex" justifyContent="center">
+            <Button
+              onClick={() => navigate(-1)}
+              aria-label="cancel"
+              variant="contained"
+              color="warning"
+            >
+              Annuler
+            </Button>
+          </Box>
         </form>
       </Box>
     </Box>

@@ -132,10 +132,10 @@ const Products  = () => {
           thisProd.active = false
           const {data} = await updateProduit({id, ProduitData: thisProd})
           if(data.success) {
-            toast.success("La suppression du produit se passe correctement")
+            toast.success("Le Produit a été supprimé avec succès")
             setProduct(Product.filter((p) => p._id !== id))
           } else {
-            toast.error("La suppression du produit ne s'est passé pas correctement")
+            toast.error("La Suppresion du Produit a échoué")
           }
         }
         // window.location.reload()
@@ -149,7 +149,7 @@ const Products  = () => {
     <Box m="1.5rem 2.5rem">
       
       <FlexBetween>
-        <Header title="PRODUITS" subtitle="Liste entier des "   total= {Product ? Product.length : 0} />        
+        <Header title="PRODUITS" subtitle="Liste entier de vos "   total= {Product ? Product.length : 0} />        
         <Link to={`/${userName}/ajouterProduit`}>
           <Button
             variant="contained"
@@ -157,7 +157,7 @@ const Products  = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Ajoute du produit
+            Ajouter un produit
           </Button>
         </Link>
       </FlexBetween>
@@ -197,8 +197,6 @@ const Products  = () => {
           rowsPerPageOptions={[20, 50, 100]}
           pagination
           paginationMode="server"
-          sortingMode="server"
-          components={{ Toolbar: DataGridCustomToolbar }}
         />
       </Box>
     </Box>

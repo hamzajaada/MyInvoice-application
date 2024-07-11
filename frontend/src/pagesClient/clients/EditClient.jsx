@@ -38,10 +38,10 @@ const EditClient = () => {
         const newClient = {...clientData, active: false}
         const {data} = await editClient({id, client: newClient});
         if(data.success) {
-          toast.success("La suppresion de client se passe correctement");
+          toast.success("Le Client a été supprimé avec succès");
           navigate(`/${userName}/clients`);
         } else {
-          toast.error("La suppresion de client ne s'est pas réussie");
+          toast.error("La Suppresion du Client a échoué");
         }
       }
       
@@ -56,10 +56,10 @@ const EditClient = () => {
       console.log(client);
       const {data} = await editClient({ id, client });
       if(data.success) {
-        toast.success("La modification de client se passe correctement");
+        toast.success("Le Client a été modifié avec succès");
         navigate(`/${userName}/clients`);
       } else {
-        toast.error("La modification de client ne s'est pas réussie");
+        toast.error("La modification du Client a échoué");
       }
     } catch (error) {
       console.log(error);
@@ -68,14 +68,15 @@ const EditClient = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="MODIFICATION DE CLIENT" subtitle="Modification de client séléctionné" />
+      <Header title="MODIFICATION DE CLIENT" subtitle="Modification de Client Sélectionné" />
+      <Box m={4}/>
       <form onSubmit={handleSubmit} sx={{
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,
         borderRadius: "0.55rem",
       }} >
         <TextField
-          label="Nom de client"
+          label="Nom du Client"
           name="name"
           value={client.name}
           onChange={handleChange}
@@ -93,7 +94,7 @@ const EditClient = () => {
           margin="normal"
         />
         <TextField
-          label="Phone number"
+          label="Téléphone"
           name="phone"
           type="text"
           value={client.phone}
@@ -103,7 +104,7 @@ const EditClient = () => {
           margin="normal"
         />
         <TextField
-          label="Address"
+          label="Addresse"
           name="address"
           type="text"
           value={client.address}
@@ -121,6 +122,16 @@ const EditClient = () => {
             Supprimer le client
           </Button>
         </Box>
+        <Box mt={2} display="flex" justifyContent="left">
+            <Button
+              onClick={() => navigate(-1)}
+              aria-label="cancel"
+              variant="contained"
+              color="secondary"
+            >
+              Annuler
+            </Button>
+          </Box>
       </form>
     </Box>
   );

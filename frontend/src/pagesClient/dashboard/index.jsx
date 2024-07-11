@@ -51,7 +51,9 @@ const Dashboard = () => {
   const theme = useTheme();
   const genererRapport = "6630fe581c1fec2176ead2c9";
   const { data: packData } = useGetOnePackQuery(packId);
-  const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
+  //const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
+  const isNonMediumScreens = useMediaQuery('(min-width: 768px)');
+  const isSmallScreen = useMediaQuery('(max-width: 820px)');
   const { data, isLoading } = useGetDashboardClientQuery(id);
   const [enterpriseDetails, setEnterpriseDetails] = useState(null);
   const [generateRapport, setGenerateRapport] = useState(false);
@@ -429,14 +431,14 @@ const Dashboard = () => {
       <FlexBetween>
         <Box>
           <Typography
-            variant="h2"
+            variant={isSmallScreen ? "h4" : "h2"}
             color={theme.palette.secondary[100]}
             fontWeight="bold"
             sx={{ mb: "5px" }}
           >
             TABLEAU DE BORD
           </Typography>
-          <Typography variant="h5" color={theme.palette.secondary[300]}>
+          <Typography variant={isSmallScreen ? "h6" : "h5"} color={theme.palette.secondary[300]}>
             Bienvenue sur votre tableau de bord
           </Typography>
         </Box>
@@ -446,9 +448,9 @@ const Dashboard = () => {
               sx={{
                 backgroundColor: theme.palette.secondary[400],
                 color: theme.palette.secondary[50],
-                fontSize: "14px",
+                fontSize: isSmallScreen ? "11px" : "14px",
                 fontWeight: "bold",
-                padding: "10px 20px",
+                padding: isSmallScreen ? "8px 14px" : "10px 20px",
               }}
               onClick={generatePDF}
             >
@@ -541,6 +543,7 @@ const Dashboard = () => {
             },
             "& .MuiDataGrid-virtualScroller": {
               backgroundColor: theme.palette.background.alt,
+              overflowX: isSmallScreen ? "auto" : "hidden",
             },
             "& .MuiDataGrid-footerContainer": {
               backgroundColor: theme.palette.background.alt,

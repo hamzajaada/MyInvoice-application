@@ -63,10 +63,10 @@ const EditProduit = () => {
     try {
       const {data} = await editProduit({ id, ProduitData: produit });
       if(data.success) {
-        toast.success("La modification du produit se passe correctement")
+        toast.success("Le Produit a été modifié avec succès")
         Navigate(`/${userName}/produits`);
       } else {
-        toast.error("La modification du produit ne s'est pas correctement")
+        toast.error("La modification du Produit a échoué")
       }
     } catch (error) {
       console.log(error);
@@ -78,10 +78,10 @@ const EditProduit = () => {
       if(produitData) {
         const {data} = await editProduit({ id, ProduitData: { ...produitData, active: false } })
         if(data.success) {
-          toast.success("La suppression du produit se passe correctement")
+          toast.success("Le Produit a été supprimé avec succès")
           Navigate(`/${userName}/produits`);
         } else {
-          toast.error("La suppression du produit ne s'est pas correctement")
+          toast.error("La Suppresion du Produit a échoué")
         }
       }
       
@@ -92,7 +92,7 @@ const EditProduit = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="MODIFICATION DU PRODUIT" subtitle="Modification dU produit séléctionné" />
+      <Header title="MODIFICATION DU PRODUIT" subtitle="Modification du produit que vus avez sélectionné" />
       <form
         onSubmit={handleSubmit}
         sx={{
@@ -184,6 +184,16 @@ const EditProduit = () => {
             Supprimer le produit
           </Button>
         </Box>
+        <Box mt={2} display="flex" justifyContent="left">
+            <Button
+              onClick={() => Navigate(-1)}
+              aria-label="cancel"
+              variant="contained"
+              color="secondary"
+            >
+              Annuler
+            </Button>
+          </Box>
       </form>
     </Box>
   );

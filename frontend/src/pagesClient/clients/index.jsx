@@ -115,10 +115,10 @@ const Clients  = () => {
         thisClient.active = false
         const {data} = await updateClient({ id, client: thisClient });
         if(data.success) {
-          toast.success("La suppresion de client se passe correctement");
+          toast.success("Le Client a été supprimé avec succès");
           setClient(Client.filter((c) => c._id !== id));
         } else {
-          toast.error("La suppresion de client ne s'est pas passé correctement");
+          toast.error("La Suppresion du Client a échoué");
         }
       }
       // window.location.reload();
@@ -140,7 +140,7 @@ const Clients  = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Ajoute de clients
+            Ajouter un client
           </Button>
         </Link>
       </FlexBetween>

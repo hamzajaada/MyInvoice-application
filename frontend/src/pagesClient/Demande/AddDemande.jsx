@@ -57,9 +57,9 @@ const Profil = () => {
       setDemande(updatedDemande);
       const {data} = await AddDemande(updatedDemande);
       if(data.success) {
-        toast.success("La demande est envoyé correctement")
+        toast.success("La Demande a été envoyée avec succès")
       } else {
-        toast.error("Erreur lors de l'envoie du demande")
+        toast.error("l'Envoie de Demande a échoué")
       }
     } catch (error) {
       console.log(error);
@@ -70,7 +70,7 @@ const Profil = () => {
     <Box m="2rem 2.5rem">
       <Header
         title="CHANGEMENT DE PACK"
-        subtitle="Demande de chamngement de pack"
+        subtitle="Demande de changement d'Abonnement"
       />
       <form
         onSubmit={handleSubmit}
@@ -126,6 +126,16 @@ const Profil = () => {
             Envoyer la demande
           </Button>
         </Box>
+        <Box mt={2} display="flex" justifyContent="left">
+            <Button
+              onClick={() => navigate(-1)}
+              aria-label="cancel"
+              variant="contained"
+              color="secondary"
+            >
+              Annuler
+            </Button>
+          </Box>
       </form>
     </Box>
   );

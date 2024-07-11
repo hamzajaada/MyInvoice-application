@@ -144,10 +144,10 @@ const EditInvoice = () => {
 
       const { data } = await updateDevi({ id, deviData: updatedDevi });
       if (data.success) {
-        toast.success("La modification de devi se passe correctement");
+        toast.success("Le Devi a été modifié avec succès");
         Navigate(`/${userName}/devis`);
       } else {
-        toast.error("La modification de devi ne s'est pas réussi");
+        toast.error("La modification de Devi a échoué");
       }
     } catch (error) {
       console.log(error);
@@ -169,10 +169,10 @@ const EditInvoice = () => {
           deviData: { ...deviData, active: false },
         });
         if (data.success) {
-          toast.success("La suppresion de devi se passe correctement");
+          toast.success("Le Devi a été supprimé avec succès");
           Navigate(`/${userName}/devis`);
         } else {
-          toast.error("La suppresion de devi ne s'est pas réussi");
+          toast.error("La suppresion de Devi a échoué ");
         }
       }
     } catch (error) {
@@ -208,7 +208,7 @@ const EditInvoice = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <Header
-        title="MODIFICATION DE DEVIE"
+        title="MODIFICATION DE DEVI"
         subtitle="Modification du devi que vous avez sélectionnez"
       />
       <Box m={2} />
@@ -335,11 +335,11 @@ const EditInvoice = () => {
                       />
                       <Button
                         variant="contained"
-                        color="secondary"
+                        color="warning"
                         onClick={() => handleDeleteProduct(item.productId)}
                         style={{ marginLeft: "16px" }}
                       >
-                        Supprimer le produit
+                        Supprimer Produit
                       </Button>
                     </Box>
                   );
@@ -351,7 +351,7 @@ const EditInvoice = () => {
                 onClick={handleAddItem}
                 style={{ marginTop: "16px" }}
               >
-                Ajouter un produit
+                Ajouter un Produit
               </Button>
               <Divider sx={{ marginTop: "20px" }} />
               <Typography
@@ -391,11 +391,11 @@ const EditInvoice = () => {
                     <Button
                       width={"40%"}
                       variant="contained"
-                      color="secondary"
+                      color="warning"
                       onClick={() => handleDeleteTax(index)}
                       style={{ marginLeft: "16px" }}
                     >
-                      Supprimer le taxe
+                      Supprimer Taxe
                     </Button>
                   </Box>
                 ))}
@@ -405,7 +405,7 @@ const EditInvoice = () => {
                 onClick={handleAddTax}
                 style={{ marginTop: "16px" }}
               >
-                Ajouter une taxe
+                Ajouter un Taxe
               </Button>
             </Grid>
           </Grid>

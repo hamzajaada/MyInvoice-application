@@ -265,8 +265,12 @@ const Devis = () => {
     navigate(`/${userName}/devis/imprimer/letter/${id}`);
   };
 
+  const handlePrintClassic = (id) => {
+    navigate(`/${userName}/devis/imprimer/classic/${id}`);
+  };
+
   const handleEmail = (id) => {
-    navigate(`/devis/email/${id}`);
+    navigate(`/${userName}/devis/email/${id}`);
   };
 
   const handleEdit = (id) => {
@@ -280,10 +284,10 @@ const Devis = () => {
         thisDevi.active = false;
         const { data } = await updateDevi({ id, deviData: thisDevi });
         if (data.success) {
-          toast.success("La suppresion de devi se passe correctement");
+          toast.success("Le Devi a été supprimé avec succès");
           setDevis(Devis.filter((d) => d._id !== id));
         } else {
-          toast.error("La suppresion de devi ne s'est pas passé correctement");
+          toast.error("La suppresion de Devi a échoué");
         }
       }
       // window.location.reload();
@@ -301,7 +305,7 @@ const Devis = () => {
       <FlexBetween>
         <Header
           title="DEVIS"
-          subtitle="Liste des bon de devi "
+          subtitle="Liste des bons des "
           total={Devis ? Devis.length : 0}
         />
         <Link to={`/${userName}/devis/new`}>
@@ -311,7 +315,7 @@ const Devis = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Ajouter un devi
+            Ajouter un Devi
           </Button>
         </Link>
       </FlexBetween>
@@ -343,15 +347,13 @@ const Devis = () => {
         }}
       >
         <DataGrid
-          loading={isLoading}
+          loading={isLoading || !Devis}
           getRowId={(row) => row._id}
           rows={Devis}
           columns={columns}
           rowsPerPageOptions={[20, 50, 100]}
           pagination
           paginationMode="server"
-          sortingMode="server"
-          components={{ Toolbar: DataGridCustomToolbar }}
         />
       </Box>
       <Dialog
@@ -367,7 +369,7 @@ const Devis = () => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Sélectionnez le type de document que vous souhaitez imprimer.
+            Sélectionnez le modèle que vous souhaitez imprimer.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -388,6 +390,15 @@ const Devis = () => {
             sx={{ color: theme.palette.secondary[200] }}
           >
             Modéle lettre head
+          </Button>
+          <Button
+            onClick={() => {
+              handlePrintClassic(selectedInvoiceId);
+              handleDialogClose();
+            }}
+            sx={{ color: theme.palette.secondary[200] }}
+          >
+            Modèle Classique
           </Button>
           <Button
             onClick={handleDialogClose}

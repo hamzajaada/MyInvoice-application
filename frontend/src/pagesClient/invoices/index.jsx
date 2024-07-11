@@ -355,15 +355,13 @@ const Invoices = () => {
         }}
       >
         <DataGrid
-          loading={isLoading}
+          loading={isLoading || !Facture}
           getRowId={(row) => row._id}
           rows={Facture}
           columns={columns}
           rowsPerPageOptions={[20, 50, 100]}
           pagination
           paginationMode="server"
-          sortingMode="server"
-          components={{ Toolbar: DataGridCustomToolbar }}
         />
       </Box>
       <Dialog

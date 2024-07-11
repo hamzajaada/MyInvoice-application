@@ -39,7 +39,7 @@ const AddClient = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="AJOUTE DE CLIENT" subtitle="Ajout d'un nouveau client" />
+      <Header title="AJOUTER UN CLIENT" subtitle="Ajout d'un nouveau client" />
       <form onSubmit={handleSubmit} sx={{
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,
@@ -87,9 +87,19 @@ const AddClient = () => {
         
         <Box mt={2}>
           <Button type="submit" variant="contained" color="primary">
-            Add client
+            Ajouter le client
           </Button>
         </Box>
+        <Box mt={2} display="flex" justifyContent="left">
+            <Button
+              onClick={() => navigate(-1)}
+              aria-label="cancel"
+              variant="contained"
+              color="secondary"
+            >
+              Annuler
+            </Button>
+          </Box>
       </form>
     </Box>
   );

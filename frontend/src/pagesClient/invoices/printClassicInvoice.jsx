@@ -120,11 +120,11 @@ const PrintClassicInvoice = () => {
                 </TableRow>
               ))}
               <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
-                <TableCell colSpan={2} align="right"><Typography fontWeight="bold" color="white">Sous - Totale:</Typography></TableCell>
+                <TableCell colSpan={2} align="right"><Typography fontWeight="bold" color="white">Sous - Total :</Typography></TableCell>
                 <TableCell><Typography fontWeight="bold" color="white">{sousTotale.toFixed(2)} DH</Typography></TableCell>
               </TableRow>
               <TableRow sx={{ backgroundColor: theme.palette.primary.main }}>
-                <TableCell colSpan={2} align="right"><Typography fontWeight="bold" color="white">Montant Totale:</Typography></TableCell>
+                <TableCell colSpan={2} align="right"><Typography fontWeight="bold" color="white">Montant Total :</Typography></TableCell>
                 <TableCell><Typography fontWeight="bold" color="white">{amount.toFixed(2)} DH</Typography></TableCell>
               </TableRow>
             </TableBody>

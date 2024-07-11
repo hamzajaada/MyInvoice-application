@@ -9,9 +9,9 @@ import FlexBetween from "componementClient/FlexBetween";
 const DeviItem = ({ item }) => {
   return (
     <tr>
-      <td className="border px-4 py-2">{item.productName}</td>
-      <td className="border px-4 py-2">{item.quantity}</td>
-      <td className="border px-4 py-2">{item.price.toFixed(2)} DH</td>
+      <td className="border px-4 py-2" align="center">{item.productName}</td>
+      <td className="border px-4 py-2" align="center">{item.quantity}</td>
+      <td className="border px-4 py-2" align="center">{item.price.toFixed(2)} DH</td>
     </tr>
   );
 };
@@ -19,8 +19,8 @@ const DeviItem = ({ item }) => {
 const DeviTax = ({ tax }) => {
   return (
     <tr>
-      <td className="border px-4 py-2">{tax.taxeName}</td>
-      <td className="border px-4 py-2">{tax.value.toFixed(2)} DH</td>
+      <td className="border px-4 py-2" align="center">{tax.taxeName}</td>
+      <td className="border px-4 py-2" align="center">{tax.value} %</td>
     </tr>
   );
 };
@@ -42,6 +42,9 @@ const DeviDetails = () => {
   };
 
   if (!devi) return <Typography variant="h6">Chargement...</Typography>;
+
+  const {itemsTable,} = data;
+  const sousTotale = itemsTable.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -98,16 +101,13 @@ const DeviDetails = () => {
             </ClientInfo>
             <DeviMeta>
               <Typography>
-                <strong>Date de devi:</strong> {devi.formattedDate}
-              </Typography>
-              <Typography>
-                <strong>Date d'échéance:</strong> {devi.formattedDueDate}
+                <strong>Date de Devi:</strong> {devi.formattedDate}
               </Typography>
               <Typography>
                 <strong>Statut:</strong> {devi.deviStatus}
               </Typography>
               <Typography>
-                <strong>Numéro de devi:</strong> {devi._id}
+                <strong>Numéro de Devi:</strong> {devi._id}
               </Typography>
             </DeviMeta>
           </FlexBetween>
@@ -129,8 +129,8 @@ const DeviDetails = () => {
           <table className="w-full mb-6 border-collapse">
             <thead>
               <tr className="bg-gray-200">
-                <th className="border px-4 py-2">Nom de la taxe</th>
-                <th className="border px-4 py-2">Valeur</th>
+                <th className="border px-4 py-2">Taxe</th>
+                <th className="border px-4 py-2">Taux</th>
               </tr>
             </thead>
             <tbody>
@@ -140,6 +140,10 @@ const DeviDetails = () => {
             </tbody>
           </table>
           <TotalAmount>
+          <Typography variant="h5" className="text-right font-semibold">
+              Sous-Total : {sousTotale.toFixed(2)} DH
+            </Typography>
+            <Box m={2}/>  
             <Typography variant="h5" className="text-right font-semibold">
               Montant total: {devi.amount.toFixed(2)} DH
             </Typography>

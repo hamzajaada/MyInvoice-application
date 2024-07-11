@@ -52,6 +52,7 @@ const Daily = () => {
     return [formattedData];
   }, [data, startDate, endDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
+
   return (
     <Box m="1.5rem 2.5rem">
        <Box>
@@ -69,7 +70,7 @@ const Daily = () => {
     </Box>
       <Box height="75vh">
         <Box display="flex" justifyContent="flex-end">
-          <Box>
+          <Box color="black" border={`2px solid black`} fontWeight= "bold">
             <DatePicker
               selected={startDate}
               onChange={(date) => setStartDate(date)}
@@ -78,7 +79,7 @@ const Daily = () => {
               endDate={endDate}
             />
           </Box>
-          <Box>
+          <Box ml={1} color="black" border={`2px solid black`} fontWeight= "bold">
             <DatePicker
               selected={endDate}
               onChange={(date) => setEndDate(date)}
@@ -147,7 +148,7 @@ const Daily = () => {
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 90,
-              legend: "Mois",
+              legend: "Jours",
               legendOffset: 60,
               legendPosition: "middle",
             }}
@@ -156,7 +157,7 @@ const Daily = () => {
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 0,
-              legend: "Total (DHs)",
+              legend: "Total des Revenues et Unités Vendues",
               legendOffset: -56,
               legendPosition: "middle",
             }}

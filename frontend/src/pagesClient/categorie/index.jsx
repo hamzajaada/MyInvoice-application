@@ -85,10 +85,10 @@ const Categories = () => {
         thisCategorie.active = false
         const {data} = await updateCategorie({id, categorie: thisCategorie})
         if(data.success) {
-          toast.success("La suppresion de catégorie se passe correctement");
+          toast.success("La Catégorie a été supprimé avec succès");
           setCategorie(Categorie.filter((c) => c._id !== id));
         } else {
-          toast.error("La suppresion de catégorie ne s'est pas passé correctement");
+          toast.error("La Suppresion de Catégorie a échoué");
         }
       }
       // window.location.reload()
@@ -100,7 +100,7 @@ const Categories = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
-        <Header title="CATEGORY" subtitle="Liste de categories" />
+        <Header title="CATEGORIES" subtitle="Liste des Catégories" />
         <Link to={`/${userName}/categories/new`}>
           <Button
             variant="contained"
@@ -108,7 +108,7 @@ const Categories = () => {
             startIcon={<AddOutlinedIcon />}
             sx={{ mt: 3, mb: 2 }}
           >
-            Ajoute de catégorie
+            Ajouter une Catégorie
           </Button>
         </Link>
       </FlexBetween>

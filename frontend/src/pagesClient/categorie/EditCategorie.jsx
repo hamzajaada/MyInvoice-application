@@ -36,10 +36,10 @@ const EditCategorie = () => {
         const newCategorie = {...categorieData, active: false}
         const {data} = await editCategorie({id, categorie: newCategorie});
         if(data.success) {
-          toast.success("La suppresion de catégorie se passe correctement");
+          toast.success("La Catégorie a été supprimé avec succès");
           navigate(`/${userName}/categories`);
         } else {
-          toast.error("La suppresion de catégorie ne s'est pas réussie");
+          toast.error("La Suppresion de Catégorie a échoué");
         }
       }
       
@@ -54,10 +54,10 @@ const EditCategorie = () => {
       console.log(categorie);
       const {data} = await editCategorie({ id, categorie });
       if(data.success) {
-        toast.success("La modification de catégorie se passe correctement");
+        toast.success("La Catégorie a été modifier avec succès");
         navigate(`/${userName}/categories`);
       } else {
-        toast.error("La modification de catégorie ne s'est pas réussie");
+        toast.error("La Modification de Catégorie a échoué");
       }
     } catch (error) {
       console.log(error);
@@ -67,6 +67,7 @@ const EditCategorie = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="MODIFICATION DU CATEGORIE" subtitle="Modification de catégorie séléctionné" />
+      <Box m={4}/>
       <form onSubmit={handleSubmit} sx={{
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,
@@ -89,6 +90,16 @@ const EditCategorie = () => {
             Supprimer la catégorie
           </Button>
         </Box>
+        <Box mt={2} display="flex" justifyContent="left">
+            <Button
+              onClick={() => navigate(-1)}
+              aria-label="cancel"
+              variant="contained"
+              color="secondary"
+            >
+              Annuler
+            </Button>
+          </Box>
       </form>
     </Box>
   );

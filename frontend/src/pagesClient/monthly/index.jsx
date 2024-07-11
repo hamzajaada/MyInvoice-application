@@ -121,7 +121,7 @@ const Monthly = () => {
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 0,
-              legend: "Total (DHs)",
+              legend: "Total des Revenues et Unités Vendues",
               legendOffset: -56,
               legendPosition: "middle",
             }}

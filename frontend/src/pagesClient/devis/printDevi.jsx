@@ -31,9 +31,9 @@ const PrintInvoice = () => {
       case "approuvé":
         return "green";
       case "attente d'approbation":
-        return "red";
-      default:
         return "orange";
+      default:
+        return "red";
     }
   };
 
@@ -54,7 +54,6 @@ const PrintInvoice = () => {
     clientPhone,
     clientAddress,
     formattedDate,
-    formattedDueDate,
     itemsTable,
     taxesTable,
     amount,
@@ -92,7 +91,7 @@ const PrintInvoice = () => {
               variant="h6"
               sx={{ color: "white", fontWeight: "bold" }}
             >
-              Numéro de devi: #{_id}
+              Numéro de Devi : #{_id}
             </Typography>
           </Box>
           <Box bgcolor={getStatusColor(deviStatus)} borderRadius={4} p={2}>
@@ -173,14 +172,9 @@ const PrintInvoice = () => {
           </Box>
         </Box>
         <Box display="flex" justifyContent="center" mt={3}>
-          <Box mr={15}>
+          <Box mr={1}>
             <Typography variant="body1" fontWeight="bold">
               Créé le: {formattedDate}
-            </Typography>
-          </Box>
-          <Box>
-            <Typography variant="body1" fontWeight="bold">
-              Date d'échéance: {formattedDueDate}
             </Typography>
           </Box>
         </Box>
@@ -213,7 +207,7 @@ const PrintInvoice = () => {
                 </TableRow>
               ))}
               <TableRow sx={{ backgroundColor: "#fd8B36" }}>
-                <TableCell colSpan={2}>
+                <TableCell colSpan={2} align="center">
                   <Typography fontWeight="bold">Taxes </Typography>
                 </TableCell>
                 <TableCell colSpan={1}>
@@ -222,7 +216,7 @@ const PrintInvoice = () => {
               </TableRow>
               {taxesTable.map((tax, index) => (
                 <TableRow key={index} sx={{ backgroundColor: "white" }}>
-                  <TableCell colSpan={2}>
+                  <TableCell colSpan={2} align="center">
                     <Typography>{tax.taxeName}</Typography>
                   </TableCell>
                   <TableCell>
@@ -232,7 +226,7 @@ const PrintInvoice = () => {
               ))}
               <TableRow sx={{ backgroundColor: "#fd8B36" }}>
                 <TableCell colSpan={2} align="right">
-                  <Typography fontWeight="bold">Sous - Totale:</Typography>
+                  <Typography fontWeight="bold">Sous - Total :</Typography>
                 </TableCell>
                 <TableCell>
                   <Typography fontWeight="bold">
@@ -264,9 +258,11 @@ const PrintInvoice = () => {
               src={`${userSignature.url}`}
               alt="Signature"
               sx={{
-                width: "200px",
-                height: "170px",
-                marginLeft: "10px",
+                width: '170px',
+                height: '170px',
+                border: '1px solid #000',
+                marginLeft: '10px',
+                objectFit: 'cover',   
               }}
             />
           </Box>

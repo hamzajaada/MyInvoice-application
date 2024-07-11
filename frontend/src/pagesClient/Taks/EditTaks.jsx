@@ -36,10 +36,10 @@ const EditCategorie = () => {
       if(taxData) {
         const {data} = await editTax({ id, taxData: { ...taxData, active: false } });
         if(data.success) {
-          toast.success("La suppresion de tax se passe correctement");
+          toast.success("Le Taxe a été supprimé avec succès");
           navigate(`/${userName}/Taks`);
         } else {
-          toast.error("La suppresion de tax ne s'est pas dés  ");
+          toast.error("La Suppresion du Taxe a échoué ");
         }
       }
     } catch (error) {
@@ -53,10 +53,10 @@ const EditCategorie = () => {
       console.log(tax);
       const {data} = await editTax({ id, taxData: tax });
       if(data.success) {
-        toast.success("La suppresion de tax se passe correctement");
+        toast.success("Le Taxe a été modifié avec succès");
         navigate(`/${userName}/Taks`);
       } else {
-        toast.error("La suppresion de tax ne s'est pas dés  ");
+        toast.error("La Modification du Taxe a échoué");
       }
     } catch (error) {
       console.log(error);
@@ -65,14 +65,15 @@ const EditCategorie = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="MODIFICATION DE TAX" subtitle="Modification dec tax séléctionné" />
+      <Header title="MODIFICATION DU TAXE" subtitle="Modification Du Taxe Sélectionné" />
+      <Box m={4}/>
       <form onSubmit={handleSubmit} sx={{
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,
         borderRadius: "0.55rem",
       }} >
         <TextField
-          label="Nom de tax"
+          label="Nom du Taxe"
           name="name"
           value={tax.name}
           onChange={handleChange}
@@ -81,7 +82,7 @@ const EditCategorie = () => {
           margin="normal"
         />
         <TextField
-        label="Taks Valleur"
+        label="Valeur du Taxe"
         name="TaksValleur"
         value={tax.TaksValleur} 
         onChange={handleChange}
@@ -92,12 +93,22 @@ const EditCategorie = () => {
       />
         <Box mt={2}>
         <Button type="submit" variant="contained" color="primary">
-            Modifier le tax
+            Modifier le taxe
           </Button>
           <Button type="button" onClick={handleDelete} aria-label="delete" sx={{ ml: 2 }} variant="contained" color="primary">
-            Supprimer le tax
+            Supprimer le taxe
           </Button>
         </Box>
+        <Box mt={2} display="flex" justifyContent="left">
+            <Button
+              onClick={() => navigate(-1)}
+              aria-label="cancel"
+              variant="contained"
+              color="secondary"
+            >
+              Annuler
+            </Button>
+          </Box>
       </form>
     </Box>
   );
